@@ -1,5 +1,5 @@
 ﻿
-namespace AlgorithmLib10.BSTs.BSTs114
+namespace AlgorithmLib10.SegTrees.SegTrees114
 {
 	public class Int32RSQTree
 	{

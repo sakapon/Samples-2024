@@ -1,6 +1,6 @@
-﻿using AlgorithmLib10.BSTs.BSTs104;
+﻿using AlgorithmLib10.SegTrees.SegTrees104;
 
-namespace OnlineTest10.DataTrees.BSTs
+namespace OnlineTest10.SegTrees
 {
 	// Test: https://atcoder.jp/contests/abc221/tasks/abc221_e
 	class RSQ_ABC221_E
