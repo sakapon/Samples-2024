@@ -3,16 +3,17 @@ namespace AlgorithmLib10.SegTrees.SegTrees111
 {
 	public class RAQTree
 	{
-		int n;
+		readonly int n;
 		long[] values;
 
-		public RAQTree(int size = 1 << 18) => Initialize(size);
-		public void Clear() => Initialize(n);
-
-		void Initialize(int size)
+		public RAQTree(int size = 1 << 18)
 		{
 			n = 1;
 			while (n < size) n <<= 1;
+			Clear();
+		}
+		public void Clear()
+		{
 			values = new long[n << 1];
 		}
 
