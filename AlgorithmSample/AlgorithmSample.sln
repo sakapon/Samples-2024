@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlgorithmLib8", "AlgorithmL
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineTest8", "OnlineTest8\OnlineTest8.csproj", "{8D393C0E-8B53-4462-A394-5B3B52E4B3C1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlgorithmLib10", "AlgorithmLib10\AlgorithmLib10.csproj", "{FE997CF5-9562-4D6D-9CB6-54D8B0974899}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineTest10", "OnlineTest10\OnlineTest10.csproj", "{3D2E7195-47FF-422A-9F86-09658D8808D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{8D393C0E-8B53-4462-A394-5B3B52E4B3C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D393C0E-8B53-4462-A394-5B3B52E4B3C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D393C0E-8B53-4462-A394-5B3B52E4B3C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE997CF5-9562-4D6D-9CB6-54D8B0974899}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE997CF5-9562-4D6D-9CB6-54D8B0974899}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE997CF5-9562-4D6D-9CB6-54D8B0974899}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE997CF5-9562-4D6D-9CB6-54D8B0974899}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D2E7195-47FF-422A-9F86-09658D8808D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D2E7195-47FF-422A-9F86-09658D8808D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D2E7195-47FF-422A-9F86-09658D8808D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D2E7195-47FF-422A-9F86-09658D8808D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
