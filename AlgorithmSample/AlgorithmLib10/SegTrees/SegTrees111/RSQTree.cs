@@ -1,5 +1,4 @@
-﻿using System.Numerics;
-
+﻿
 namespace AlgorithmLib10.SegTrees.SegTrees111
 {
 	public class RSQTree
@@ -12,7 +11,8 @@ namespace AlgorithmLib10.SegTrees.SegTrees111
 
 		void Initialize(int size)
 		{
-			n = (int)BitOperations.RoundUpToPowerOf2((uint)size);
+			n = 1;
+			while (n < size) n <<= 1;
 			values = new long[n << 1];
 		}
 
