@@ -18,16 +18,15 @@ namespace AlgorithmLib10.SegTrees.SegTrees111
 
 		public long this[int key]
 		{
-			get => values[n + key];
-			set => Add(key, value - values[n + key]);
+			get => values[n | key];
+			set => Add(key, value - values[n | key]);
 		}
 		public long this[int l, int r] => Get(l, r);
 
 		public long Get(int l, int r)
 		{
-			l += n; r += n;
 			var v = 0L;
-			for (; l != r; l >>= 1, r >>= 1)
+			for (l += n, r += n; l != r; l >>= 1, r >>= 1)
 			{
 				if ((l & 1) != 0) v += values[l++];
 				if ((r & 1) != 0) v += values[--r];
@@ -37,7 +36,7 @@ namespace AlgorithmLib10.SegTrees.SegTrees111
 
 		public void Add(int key, long value)
 		{
-			for (int i = n + key; i > 0; i >>= 1) values[i] += value;
+			for (int i = n | key; i != 0; i >>= 1) values[i] += value;
 		}
 	}
 }
