@@ -1,5 +1,5 @@
 ﻿
-namespace AlgorithmLib10.DataTrees.BSTs.BSTs104
+namespace AlgorithmLib10.BSTs.BSTs104
 {
 	public class Int32RAQTree
 	{

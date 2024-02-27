@@ -1,4 +1,4 @@
-﻿using AlgorithmLib10.DataTrees.BSTs.BSTs104;
+﻿using AlgorithmLib10.BSTs.BSTs104;
 
 namespace OnlineTest10.DataTrees.BSTs
 {
