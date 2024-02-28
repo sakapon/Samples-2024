@@ -1,6 +1,6 @@
 ﻿using AlgorithmLib10.SegTrees.SegTrees111;
 
-namespace OnlineTest10.SegTrees
+namespace OnlineTest10.SegTrees.Test01
 {
 	// Test: https://atcoder.jp/contests/abc339/tasks/abc339_e
 	class Merge_ABC339_E

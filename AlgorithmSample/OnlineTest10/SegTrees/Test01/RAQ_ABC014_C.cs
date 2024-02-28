@@ -1,6 +1,6 @@
 ﻿using AlgorithmLib10.SegTrees.SegTrees111;
 
-namespace OnlineTest10.SegTrees
+namespace OnlineTest10.SegTrees.Test01
 {
 	// Test: https://atcoder.jp/contests/abc014/tasks/abc014_3
 	class RAQ_ABC014_C

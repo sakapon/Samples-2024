@@ -1,6 +1,6 @@
 ﻿using AlgorithmLib10.SegTrees.SegTrees104;
 
-namespace OnlineTest10.SegTrees
+namespace OnlineTest10.SegTrees.Test04
 {
 	// Test: https://atcoder.jp/contests/abc221/tasks/abc221_e
 	class RSQ_ABC221_E
