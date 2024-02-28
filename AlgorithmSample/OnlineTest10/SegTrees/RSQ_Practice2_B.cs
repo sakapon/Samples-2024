@@ -1,4 +1,4 @@
-﻿using AlgorithmLib10.SegTrees.SegTrees104;
+﻿using AlgorithmLib10.SegTrees.SegTrees111;
 
 namespace OnlineTest10.SegTrees
 {
@@ -12,7 +12,7 @@ namespace OnlineTest10.SegTrees
 			var (n, qc) = Read2();
 			var a = Read();
 
-			var rsq = new Int32RSQTree();
+			var rsq = new RSQTree(n);
 			for (int i = 0; i < n; i++)
 			{
 				rsq.Add(i, a[i]);

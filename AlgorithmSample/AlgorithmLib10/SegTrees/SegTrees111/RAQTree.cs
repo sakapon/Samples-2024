@@ -4,17 +4,18 @@ namespace AlgorithmLib10.SegTrees.SegTrees111
 	public class RAQTree
 	{
 		readonly int n;
-		long[] values;
+		readonly long[] values;
 
 		public RAQTree(int size = 1 << 18)
 		{
 			n = 1;
 			while (n < size) n <<= 1;
+			values = new long[n << 1];
 			Clear();
 		}
 		public void Clear()
 		{
-			values = new long[n << 1];
+			Array.Clear(values, 0, values.Length);
 		}
 
 		public long this[int key] => Get(key);
@@ -29,6 +30,8 @@ namespace AlgorithmLib10.SegTrees.SegTrees111
 		public void Add(int key, long value) => values[n | key] += value;
 		public void Add(int l, int r, long value)
 		{
+			if (l < 0) l = 0;
+			if (r > n) r = n;
 			for (l += n, r += n; l != r; l >>= 1, r >>= 1)
 			{
 				if ((l & 1) != 0) values[l++] += value;

@@ -1,4 +1,4 @@
-﻿using AlgorithmLib10.SegTrees.SegTrees104;
+﻿using AlgorithmLib10.SegTrees.SegTrees111;
 
 namespace OnlineTest10.SegTrees
 {
@@ -13,7 +13,7 @@ namespace OnlineTest10.SegTrees
 			var n = int.Parse(Console.ReadLine());
 			var ps = Array.ConvertAll(new bool[n], _ => Read2());
 
-			var raq = new Int32RAQTree();
+			var raq = new RAQTree(1 << 20);
 			var u = new bool[1 << 20];
 
 			foreach (var (a, b) in ps)
