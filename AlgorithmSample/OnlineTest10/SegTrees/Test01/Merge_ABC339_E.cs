@@ -19,7 +19,8 @@ namespace OnlineTest10.SegTrees.Test01
 
 			foreach (var v in a)
 			{
-				st[v] = Math.Max(st[v], st[v - d, v + d + 1] + 1);
+				var nv = st[v - d, v + d + 1] + 1;
+				if (st[v] < nv) st[v] = nv;
 			}
 			return st[0, 1 << 30];
 		}
