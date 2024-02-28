@@ -15,17 +15,13 @@ namespace OnlineTest10.SegTrees
 
 			const int max = 500000;
 			var monoid = new Monoid<int>((x, y) => x >= y ? x : y, 0);
-			var st = new MergeTree<int>(monoid, max + 1);
+			var st = new MergeTree<int>(max + 1, monoid);
 
 			foreach (var v in a)
 			{
-				var l = v - d;
-				var r = v + d;
-				if (l < 0) l = 0;
-				if (r > max) r = max;
-				st[v] = Math.Max(st[v], st[l, r + 1] + 1);
+				st[v] = Math.Max(st[v], st[v - d, v + d + 1] + 1);
 			}
-			return st[0, max + 1];
+			return st[0, 1 << 30];
 		}
 	}
 }

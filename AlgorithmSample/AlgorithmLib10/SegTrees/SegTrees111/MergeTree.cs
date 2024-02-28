@@ -8,7 +8,7 @@ namespace AlgorithmLib10.SegTrees.SegTrees111
 		readonly Func<TValue, TValue, TValue> merge;
 		readonly TValue iv;
 
-		public MergeTree(Monoid<TValue> monoid, int size = 1 << 18)
+		public MergeTree(int size, Monoid<TValue> monoid)
 		{
 			(merge, iv) = (monoid.Op, monoid.Id);
 			n = 1;

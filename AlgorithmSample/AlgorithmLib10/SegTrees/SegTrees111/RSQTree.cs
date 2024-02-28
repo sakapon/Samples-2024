@@ -6,7 +6,7 @@ namespace AlgorithmLib10.SegTrees.SegTrees111
 		readonly int n;
 		readonly long[] values;
 
-		public RSQTree(int size = 1 << 18)
+		public RSQTree(int size)
 		{
 			n = 1;
 			while (n < size) n <<= 1;

@@ -12,7 +12,7 @@ namespace OnlineTest10.SegTrees
 			var (n, qc) = Read2();
 			var a = Read();
 
-			var st = new MergeTree<int>(Monoid.Int32_Max);
+			var st = new MergeTree<int>(n + 1, Monoid.Int32_Max);
 			for (int i = 1; i <= n; i++) st[i] = a[i - 1];
 
 			Console.SetOut(new System.IO.StreamWriter(Console.OpenStandardOutput()) { AutoFlush = false });
