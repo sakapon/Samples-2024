@@ -57,6 +57,8 @@ namespace AlgorithmLib10.SegTrees.SegTrees101
 
 		void ScanNodes(int l, int r)
 		{
+			if (l < 0) l = 0;
+			if (r > n) r = n;
 			Path.Clear();
 			ScanNodes(Root, 0, n, l, r);
 		}
@@ -74,24 +76,12 @@ namespace AlgorithmLib10.SegTrees.SegTrees101
 		{
 			Path.Clear();
 			var node = Root;
-			var (nl, nr) = (0, n);
-			while (node != null)
+			for (var f = n >> 1; ; f >>= 1)
 			{
 				Path.Add(node);
-				if (node.Left == null) return node;
-				var nc = nl + nr >> 1;
-				if (key < nc)
-				{
-					node = node.Left;
-					nr = nc;
-				}
-				else
-				{
-					node = node.Right;
-					nl = nc;
-				}
+				if (f == 0) return node;
+				node = (key & f) == 0 ? node.Left : node.Right;
 			}
-			return null;
 		}
 	}
 }
