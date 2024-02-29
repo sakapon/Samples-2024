@@ -44,24 +44,14 @@ namespace AlgorithmLib10.SegTrees.SegTrees111
 
 		void Split(int key)
 		{
-			var (nl, nr) = (0, n);
-			for (int i = 1; i < n;)
+			for (int i = 1, f = n >> 1; f != 0; f >>= 1)
 			{
 				values[i << 1] = op(values[i], values[i << 1]);
 				values[(i << 1) | 1] = op(values[i], values[(i << 1) | 1]);
 				values[i] = iv;
 
-				var nc = nl + nr >> 1;
-				if (key < nc)
-				{
-					nr = nc;
-					i <<= 1;
-				}
-				else
-				{
-					nl = nc;
-					i = (i << 1) | 1;
-				}
+				i <<= 1;
+				if ((key & f) != 0) i |= 1;
 			}
 		}
 
