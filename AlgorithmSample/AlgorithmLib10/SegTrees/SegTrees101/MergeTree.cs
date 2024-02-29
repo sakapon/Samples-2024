@@ -51,10 +51,9 @@ namespace AlgorithmLib10.SegTrees.SegTrees101
 
 		public TValue Get(int l, int r)
 		{
-			ScanNodes(l, r);
-			var v = iv;
-			foreach (var n in Path) v = op(v, n.Value);
-			return v;
+			if (l < 0) l = 0;
+			if (r > n) r = n;
+			return Get(Root, 0, n, l, r);
 		}
 
 		public void Set(int key, TValue value)
@@ -68,21 +67,12 @@ namespace AlgorithmLib10.SegTrees.SegTrees101
 			}
 		}
 
-		void ScanNodes(int l, int r)
+		TValue Get(Node node, int nl, int nr, int l, int r)
 		{
-			if (l < 0) l = 0;
-			if (r > n) r = n;
-			Path.Clear();
-			ScanNodes(Root, 0, n, l, r);
-		}
-
-		void ScanNodes(Node node, int nl, int nr, int l, int r)
-		{
-			if (node == null) return;
-			if (nl == l && nr == r) { Path.Add(node); return; }
+			if (nl == l && nr == r) return node.Value;
 			var nc = nl + nr >> 1;
-			if (l < nc) ScanNodes(node.Left, nl, nc, l, nc < r ? nc : r);
-			if (nc < r) ScanNodes(node.Right, nc, nr, l < nc ? nc : l, r);
+			var v = l < nc ? Get(node.Left, nl, nc, l, nc < r ? nc : r) : iv;
+			return nc < r ? op(v, Get(node.Right, nc, nr, l < nc ? nc : l, r)) : v;
 		}
 
 		Node GetNode(int key)

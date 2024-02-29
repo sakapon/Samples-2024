@@ -32,13 +32,13 @@ namespace AlgorithmLib10.SegTrees.SegTrees111
 		{
 			if (l < 0) l = 0;
 			if (r > n) r = n;
-			var v = iv;
+			var (vl, vr) = (iv, iv);
 			for (l += n, r += n; l != r; l >>= 1, r >>= 1)
 			{
-				if ((l & 1) != 0) v = op(v, values[l++]);
-				if ((r & 1) != 0) v = op(v, values[--r]);
+				if ((l & 1) != 0) vl = op(vl, values[l++]);
+				if ((r & 1) != 0) vr = op(values[--r], vr);
 			}
-			return v;
+			return op(vl, vr);
 		}
 
 		public void Set(int key, TValue value)
