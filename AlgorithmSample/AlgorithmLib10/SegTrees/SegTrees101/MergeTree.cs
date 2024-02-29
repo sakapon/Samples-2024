@@ -10,9 +10,9 @@ namespace AlgorithmLib10.SegTrees.SegTrees101
 			public Node Left, Right;
 		}
 
-		readonly int n;
 		readonly Func<TValue, TValue, TValue> op;
 		readonly TValue iv;
+		readonly int n;
 		Node Root;
 		readonly List<Node> Path = new List<Node>();
 

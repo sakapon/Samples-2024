@@ -3,10 +3,10 @@ namespace AlgorithmLib10.SegTrees.SegTrees111
 {
 	public class SplitTree<TValue>
 	{
-		readonly int n;
-		readonly TValue[] values;
 		readonly Func<TValue, TValue, TValue> op;
 		readonly TValue iv;
+		readonly int n;
+		readonly TValue[] values;
 
 		public SplitTree(int size, Monoid<TValue> monoid)
 		{
