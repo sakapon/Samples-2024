@@ -17,40 +17,50 @@ namespace AlgorithmLib10.SegTrees.SegTrees104
 
 		public void Clear() => Root = null;
 
-		public long this[int key] => this[key, key + 1];
-		public long this[int l, int r]
+		public long this[int key] => Get(key);
+		public long this[int l, int r] => Get(l, r);
+
+		public long Get(int key)
 		{
-			get
-			{
-				ScanNode(l, r);
-				var v = 0L;
-				foreach (var n in Path) v += n.Value;
-				return v;
-			}
+			var node = GetNode(key);
+			return node != null ? node.Value : 0;
+		}
+
+		public long Get(int l, int r)
+		{
+			ScanNodes(l, r);
+			var v = 0L;
+			foreach (var n in Path) v += n.Value;
+			return v;
 		}
 
 		public void Add(int key, long value)
 		{
-			AddNode(key);
+			ScanOrAddNode(key);
 			foreach (var n in Path) n.Value += value;
 		}
 
-		void ScanNode(int l, int r)
+		void ScanNodes(int l, int r)
 		{
 			Path.Clear();
-			ScanNode(Root, -1 << MaxDigit, 1 << MaxDigit, l, r);
+			ScanNodes(Root, -1 << MaxDigit, 1 << MaxDigit, l, r);
 		}
 
-		void ScanNode(Node node, int nl, int nr, int l, int r)
+		void ScanNodes(Node node, int nl, int nr, int l, int r)
 		{
 			if (node == null) return;
 			if (nl == l && nr == r) { Path.Add(node); return; }
-			var nc = (nl + nr) >> 1;
-			if (l < nc) ScanNode(node.Left, nl, nc, l, nc < r ? nc : r);
-			if (nc < r) ScanNode(node.Right, nc, nr, l < nc ? nc : l, r);
+			var nc = nl + nr >> 1;
+			if (l < nc) ScanNodes(node.Left, nl, nc, l, nc < r ? nc : r);
+			if (nc < r) ScanNodes(node.Right, nc, nr, l < nc ? nc : l, r);
 		}
 
-		void AddNode(int key)
+		Node GetNode(int key)
+		{
+			throw new NotImplementedException();
+		}
+
+		void ScanOrAddNode(int key)
 		{
 			Path.Clear();
 			ref var node = ref Root;
