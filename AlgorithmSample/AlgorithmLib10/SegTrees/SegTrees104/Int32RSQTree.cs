@@ -17,7 +17,11 @@ namespace AlgorithmLib10.SegTrees.SegTrees104
 
 		public void Clear() => Root = null;
 
-		public long this[int key] => Get(key);
+		public long this[int key]
+		{
+			get => Get(key);
+			set => Set(key, value);
+		}
 		public long this[int l, int r] => Get(l, r);
 
 		public long Get(int key)
@@ -31,6 +35,13 @@ namespace AlgorithmLib10.SegTrees.SegTrees104
 			if (l < MinIndex) l = MinIndex;
 			if (r > MaxIndex) r = MaxIndex;
 			return Get(Root, MinIndex, MaxIndex, l, r);
+		}
+
+		public void Set(int key, long value)
+		{
+			var node = GetOrAddNode(key);
+			var d = value - node.Value;
+			foreach (var n in Path) n.Value += d;
 		}
 
 		public void Add(int key, long value)
