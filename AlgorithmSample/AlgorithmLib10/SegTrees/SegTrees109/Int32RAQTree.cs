@@ -59,18 +59,10 @@ namespace AlgorithmLib10.SegTrees.SegTrees109
 			{
 				if (node == null) return;
 				Path.Add(node);
-				if (nl + 1 == nr) break;
+				if (nl + 1 == nr) return;
 				var nc = nl + nr >> 1;
-				if (key < nc)
-				{
-					node = node.Left;
-					nr = nc;
-				}
-				else
-				{
-					node = node.Right;
-					nl = nc;
-				}
+				if (key < nc) { nr = nc; node = node.Left; }
+				else { nl = nc; node = node.Right; }
 			}
 		}
 	}
