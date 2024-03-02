@@ -10,7 +10,7 @@ namespace AlgorithmLib10.SegTrees.SegTrees104
 			public Node Left, Right;
 		}
 
-		// [Min, Max)
+		// [MinIndex, MaxIndex)
 		const int MinIndex = -1 << 30, MaxIndex = 1 << 30;
 		Node Root;
 		readonly List<Node> Path = new List<Node>();

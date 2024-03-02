@@ -10,7 +10,7 @@ namespace AlgorithmLib10.SegTrees.SegTrees104
 			public Node Left, Right;
 		}
 
-		// [Min, Max)
+		// [MinIndex, MaxIndex)
 		const int MinIndex = -1 << 30, MaxIndex = 1 << 30;
 		Node Root;
 		readonly List<Node> Path = new List<Node>();
@@ -27,7 +27,12 @@ namespace AlgorithmLib10.SegTrees.SegTrees104
 			return v;
 		}
 
-		public void Add(int key, long value) => Add(key, key + 1, value);
+		public void Add(int key, long value)
+		{
+			var node = GetOrAddNode(key);
+			node.Value += value;
+		}
+
 		public void Add(int l, int r, long value)
 		{
 			if (l < MinIndex) l = MinIndex;
@@ -68,6 +73,29 @@ namespace AlgorithmLib10.SegTrees.SegTrees104
 					nl = nc;
 				}
 			}
+		}
+
+		Node GetOrAddNode(int key)
+		{
+			ref var node = ref Root;
+			var (nl, nr) = (MinIndex, MaxIndex);
+			while (true)
+			{
+				node ??= new Node();
+				if (nl + 1 == nr) break;
+				var nc = nl + nr >> 1;
+				if (key < nc)
+				{
+					node = ref node.Left;
+					nr = nc;
+				}
+				else
+				{
+					node = ref node.Right;
+					nl = nc;
+				}
+			}
+			return node;
 		}
 	}
 }
