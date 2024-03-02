@@ -10,8 +10,8 @@ namespace AlgorithmLib10.SegTrees.SegTrees109
 			public Node Left, Right;
 		}
 
-		// [-1 << MaxDigit, 1 << MaxDigit)
-		const int MaxDigit = 30;
+		// [MinIndex, MaxIndex)
+		const int MinIndex = -1 << 30, MaxIndex = 1 << 30;
 		Node Root;
 		readonly List<Node> Path = new List<Node>();
 
@@ -38,14 +38,14 @@ namespace AlgorithmLib10.SegTrees.SegTrees109
 		void AddNode(int l, int r)
 		{
 			Path.Clear();
-			AddNode(ref Root, -1 << MaxDigit, 1 << MaxDigit, l, r);
+			AddNode(ref Root, MinIndex, MaxIndex, l, r);
 		}
 
 		void AddNode(ref Node node, int nl, int nr, int l, int r)
 		{
 			node ??= new Node();
 			if (nl == l && nr == r) { Path.Add(node); return; }
-			var nc = (nl + nr) >> 1;
+			var nc = nl + nr >> 1;
 			if (l < nc) AddNode(ref node.Left, nl, nc, l, nc < r ? nc : r);
 			if (nc < r) AddNode(ref node.Right, nc, nr, l < nc ? nc : l, r);
 		}
@@ -54,20 +54,22 @@ namespace AlgorithmLib10.SegTrees.SegTrees109
 		{
 			Path.Clear();
 			var node = Root;
-			var nc = 0;
-			for (int d = MaxDigit - 1; d >= -2; --d)
+			var (nl, nr) = (MinIndex, MaxIndex);
+			while (true)
 			{
 				if (node == null) return;
 				Path.Add(node);
+				if (nl + 1 == nr) break;
+				var nc = nl + nr >> 1;
 				if (key < nc)
 				{
 					node = node.Left;
-					nc -= 1 << d;
+					nr = nc;
 				}
 				else
 				{
 					node = node.Right;
-					nc |= 1 << d;
+					nl = nc;
 				}
 			}
 		}
