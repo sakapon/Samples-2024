@@ -10,64 +10,62 @@ namespace AlgorithmLib10.SegTrees.SegTrees104
 			public Node Left, Right;
 		}
 
-		// [-1 << MaxDigit, 1 << MaxDigit)
-		const int MaxDigit = 30;
+		// [Min, Max)
+		const int MinIndex = -1 << 30, MaxIndex = 1 << 30;
 		Node Root;
 		readonly List<Node> Path = new List<Node>();
 
 		public void Clear() => Root = null;
 
-		public long this[int key]
+		public long this[int key] => Get(key);
+
+		public long Get(int key)
 		{
-			get
-			{
-				ScanNode(key);
-				var v = 0L;
-				foreach (var n in Path) v += n.Value;
-				return v;
-			}
+			ScanNodes(key);
+			var v = 0L;
+			foreach (var n in Path) v += n.Value;
+			return v;
 		}
 
 		public void Add(int key, long value) => Add(key, key + 1, value);
 		public void Add(int l, int r, long value)
 		{
-			AddNode(l, r);
+			if (l < MinIndex) l = MinIndex;
+			if (r > MaxIndex) r = MaxIndex;
+			Path.Clear();
+			AddNodes(ref Root, MinIndex, MaxIndex, l, r);
 			foreach (var n in Path) n.Value += value;
 		}
 
-		void AddNode(int l, int r)
-		{
-			Path.Clear();
-			AddNode(ref Root, -1 << MaxDigit, 1 << MaxDigit, l, r);
-		}
-
-		void AddNode(ref Node node, int nl, int nr, int l, int r)
+		void AddNodes(ref Node node, int nl, int nr, int l, int r)
 		{
 			node ??= new Node();
 			if (nl == l && nr == r) { Path.Add(node); return; }
-			var nc = (nl + nr) >> 1;
-			if (l < nc) AddNode(ref node.Left, nl, nc, l, nc < r ? nc : r);
-			if (nc < r) AddNode(ref node.Right, nc, nr, l < nc ? nc : l, r);
+			var nc = nl + nr >> 1;
+			if (l < nc) AddNodes(ref node.Left, nl, nc, l, nc < r ? nc : r);
+			if (nc < r) AddNodes(ref node.Right, nc, nr, l < nc ? nc : l, r);
 		}
 
-		void ScanNode(int key)
+		void ScanNodes(int key)
 		{
 			Path.Clear();
 			var node = Root;
-			var nc = 0;
-			for (int d = MaxDigit - 1; d >= -2; --d)
+			var (nl, nr) = (MinIndex, MaxIndex);
+			while (true)
 			{
 				if (node == null) return;
 				Path.Add(node);
+				if (nl + 1 == nr) return;
+				var nc = nl + nr >> 1;
 				if (key < nc)
 				{
 					node = node.Left;
-					nc -= 1 << d;
+					nr = nc;
 				}
 				else
 				{
 					node = node.Right;
-					nc |= 1 << d;
+					nl = nc;
 				}
 			}
 		}
