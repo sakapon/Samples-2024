@@ -8,7 +8,7 @@ namespace AlgorithmLib10.SegTrees.SegTrees114
 		readonly Func<TValue, TValue, TValue> op;
 		readonly TValue iv;
 		TValue[] values;
-		int[] l, r;
+		int[] ln, rn;
 		int t;
 		readonly int Root;
 
@@ -21,10 +21,10 @@ namespace AlgorithmLib10.SegTrees.SegTrees114
 		void Initialize(int size)
 		{
 			values = new TValue[size];
-			l = new int[size];
-			r = new int[size];
-			Array.Fill(l, -1);
-			Array.Fill(r, -1);
+			ln = new int[size];
+			rn = new int[size];
+			Array.Fill(ln, -1);
+			Array.Fill(rn, -1);
 			t = 0;
 		}
 
@@ -37,21 +37,21 @@ namespace AlgorithmLib10.SegTrees.SegTrees114
 			while (true)
 			{
 				// 子の数は 0 または 2
-				if (l[node] == -1) return values[node];
+				if (ln[node] == -1) return values[node];
 
-				values[l[node]] = op(values[node], values[l[node]]);
-				values[r[node]] = op(values[node], values[r[node]]);
+				values[ln[node]] = op(values[node], values[ln[node]]);
+				values[rn[node]] = op(values[node], values[rn[node]]);
 				values[node] = iv;
 
 				var nc = nl + nr >> 1;
 				if (key < nc)
 				{
-					node = l[node];
+					node = ln[node];
 					nr = nc;
 				}
 				else
 				{
-					node = r[node];
+					node = rn[node];
 					nl = nc;
 				}
 			}
@@ -69,66 +69,66 @@ namespace AlgorithmLib10.SegTrees.SegTrees114
 					return;
 				}
 
-				if (l[node] == -1)
+				if (ln[node] == -1)
 				{
-					l[node] = ++t;
+					ln[node] = ++t;
 					values[t] = values[node];
-					r[node] = ++t;
+					rn[node] = ++t;
 					values[t] = values[node];
 				}
 				else
 				{
-					values[l[node]] = op(values[node], values[l[node]]);
-					values[r[node]] = op(values[node], values[r[node]]);
+					values[ln[node]] = op(values[node], values[ln[node]]);
+					values[rn[node]] = op(values[node], values[rn[node]]);
 				}
 				values[node] = iv;
 
 				var nc = nl + nr >> 1;
 				if (key < nc)
 				{
-					node = l[node];
+					node = ln[node];
 					nr = nc;
 				}
 				else
 				{
-					node = r[node];
+					node = rn[node];
 					nl = nc;
 				}
 			}
 		}
 
-		public void Set(int li, int ri, TValue value)
+		public void Set(int l, int r, TValue value)
 		{
-			if (li < MinIndex) li = MinIndex;
-			if (ri > MaxIndex) ri = MaxIndex;
-			Split(Root, MinIndex, MaxIndex, li, ri, value);
+			if (l < MinIndex) l = MinIndex;
+			if (r > MaxIndex) r = MaxIndex;
+			Split(Root, MinIndex, MaxIndex, l, r, value);
 		}
 
-		void Split(int node, int nl, int nr, int li, int ri, TValue value)
+		void Split(int node, int nl, int nr, int l, int r, TValue value)
 		{
-			if (nl == li && nr == ri)
+			if (nl == l && nr == r)
 			{
 				values[node] = op(value, values[node]);
 				return;
 			}
 
-			if (l[node] == -1)
+			if (ln[node] == -1)
 			{
-				l[node] = ++t;
+				ln[node] = ++t;
 				values[t] = values[node];
-				r[node] = ++t;
+				rn[node] = ++t;
 				values[t] = values[node];
 			}
 			else
 			{
-				values[l[node]] = op(values[node], values[l[node]]);
-				values[r[node]] = op(values[node], values[r[node]]);
+				values[ln[node]] = op(values[node], values[ln[node]]);
+				values[rn[node]] = op(values[node], values[rn[node]]);
 			}
 			values[node] = iv;
 
 			var nc = nl + nr >> 1;
-			if (li < nc) Split(l[node], nl, nc, li, nc < ri ? nc : ri, value);
-			if (nc < ri) Split(r[node], nc, nr, li < nc ? nc : li, ri, value);
+			if (l < nc) Split(ln[node], nl, nc, l, nc < r ? nc : r, value);
+			if (nc < r) Split(rn[node], nc, nr, l < nc ? nc : l, r, value);
 		}
 	}
 }
