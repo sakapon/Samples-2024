@@ -44,16 +44,8 @@ namespace AlgorithmLib10.SegTrees.SegTrees114
 				values[node] = iv;
 
 				var nc = nl + nr >> 1;
-				if (key < nc)
-				{
-					node = ln[node];
-					nr = nc;
-				}
-				else
-				{
-					node = rn[node];
-					nl = nc;
-				}
+				if (key < nc) { nr = nc; node = ln[node]; }
+				else { nl = nc; node = rn[node]; }
 			}
 		}
 
@@ -63,11 +55,7 @@ namespace AlgorithmLib10.SegTrees.SegTrees114
 			var (nl, nr) = (MinIndex, MaxIndex);
 			while (true)
 			{
-				if (nl + 1 == nr)
-				{
-					values[node] = op(value, values[node]);
-					return;
-				}
+				if (nl + 1 == nr) { values[node] = op(value, values[node]); return; }
 
 				if (ln[node] == -1)
 				{
@@ -84,16 +72,8 @@ namespace AlgorithmLib10.SegTrees.SegTrees114
 				values[node] = iv;
 
 				var nc = nl + nr >> 1;
-				if (key < nc)
-				{
-					node = ln[node];
-					nr = nc;
-				}
-				else
-				{
-					node = rn[node];
-					nl = nc;
-				}
+				if (key < nc) { nr = nc; node = ln[node]; }
+				else { nl = nc; node = rn[node]; }
 			}
 		}
 
@@ -101,16 +81,12 @@ namespace AlgorithmLib10.SegTrees.SegTrees114
 		{
 			if (l < MinIndex) l = MinIndex;
 			if (r > MaxIndex) r = MaxIndex;
-			Split(Root, MinIndex, MaxIndex, l, r, value);
+			Set(Root, MinIndex, MaxIndex, l, r, value);
 		}
 
-		void Split(int node, int nl, int nr, int l, int r, TValue value)
+		void Set(int node, int nl, int nr, int l, int r, TValue value)
 		{
-			if (nl == l && nr == r)
-			{
-				values[node] = op(value, values[node]);
-				return;
-			}
+			if (nl == l && nr == r) { values[node] = op(value, values[node]); return; }
 
 			if (ln[node] == -1)
 			{
@@ -127,8 +103,8 @@ namespace AlgorithmLib10.SegTrees.SegTrees114
 			values[node] = iv;
 
 			var nc = nl + nr >> 1;
-			if (l < nc) Split(ln[node], nl, nc, l, nc < r ? nc : r, value);
-			if (nc < r) Split(rn[node], nc, nr, l < nc ? nc : l, r, value);
+			if (l < nc) Set(ln[node], nl, nc, l, nc < r ? nc : r, value);
+			if (nc < r) Set(rn[node], nc, nr, l < nc ? nc : l, r, value);
 		}
 	}
 }

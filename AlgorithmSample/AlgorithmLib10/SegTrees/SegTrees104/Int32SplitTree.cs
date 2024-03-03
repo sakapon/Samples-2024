@@ -39,16 +39,8 @@ namespace AlgorithmLib10.SegTrees.SegTrees104
 				node.Value = iv;
 
 				var nc = nl + nr >> 1;
-				if (key < nc)
-				{
-					node = node.Left;
-					nr = nc;
-				}
-				else
-				{
-					node = node.Right;
-					nl = nc;
-				}
+				if (key < nc) { nr = nc; node = node.Left; }
+				else { nl = nc; node = node.Right; }
 			}
 		}
 
@@ -58,11 +50,7 @@ namespace AlgorithmLib10.SegTrees.SegTrees104
 			var (nl, nr) = (MinIndex, MaxIndex);
 			while (true)
 			{
-				if (nl + 1 == nr)
-				{
-					node.Value = op(value, node.Value);
-					return;
-				}
+				if (nl + 1 == nr) { node.Value = op(value, node.Value); return; }
 
 				if (node.Left == null)
 				{
@@ -77,16 +65,8 @@ namespace AlgorithmLib10.SegTrees.SegTrees104
 				node.Value = iv;
 
 				var nc = nl + nr >> 1;
-				if (key < nc)
-				{
-					node = node.Left;
-					nr = nc;
-				}
-				else
-				{
-					node = node.Right;
-					nl = nc;
-				}
+				if (key < nc) { nr = nc; node = node.Left; }
+				else { nl = nc; node = node.Right; }
 			}
 		}
 
@@ -94,16 +74,12 @@ namespace AlgorithmLib10.SegTrees.SegTrees104
 		{
 			if (l < MinIndex) l = MinIndex;
 			if (r > MaxIndex) r = MaxIndex;
-			Split(Root, MinIndex, MaxIndex, l, r, value);
+			Set(Root, MinIndex, MaxIndex, l, r, value);
 		}
 
-		void Split(Node node, int nl, int nr, int l, int r, TValue value)
+		void Set(Node node, int nl, int nr, int l, int r, TValue value)
 		{
-			if (nl == l && nr == r)
-			{
-				node.Value = op(value, node.Value);
-				return;
-			}
+			if (nl == l && nr == r) { node.Value = op(value, node.Value); return; }
 
 			if (node.Left == null)
 			{
@@ -118,8 +94,8 @@ namespace AlgorithmLib10.SegTrees.SegTrees104
 			node.Value = iv;
 
 			var nc = nl + nr >> 1;
-			if (l < nc) Split(node.Left, nl, nc, l, nc < r ? nc : r, value);
-			if (nc < r) Split(node.Right, nc, nr, l < nc ? nc : l, r, value);
+			if (l < nc) Set(node.Left, nl, nc, l, nc < r ? nc : r, value);
+			if (nc < r) Set(node.Right, nc, nr, l < nc ? nc : l, r, value);
 		}
 	}
 }
