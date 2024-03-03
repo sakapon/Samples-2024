@@ -27,17 +27,34 @@ namespace AlgorithmLib10.SegTrees.SegTrees104
 		}
 		public TValue this[int l, int r] => Get(l, r);
 
-		public TValue Get(int key)
-		{
-			var node = GetNode(key);
-			return node != null ? node.Value : iv;
-		}
-
 		public TValue Get(int l, int r)
 		{
 			if (l < MinIndex) l = MinIndex;
 			if (r > MaxIndex) r = MaxIndex;
 			return Get(Root, MinIndex, MaxIndex, l, r);
+		}
+
+		TValue Get(Node node, int nl, int nr, int l, int r)
+		{
+			if (node == null) return iv;
+			if (nl == l && nr == r) return node.Value;
+			var nc = nl + nr >> 1;
+			var v = l < nc ? Get(node.Left, nl, nc, l, nc < r ? nc : r) : iv;
+			return nc < r ? op(v, Get(node.Right, nc, nr, l < nc ? nc : l, r)) : v;
+		}
+
+		public TValue Get(int key)
+		{
+			var node = Root;
+			var (nl, nr) = (MinIndex, MaxIndex);
+			while (true)
+			{
+				if (node == null) return iv;
+				if (nl + 1 == nr) return node.Value;
+				var nc = nl + nr >> 1;
+				if (key < nc) { nr = nc; node = node.Left; }
+				else { nl = nc; node = node.Right; }
+			}
 		}
 
 		public void Set(int key, TValue value)
@@ -52,38 +69,6 @@ namespace AlgorithmLib10.SegTrees.SegTrees104
 			}
 		}
 
-		TValue Get(Node node, int nl, int nr, int l, int r)
-		{
-			if (node == null) return iv;
-			if (nl == l && nr == r) return node.Value;
-			var nc = nl + nr >> 1;
-			var v = l < nc ? Get(node.Left, nl, nc, l, nc < r ? nc : r) : iv;
-			return nc < r ? op(v, Get(node.Right, nc, nr, l < nc ? nc : l, r)) : v;
-		}
-
-		Node GetNode(int key)
-		{
-			var node = Root;
-			var (nl, nr) = (MinIndex, MaxIndex);
-			while (true)
-			{
-				if (node == null) break;
-				if (nl + 1 == nr) break;
-				var nc = nl + nr >> 1;
-				if (key < nc)
-				{
-					node = node.Left;
-					nr = nc;
-				}
-				else
-				{
-					node = node.Right;
-					nl = nc;
-				}
-			}
-			return node;
-		}
-
 		Node GetOrAddNode(int key)
 		{
 			Path.Clear();
@@ -93,20 +78,11 @@ namespace AlgorithmLib10.SegTrees.SegTrees104
 			{
 				node ??= new Node();
 				Path.Add(node);
-				if (nl + 1 == nr) break;
+				if (nl + 1 == nr) return node;
 				var nc = nl + nr >> 1;
-				if (key < nc)
-				{
-					node = ref node.Left;
-					nr = nc;
-				}
-				else
-				{
-					node = ref node.Right;
-					nl = nc;
-				}
+				if (key < nc) { nr = nc; node = ref node.Left; }
+				else { nl = nc; node = ref node.Right; }
 			}
-			return node;
 		}
 	}
 }

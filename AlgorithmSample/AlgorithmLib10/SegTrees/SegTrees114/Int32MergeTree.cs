@@ -36,17 +36,34 @@ namespace AlgorithmLib10.SegTrees.SegTrees114
 		}
 		public TValue this[int l, int r] => Get(l, r);
 
-		public TValue Get(int key)
-		{
-			var node = GetNode(key);
-			return node != -1 ? values[node] : iv;
-		}
-
 		public TValue Get(int l, int r)
 		{
 			if (l < MinIndex) l = MinIndex;
 			if (r > MaxIndex) r = MaxIndex;
 			return Get(Root, MinIndex, MaxIndex, l, r);
+		}
+
+		TValue Get(int node, int nl, int nr, int l, int r)
+		{
+			if (node == -1) return iv;
+			if (nl == l && nr == r) return values[node];
+			var nc = nl + nr >> 1;
+			var v = l < nc ? Get(ln[node], nl, nc, l, nc < r ? nc : r) : iv;
+			return nc < r ? op(v, Get(rn[node], nc, nr, l < nc ? nc : l, r)) : v;
+		}
+
+		public TValue Get(int key)
+		{
+			var node = Root;
+			var (nl, nr) = (MinIndex, MaxIndex);
+			while (true)
+			{
+				if (node == -1) return iv;
+				if (nl + 1 == nr) return values[node];
+				var nc = nl + nr >> 1;
+				if (key < nc) { nr = nc; node = ln[node]; }
+				else { nl = nc; node = rn[node]; }
+			}
 		}
 
 		public void Set(int key, TValue value)
@@ -61,38 +78,6 @@ namespace AlgorithmLib10.SegTrees.SegTrees114
 			}
 		}
 
-		TValue Get(int node, int nl, int nr, int l, int r)
-		{
-			if (node == -1) return iv;
-			if (nl == l && nr == r) return values[node];
-			var nc = nl + nr >> 1;
-			var v = l < nc ? Get(ln[node], nl, nc, l, nc < r ? nc : r) : iv;
-			return nc < r ? op(v, Get(rn[node], nc, nr, l < nc ? nc : l, r)) : v;
-		}
-
-		int GetNode(int key)
-		{
-			var node = Root;
-			var (nl, nr) = (MinIndex, MaxIndex);
-			while (true)
-			{
-				if (node == -1) break;
-				if (nl + 1 == nr) break;
-				var nc = nl + nr >> 1;
-				if (key < nc)
-				{
-					node = ln[node];
-					nr = nc;
-				}
-				else
-				{
-					node = rn[node];
-					nl = nc;
-				}
-			}
-			return node;
-		}
-
 		int GetOrAddNode(int key)
 		{
 			Path.Clear();
@@ -102,20 +87,11 @@ namespace AlgorithmLib10.SegTrees.SegTrees114
 			{
 				if (node == -1) node = ++t;
 				Path.Add(node);
-				if (nl + 1 == nr) break;
+				if (nl + 1 == nr) return node;
 				var nc = nl + nr >> 1;
-				if (key < nc)
-				{
-					node = ref ln[node];
-					nr = nc;
-				}
-				else
-				{
-					node = ref rn[node];
-					nl = nc;
-				}
+				if (key < nc) { nr = nc; node = ref ln[node]; }
+				else { nl = nc; node = ref rn[node]; }
 			}
-			return node;
 		}
 	}
 }
