@@ -3,15 +3,16 @@ namespace AlgorithmLib10.SegTrees.SegTrees204
 {
 	public class Int32MergeTree<TValue>
 	{
-		[System.Diagnostics.DebuggerDisplay(@"Value = {Value}")]
+		[System.Diagnostics.DebuggerDisplay(@"[{L}, {R}), Value = {Value}")]
 		public class Node
 		{
-			public TValue Value;
+			public int L, R;
 			public Node Left, Right;
+			public TValue Value;
 		}
 
 		// [MinIndex, MaxIndex)
-		const int MinIndex = -1 << 30, MaxIndex = 1 << 30;
+		const int MinIndex = 0, MaxIndex = 1 << 30;
 		readonly Func<TValue, TValue, TValue> op;
 		readonly TValue iv;
 		Node Root;
@@ -31,29 +32,28 @@ namespace AlgorithmLib10.SegTrees.SegTrees204
 		{
 			if (l < MinIndex) l = MinIndex;
 			if (r > MaxIndex) r = MaxIndex;
-			return Get(Root, MinIndex, MaxIndex, l, r);
+			return Get(Root, l, r);
 		}
 
-		TValue Get(Node node, int nl, int nr, int l, int r)
+		TValue Get(Node node, int l, int r)
 		{
 			if (node == null) return iv;
-			if (nl == l && nr == r) return node.Value;
-			var nc = nl + nr >> 1;
-			var v = l < nc ? Get(node.Left, nl, nc, l, nc < r ? nc : r) : iv;
-			return nc < r ? op(v, Get(node.Right, nc, nr, l < nc ? nc : l, r)) : v;
+			if (l <= node.L && node.R <= r) return node.Value;
+			var nc = node.L + node.R >> 1;
+			var v = l < nc ? Get(node.Left, l, nc < r ? nc : r) : iv;
+			return nc < r ? op(v, Get(node.Right, l < nc ? nc : l, r)) : v;
 		}
 
 		public TValue Get(int key)
 		{
 			var node = Root;
-			var (nl, nr) = (MinIndex, MaxIndex);
 			while (true)
 			{
 				if (node == null) return iv;
-				if (nl + 1 == nr) return node.Value;
-				var nc = nl + nr >> 1;
-				if (key < nc) { nr = nc; node = node.Left; }
-				else { nl = nc; node = node.Right; }
+				if (!(node.L <= key && key < node.R)) return iv;
+				if (key == node.L && node.L + 1 == node.R) return node.Value;
+				var nc = node.L + node.R >> 1;
+				node = key < nc ? node.Left : node.Right;
 			}
 		}
 
@@ -73,16 +73,50 @@ namespace AlgorithmLib10.SegTrees.SegTrees204
 		{
 			Path.Clear();
 			ref var node = ref Root;
-			var (nl, nr) = (MinIndex, MaxIndex);
 			while (true)
 			{
-				node ??= new Node();
-				Path.Add(node);
-				if (nl + 1 == nr) return node;
-				var nc = nl + nr >> 1;
-				if (key < nc) { nr = nc; node = ref node.Left; }
-				else { nl = nc; node = ref node.Right; }
+				if (node == null)
+				{
+					node = new Node { L = key, R = key + 1 };
+					Path.Add(node);
+					return node;
+				}
+				else if (node.L <= key && key < node.R)
+				{
+					Path.Add(node);
+					if (key == node.L && node.L + 1 == node.R) return node;
+					var nc = node.L + node.R >> 1;
+					node = ref (key < nc ? ref node.Left : ref node.Right);
+				}
+				else
+				{
+					var child = node;
+					var f = MaxBit(node.L ^ key);
+					var l = key & ~(f | (f - 1));
+					node = new Node { L = l, R = l + (f << 1) };
+					Path.Add(node);
+					if (child.L < (l | f))
+					{
+						node.Left = child;
+						node = ref node.Right;
+					}
+					else
+					{
+						node.Right = child;
+						node = ref node.Left;
+					}
+				}
 			}
+		}
+
+		static int MaxBit(int x)
+		{
+			x |= x >> 1;
+			x |= x >> 2;
+			x |= x >> 4;
+			x |= x >> 8;
+			x |= x >> 16;
+			return x ^ (x >> 1);
 		}
 	}
 }
