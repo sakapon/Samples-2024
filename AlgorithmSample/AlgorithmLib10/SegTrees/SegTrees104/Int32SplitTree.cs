@@ -21,7 +21,7 @@ namespace AlgorithmLib10.SegTrees.SegTrees104
 			(op, iv) = (monoid.Op, monoid.Id);
 			Clear();
 		}
-		public void Clear() => Root = new Node();
+		public void Clear() => Root = new Node { Value = iv };
 
 		public TValue this[int key] => Get(key);
 

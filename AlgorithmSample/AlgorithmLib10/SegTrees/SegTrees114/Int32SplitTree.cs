@@ -23,6 +23,7 @@ namespace AlgorithmLib10.SegTrees.SegTrees114
 			values = new TValue[size];
 			ln = new int[size];
 			rn = new int[size];
+			values[0] = iv;
 			Array.Fill(ln, -1);
 			Array.Fill(rn, -1);
 			t = 0;
