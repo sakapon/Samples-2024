@@ -4,11 +4,12 @@ namespace AlgorithmLib10.SegTrees.SegTrees214
 	public class Int32MergeTree<TValue>
 	{
 		// [MinIndex, MaxIndex)
-		const int MinIndex = -1 << 30, MaxIndex = 1 << 30;
+		const int MinIndex = 0, MaxIndex = 1 << 30;
 		readonly Func<TValue, TValue, TValue> op;
 		readonly TValue iv;
-		TValue[] values;
+		int[] li, ri;
 		int[] ln, rn;
+		TValue[] values;
 		int t;
 		int Root;
 		readonly List<int> Path = new List<int>();
@@ -21,9 +22,11 @@ namespace AlgorithmLib10.SegTrees.SegTrees214
 		public void Clear() => Initialize(values.Length);
 		void Initialize(int size)
 		{
-			values = new TValue[size];
+			li = new int[size];
+			ri = new int[size];
 			ln = new int[size];
 			rn = new int[size];
+			values = new TValue[size];
 			Array.Fill(ln, -1);
 			Array.Fill(rn, -1);
 			t = 0;
@@ -40,29 +43,28 @@ namespace AlgorithmLib10.SegTrees.SegTrees214
 		{
 			if (l < MinIndex) l = MinIndex;
 			if (r > MaxIndex) r = MaxIndex;
-			return Get(Root, MinIndex, MaxIndex, l, r);
+			return Get(Root, l, r);
 		}
 
-		TValue Get(int node, int nl, int nr, int l, int r)
+		TValue Get(int node, int l, int r)
 		{
 			if (node == -1) return iv;
-			if (nl == l && nr == r) return values[node];
-			var nc = nl + nr >> 1;
-			var v = l < nc ? Get(ln[node], nl, nc, l, nc < r ? nc : r) : iv;
-			return nc < r ? op(v, Get(rn[node], nc, nr, l < nc ? nc : l, r)) : v;
+			if (l <= li[node] && ri[node] <= r) return values[node];
+			var nc = li[node] + ri[node] >> 1;
+			var v = l < nc ? Get(ln[node], l, nc < r ? nc : r) : iv;
+			return nc < r ? op(v, Get(rn[node], l < nc ? nc : l, r)) : v;
 		}
 
 		public TValue Get(int key)
 		{
 			var node = Root;
-			var (nl, nr) = (MinIndex, MaxIndex);
 			while (true)
 			{
 				if (node == -1) return iv;
-				if (nl + 1 == nr) return values[node];
-				var nc = nl + nr >> 1;
-				if (key < nc) { nr = nc; node = ln[node]; }
-				else { nl = nc; node = rn[node]; }
+				if (!(li[node] <= key && key < ri[node])) return iv;
+				if (key == li[node] && li[node] + 1 == ri[node]) return values[node];
+				var nc = li[node] + ri[node] >> 1;
+				node = key < nc ? ln[node] : rn[node];
 			}
 		}
 
@@ -82,16 +84,54 @@ namespace AlgorithmLib10.SegTrees.SegTrees214
 		{
 			Path.Clear();
 			ref var node = ref Root;
-			var (nl, nr) = (MinIndex, MaxIndex);
 			while (true)
 			{
-				if (node == -1) node = ++t;
-				Path.Add(node);
-				if (nl + 1 == nr) return node;
-				var nc = nl + nr >> 1;
-				if (key < nc) { nr = nc; node = ref ln[node]; }
-				else { nl = nc; node = ref rn[node]; }
+				if (node == -1)
+				{
+					node = ++t;
+					li[node] = key;
+					ri[node] = key + 1;
+					Path.Add(node);
+					return node;
+				}
+				else if (li[node] <= key && key < ri[node])
+				{
+					Path.Add(node);
+					if (key == li[node] && li[node] + 1 == ri[node]) return node;
+					var nc = li[node] + ri[node] >> 1;
+					node = ref (key < nc ? ref ln[node] : ref rn[node]);
+				}
+				else
+				{
+					var child = node;
+					var f = MaxBit(li[node] ^ key);
+					var l = key & ~(f | (f - 1));
+					node = ++t;
+					li[node] = l;
+					ri[node] = l + (f << 1);
+					Path.Add(node);
+					if (li[child] < (l | f))
+					{
+						ln[node] = child;
+						node = ref rn[node];
+					}
+					else
+					{
+						rn[node] = child;
+						node = ref ln[node];
+					}
+				}
 			}
+		}
+
+		static int MaxBit(int x)
+		{
+			x |= x >> 1;
+			x |= x >> 2;
+			x |= x >> 4;
+			x |= x >> 8;
+			x |= x >> 16;
+			return x ^ (x >> 1);
 		}
 	}
 }
