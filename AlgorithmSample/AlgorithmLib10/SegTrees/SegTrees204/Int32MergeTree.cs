@@ -51,7 +51,7 @@ namespace AlgorithmLib10.SegTrees.SegTrees204
 			{
 				if (node == null) return iv;
 				if (!(node.L <= key && key < node.R)) return iv;
-				if (key == node.L && node.L + 1 == node.R) return node.Value;
+				if (key == node.L && key + 1 == node.R) return node.Value;
 				var nc = node.L + node.R >> 1;
 				node = key < nc ? node.Left : node.Right;
 			}
@@ -84,7 +84,7 @@ namespace AlgorithmLib10.SegTrees.SegTrees204
 				else if (node.L <= key && key < node.R)
 				{
 					Path.Add(node);
-					if (key == node.L && node.L + 1 == node.R) return node;
+					if (key == node.L && key + 1 == node.R) return node;
 					var nc = node.L + node.R >> 1;
 					node = ref (key < nc ? ref node.Left : ref node.Right);
 				}
