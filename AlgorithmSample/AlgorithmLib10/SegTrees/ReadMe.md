@@ -1,6 +1,16 @@
-## SegTrees
+# Segment Trees
+`SegTrees` namespaces
+
+## Types
+- RSQTree
+- RAQTree
+- MergeTree
+- SplitTree
+
+## Versions
 
 ### Length n
+通常のセグメント木。
 - 101 link-based
 - 111 array-based
 
