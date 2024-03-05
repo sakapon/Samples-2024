@@ -10,8 +10,7 @@ namespace AlgorithmLib10.SegTrees.SegTrees214
 		int[] li, ri;
 		int[] ln, rn;
 		TValue[] values;
-		int t;
-		int Root;
+		int Root, t;
 		readonly List<int> Path = new List<int>();
 
 		public Int32MergeTree(Monoid<TValue> monoid, int size = 1 << 22)
@@ -27,9 +26,10 @@ namespace AlgorithmLib10.SegTrees.SegTrees214
 			ln = new int[size];
 			rn = new int[size];
 			values = new TValue[size];
+
 			Array.Fill(ln, -1);
 			Array.Fill(rn, -1);
-			t = 0;
+			Root = t = -1;
 		}
 
 		public TValue this[int key]
