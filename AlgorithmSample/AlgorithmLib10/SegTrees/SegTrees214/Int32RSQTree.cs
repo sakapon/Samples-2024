@@ -4,22 +4,25 @@ namespace AlgorithmLib10.SegTrees.SegTrees214
 	public class Int32RSQTree
 	{
 		// [MinIndex, MaxIndex)
-		const int MinIndex = -1 << 30, MaxIndex = 1 << 30;
-		long[] values;
+		const int MinIndex = 0, MaxIndex = 1 << 30;
+		int[] li, ri;
 		int[] ln, rn;
-		int t;
-		int Root;
+		long[] values;
+		int Root, t;
 
 		public Int32RSQTree(int size = 1 << 22) => Initialize(size);
 		public void Clear() => Initialize(values.Length);
 		void Initialize(int size)
 		{
-			values = new long[size];
+			li = new int[size];
+			ri = new int[size];
 			ln = new int[size];
 			rn = new int[size];
+			values = new long[size];
+
 			Array.Fill(ln, -1);
 			Array.Fill(rn, -1);
-			t = 0;
+			Root = t = -1;
 		}
 
 		public long this[int key] => Get(key);
@@ -29,45 +32,82 @@ namespace AlgorithmLib10.SegTrees.SegTrees214
 		{
 			if (l < MinIndex) l = MinIndex;
 			if (r > MaxIndex) r = MaxIndex;
-			return Get(Root, MinIndex, MaxIndex, l, r);
+			return Get(Root, l, r);
 		}
 
-		long Get(int node, int nl, int nr, int l, int r)
+		long Get(int node, int l, int r)
 		{
 			if (node == -1) return 0;
-			if (nl == l && nr == r) return values[node];
-			var nc = nl + nr >> 1;
-			var v = l < nc ? Get(ln[node], nl, nc, l, nc < r ? nc : r) : 0;
-			return nc < r ? v + Get(rn[node], nc, nr, l < nc ? nc : l, r) : v;
+			if (l <= li[node] && ri[node] <= r) return values[node];
+			var nc = li[node] + ri[node] >> 1;
+			var v = l < nc ? Get(ln[node], l, nc < r ? nc : r) : 0;
+			return nc < r ? v + Get(rn[node], l < nc ? nc : l, r) : v;
 		}
 
 		public long Get(int key)
 		{
 			var node = Root;
-			var (nl, nr) = (MinIndex, MaxIndex);
 			while (true)
 			{
 				if (node == -1) return 0;
-				if (nl + 1 == nr) return values[node];
-				var nc = nl + nr >> 1;
-				if (key < nc) { nr = nc; node = ln[node]; }
-				else { nl = nc; node = rn[node]; }
+				if (!(li[node] <= key && key < ri[node])) return 0;
+				if (key == li[node] && key + 1 == ri[node]) return values[node];
+				var nc = li[node] + ri[node] >> 1;
+				node = key < nc ? ln[node] : rn[node];
 			}
 		}
 
 		public void Add(int key, long value)
 		{
 			ref var node = ref Root;
-			var (nl, nr) = (MinIndex, MaxIndex);
 			while (true)
 			{
-				if (node == -1) node = ++t;
-				values[node] += value;
-				if (nl + 1 == nr) return;
-				var nc = nl + nr >> 1;
-				if (key < nc) { nr = nc; node = ref ln[node]; }
-				else { nl = nc; node = ref rn[node]; }
+				if (node == -1)
+				{
+					node = ++t;
+					li[node] = key;
+					ri[node] = key + 1;
+					values[node] = value;
+					return;
+				}
+				else if (li[node] <= key && key < ri[node])
+				{
+					values[node] += value;
+					if (key == li[node] && key + 1 == ri[node]) return;
+					var nc = li[node] + ri[node] >> 1;
+					node = ref (key < nc ? ref ln[node] : ref rn[node]);
+				}
+				else
+				{
+					var child = node;
+					var f = MaxBit(li[node] ^ key);
+					var l = key & ~(f | (f - 1));
+					node = ++t;
+					li[node] = l;
+					ri[node] = l + (f << 1);
+					values[node] = values[child] + value;
+					if (li[child] < (l | f))
+					{
+						ln[node] = child;
+						node = ref rn[node];
+					}
+					else
+					{
+						rn[node] = child;
+						node = ref ln[node];
+					}
+				}
 			}
+		}
+
+		static int MaxBit(int x)
+		{
+			x |= x >> 1;
+			x |= x >> 2;
+			x |= x >> 4;
+			x |= x >> 8;
+			x |= x >> 16;
+			return x ^ (x >> 1);
 		}
 	}
 }
