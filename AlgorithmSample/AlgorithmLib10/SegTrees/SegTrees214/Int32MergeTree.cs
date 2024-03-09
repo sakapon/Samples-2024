@@ -12,7 +12,7 @@ namespace AlgorithmLib10.SegTrees.SegTrees214
 		int[] ln, rn;
 		TValue[] values;
 		int Root, t;
-		readonly List<int> Path = new List<int>();
+		readonly Stack<int> Path = new Stack<int>(32);
 
 		public Int32MergeTree(Monoid<TValue> monoid, int size = 1 << 22)
 		{
@@ -71,19 +71,6 @@ namespace AlgorithmLib10.SegTrees.SegTrees214
 
 		public void Set(int key, TValue value)
 		{
-			var node = GetOrAddNode(key);
-			values[node] = value;
-			for (int i = Path.Count - 2; i >= 0; --i)
-			{
-				node = Path[i];
-				var v = ln[node] != -1 ? values[ln[node]] : iv;
-				values[node] = rn[node] != -1 ? op(v, values[rn[node]]) : v;
-			}
-		}
-
-		int GetOrAddNode(int key)
-		{
-			Path.Clear();
 			ref var node = ref Root;
 			while (true)
 			{
@@ -92,13 +79,17 @@ namespace AlgorithmLib10.SegTrees.SegTrees214
 					node = ++t;
 					li[node] = key;
 					ri[node] = key + 1;
-					Path.Add(node);
-					return node;
+					values[node] = value;
+					break;
+				}
+				else if (key == li[node] && key + 1 == ri[node])
+				{
+					values[node] = value;
+					break;
 				}
 				else if (li[node] <= key && key < ri[node])
 				{
-					Path.Add(node);
-					if (key == li[node] && key + 1 == ri[node]) return node;
+					Path.Push(node);
 					var nc = li[node] + ri[node] >> 1;
 					node = ref (key < nc ? ref ln[node] : ref rn[node]);
 				}
@@ -110,7 +101,7 @@ namespace AlgorithmLib10.SegTrees.SegTrees214
 					node = ++t;
 					li[node] = l;
 					ri[node] = l + (f << 1);
-					Path.Add(node);
+					Path.Push(node);
 					if (li[child] < (l | f))
 					{
 						ln[node] = child;
@@ -122,6 +113,12 @@ namespace AlgorithmLib10.SegTrees.SegTrees214
 						node = ref ln[node];
 					}
 				}
+			}
+
+			while (Path.TryPop(out var n))
+			{
+				var v = ln[n] != -1 ? values[ln[n]] : iv;
+				values[n] = rn[n] != -1 ? op(v, values[rn[n]]) : v;
 			}
 		}
 
