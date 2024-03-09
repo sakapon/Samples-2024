@@ -4,7 +4,8 @@ namespace AlgorithmLib10.SegTrees.SegTrees214
 	public class Int32MergeTree<TValue>
 	{
 		// [MinIndex, MaxIndex)
-		const int MinIndex = 0, MaxIndex = 1 << 30;
+		const int MinIndex = 0;
+		const int MaxIndex = 1 << 30;
 		readonly Func<TValue, TValue, TValue> op;
 		readonly TValue iv;
 		int[] li, ri;
@@ -61,8 +62,8 @@ namespace AlgorithmLib10.SegTrees.SegTrees214
 			while (true)
 			{
 				if (node == -1) return iv;
-				if (!(li[node] <= key && key < ri[node])) return iv;
 				if (key == li[node] && key + 1 == ri[node]) return values[node];
+				if (!(li[node] <= key && key < ri[node])) return iv;
 				var nc = li[node] + ri[node] >> 1;
 				node = key < nc ? ln[node] : rn[node];
 			}

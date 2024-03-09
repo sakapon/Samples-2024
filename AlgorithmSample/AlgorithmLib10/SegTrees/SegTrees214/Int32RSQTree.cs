@@ -4,7 +4,8 @@ namespace AlgorithmLib10.SegTrees.SegTrees214
 	public class Int32RSQTree
 	{
 		// [MinIndex, MaxIndex)
-		const int MinIndex = 0, MaxIndex = 1 << 30;
+		const int MinIndex = 0;
+		const int MaxIndex = 1 << 30;
 		int[] li, ri;
 		int[] ln, rn;
 		long[] values;
@@ -50,8 +51,8 @@ namespace AlgorithmLib10.SegTrees.SegTrees214
 			while (true)
 			{
 				if (node == -1) return 0;
-				if (!(li[node] <= key && key < ri[node])) return 0;
 				if (key == li[node] && key + 1 == ri[node]) return values[node];
+				if (!(li[node] <= key && key < ri[node])) return 0;
 				var nc = li[node] + ri[node] >> 1;
 				node = key < nc ? ln[node] : rn[node];
 			}
@@ -70,10 +71,14 @@ namespace AlgorithmLib10.SegTrees.SegTrees214
 					values[node] = value;
 					return;
 				}
+				else if (key == li[node] && key + 1 == ri[node])
+				{
+					values[node] += value;
+					return;
+				}
 				else if (li[node] <= key && key < ri[node])
 				{
 					values[node] += value;
-					if (key == li[node] && key + 1 == ri[node]) return;
 					var nc = li[node] + ri[node] >> 1;
 					node = ref (key < nc ? ref ln[node] : ref rn[node]);
 				}

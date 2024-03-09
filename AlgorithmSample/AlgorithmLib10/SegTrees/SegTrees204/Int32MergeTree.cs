@@ -12,7 +12,8 @@ namespace AlgorithmLib10.SegTrees.SegTrees204
 		}
 
 		// [MinIndex, MaxIndex)
-		const int MinIndex = 0, MaxIndex = 1 << 30;
+		const int MinIndex = 0;
+		const int MaxIndex = 1 << 30;
 		readonly Func<TValue, TValue, TValue> op;
 		readonly TValue iv;
 		Node Root;
@@ -50,8 +51,8 @@ namespace AlgorithmLib10.SegTrees.SegTrees204
 			while (true)
 			{
 				if (node == null) return iv;
-				if (!(node.L <= key && key < node.R)) return iv;
 				if (key == node.L && key + 1 == node.R) return node.Value;
+				if (!(node.L <= key && key < node.R)) return iv;
 				var nc = node.L + node.R >> 1;
 				node = key < nc ? node.Left : node.Right;
 			}

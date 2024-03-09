@@ -4,7 +4,8 @@ namespace AlgorithmLib10.SegTrees.SegTrees214
 	public class Int32RAQTree
 	{
 		// [MinIndex, MaxIndex)
-		const int MinIndex = 0, MaxIndex = 1 << 30;
+		const int MinIndex = 0;
+		const int MaxIndex = 1 << 30;
 		int[] li, ri;
 		int[] ln, rn;
 		long[] values;
@@ -32,47 +33,47 @@ namespace AlgorithmLib10.SegTrees.SegTrees214
 			if (l < MinIndex) l = MinIndex;
 			if (r > MaxIndex) r = MaxIndex;
 			Add(ref Root, l, r, value);
-		}
 
-		void Add(ref int node, int l, int r, long value)
-		{
-			if (node == -1)
+			void Add(ref int node, int l, int r, long value)
 			{
-				if (l + 1 == r)
+				if (node == -1)
 				{
-					node = ++t;
-					li[node] = l;
-					ri[node] = r;
-					values[node] = value;
-					return;
+					if (l + 1 == r)
+					{
+						node = ++t;
+						li[node] = l;
+						ri[node] = r;
+						values[node] = value;
+						return;
+					}
+					else
+					{
+						var f = MaxBit(l ^ (r - 1));
+						var nl = l & ~(f | (f - 1));
+						node = ++t;
+						li[node] = nl;
+						ri[node] = nl + (f << 1);
+					}
 				}
-				else
+
+				if (li[node] == l && r == ri[node]) { values[node] += value; return; }
+
+				if (!(li[node] <= l && r <= ri[node]))
 				{
-					var f = MaxBit(l ^ (r - 1));
-					var nl = l & ~(f | (f - 1));
+					var child = node;
+					var nl = li[node] < l ? li[node] : l;
+					var f = MaxBit(nl ^ (ri[node] > r ? ri[node] - 1 : r - 1));
+					nl &= ~(f | (f - 1));
 					node = ++t;
 					li[node] = nl;
 					ri[node] = nl + (f << 1);
+					(li[child] < (nl | f) ? ref ln[node] : ref rn[node]) = child;
 				}
+
+				var nc = li[node] + ri[node] >> 1;
+				if (l < nc) Add(ref ln[node], l, nc < r ? nc : r, value);
+				if (nc < r) Add(ref rn[node], l < nc ? nc : l, r, value);
 			}
-
-			if (li[node] == l && r == ri[node]) { values[node] += value; return; }
-
-			if (!(li[node] <= l && r <= ri[node]))
-			{
-				var child = node;
-				var nl = li[node] < l ? li[node] : l;
-				var f = MaxBit(nl ^ (ri[node] > r ? ri[node] - 1 : r - 1));
-				nl &= ~(f | (f - 1));
-				node = ++t;
-				li[node] = nl;
-				ri[node] = nl + (f << 1);
-				(li[child] < (nl | f) ? ref ln[node] : ref rn[node]) = child;
-			}
-
-			var nc = li[node] + ri[node] >> 1;
-			if (l < nc) Add(ref ln[node], l, nc < r ? nc : r, value);
-			if (nc < r) Add(ref rn[node], l < nc ? nc : l, r, value);
 		}
 
 		public long Get(int key)
@@ -82,9 +83,9 @@ namespace AlgorithmLib10.SegTrees.SegTrees214
 			while (true)
 			{
 				if (node == -1) return v;
+				if (key == li[node] && key + 1 == ri[node]) return v + values[node];
 				if (!(li[node] <= key && key < ri[node])) return v;
 				v += values[node];
-				if (key == li[node] && key + 1 == ri[node]) return v;
 				var nc = li[node] + ri[node] >> 1;
 				node = key < nc ? ln[node] : rn[node];
 			}
@@ -103,9 +104,13 @@ namespace AlgorithmLib10.SegTrees.SegTrees214
 					values[node] = value;
 					return;
 				}
+				else if (key == li[node] && key + 1 == ri[node])
+				{
+					values[node] += value;
+					return;
+				}
 				else if (li[node] <= key && key < ri[node])
 				{
-					if (key == li[node] && key + 1 == ri[node]) { values[node] += value; return; }
 					var nc = li[node] + ri[node] >> 1;
 					node = ref (key < nc ? ref ln[node] : ref rn[node]);
 				}

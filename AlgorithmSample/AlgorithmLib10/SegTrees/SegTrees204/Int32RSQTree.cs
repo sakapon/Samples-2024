@@ -12,7 +12,8 @@ namespace AlgorithmLib10.SegTrees.SegTrees204
 		}
 
 		// [MinIndex, MaxIndex)
-		const int MinIndex = 0, MaxIndex = 1 << 30;
+		const int MinIndex = 0;
+		const int MaxIndex = 1 << 30;
 		Node Root;
 
 		public void Clear() => Root = null;
@@ -42,8 +43,8 @@ namespace AlgorithmLib10.SegTrees.SegTrees204
 			while (true)
 			{
 				if (node == null) return 0;
-				if (!(node.L <= key && key < node.R)) return 0;
 				if (key == node.L && key + 1 == node.R) return node.Value;
+				if (!(node.L <= key && key < node.R)) return 0;
 				var nc = node.L + node.R >> 1;
 				node = key < nc ? node.Left : node.Right;
 			}
@@ -59,10 +60,14 @@ namespace AlgorithmLib10.SegTrees.SegTrees204
 					node = new Node { L = key, R = key + 1, Value = value };
 					return;
 				}
+				else if (key == node.L && key + 1 == node.R)
+				{
+					node.Value += value;
+					return;
+				}
 				else if (node.L <= key && key < node.R)
 				{
 					node.Value += value;
-					if (key == node.L && key + 1 == node.R) return;
 					var nc = node.L + node.R >> 1;
 					node = ref (key < nc ? ref node.Left : ref node.Right);
 				}
