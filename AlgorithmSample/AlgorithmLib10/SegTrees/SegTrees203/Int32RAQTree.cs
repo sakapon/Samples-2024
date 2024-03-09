@@ -1,7 +1,7 @@
 ﻿
-namespace AlgorithmLib10.SegTrees.SegTrees209
+namespace AlgorithmLib10.SegTrees.SegTrees203
 {
-	public class Int32RSQTree
+	public class Int32RAQTree
 	{
 		[System.Diagnostics.DebuggerDisplay(@"[{L}, {R}), Value = {Value}")]
 		public class Node
@@ -19,21 +19,45 @@ namespace AlgorithmLib10.SegTrees.SegTrees209
 		public void Clear() => Root = null;
 
 		public long this[int key] => Get(key);
-		public long this[int l, int r] => Get(l, r);
 
-		public long Get(int l, int r)
+		public void Add(int l, int r, long value)
 		{
 			if (l < MinIndex) l = MinIndex;
 			if (r > MaxIndex) r = MaxIndex;
-			return Get(Root, l, r);
+			Add(ref Root, l, r, value);
 
-			long Get(Node node, int l, int r)
+			void Add(ref Node node, int l, int r, long value)
 			{
-				if (node == null) return 0;
-				if (l <= node.L && node.R <= r) return node.Value;
-				var nc = node.L + node.R >> 1;
-				var v = l < nc ? Get(node.Left, l, nc < r ? nc : r) : 0;
-				return nc < r ? v + Get(node.Right, l < nc ? nc : l, r) : v;
+				if (node == null)
+				{
+					if (l + 1 == r)
+					{
+						node = new Node { L = l, R = r, Value = value };
+						return;
+					}
+					else
+					{
+						var f = MaxBit(l ^ (r - 1));
+						var nl = l & ~(f | (f - 1));
+						node = new Node { L = nl, R = nl + (f << 1) };
+					}
+				}
+
+				if (node.L == l && r == node.R) { node.Value += value; return; }
+
+				if (!(node.L <= l && r <= node.R))
+				{
+					var child = node;
+					var nl = node.L < l ? node.L : l;
+					var f = MaxBit(nl ^ (node.R > r ? node.R - 1 : r - 1));
+					nl &= ~(f | (f - 1));
+					node = new Node { L = nl, R = nl + (f << 1) };
+					(child.L < (nl | f) ? ref node.Left : ref node.Right) = child;
+				}
+
+				var nc = (node.L + node.R) >> 1;
+				if (l < nc) Add(ref node.Left, l, nc < r ? nc : r, value);
+				if (nc < r) Add(ref node.Right, l < nc ? nc : l, r, value);
 			}
 		}
 
@@ -47,7 +71,7 @@ namespace AlgorithmLib10.SegTrees.SegTrees209
 				if (key == node.L && key + 1 == node.R) return node.Value;
 				if (!(node.L <= key && key < node.R)) return 0;
 				var nc = node.L + node.R >> 1;
-				return Get(key < nc ? node.Left : node.Right, key);
+				return Get(key < nc ? node.Left : node.Right, key) + node.Value;
 			}
 		}
 
@@ -67,7 +91,6 @@ namespace AlgorithmLib10.SegTrees.SegTrees209
 				}
 				else if (node.L <= key && key < node.R)
 				{
-					node.Value += value;
 					var nc = node.L + node.R >> 1;
 					Add(ref key < nc ? ref node.Left : ref node.Right, key, value);
 				}
@@ -76,7 +99,7 @@ namespace AlgorithmLib10.SegTrees.SegTrees209
 					var child = node;
 					var f = MaxBit(node.L ^ key);
 					var l = key & ~(f | (f - 1));
-					node = new Node { L = l, R = l + (f << 1), Value = child.Value + value };
+					node = new Node { L = l, R = l + (f << 1) };
 					if (child.L < (l | f))
 					{
 						node.Left = child;

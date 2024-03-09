@@ -1,5 +1,5 @@
 ﻿
-namespace AlgorithmLib10.SegTrees.SegTrees209
+namespace AlgorithmLib10.SegTrees.SegTrees203
 {
 	public static class Monoid
 	{
