@@ -12,7 +12,8 @@ namespace AlgorithmLib10.SegTrees.SegTrees209
 		}
 
 		// [MinIndex, MaxIndex)
-		const int MinIndex = 0, MaxIndex = 1 << 30;
+		const int MinIndex = 0;
+		const int MaxIndex = 1 << 30;
 		Node Root;
 
 		public void Clear() => Root = null;
@@ -25,46 +26,50 @@ namespace AlgorithmLib10.SegTrees.SegTrees209
 			if (l < MinIndex) l = MinIndex;
 			if (r > MaxIndex) r = MaxIndex;
 			return Get(Root, l, r);
-		}
 
-		long Get(Node node, int l, int r)
-		{
-			if (node == null) return 0;
-			if (l <= node.L && node.R <= r) return node.Value;
-			var nc = node.L + node.R >> 1;
-			var v = l < nc ? Get(node.Left, l, nc < r ? nc : r) : 0;
-			return nc < r ? v + Get(node.Right, l < nc ? nc : l, r) : v;
+			long Get(Node node, int l, int r)
+			{
+				if (node == null) return 0;
+				if (l <= node.L && node.R <= r) return node.Value;
+				var nc = node.L + node.R >> 1;
+				var v = l < nc ? Get(node.Left, l, nc < r ? nc : r) : 0;
+				return nc < r ? v + Get(node.Right, l < nc ? nc : l, r) : v;
+			}
 		}
 
 		public long Get(int key)
 		{
-			var node = Root;
-			while (true)
+			return Get(Root, key);
+
+			long Get(Node node, int key)
 			{
 				if (node == null) return 0;
-				if (!(node.L <= key && key < node.R)) return 0;
 				if (key == node.L && key + 1 == node.R) return node.Value;
+				if (!(node.L <= key && key < node.R)) return 0;
 				var nc = node.L + node.R >> 1;
-				node = key < nc ? node.Left : node.Right;
+				return Get(key < nc ? node.Left : node.Right, key);
 			}
 		}
 
 		public void Add(int key, long value)
 		{
-			ref var node = ref Root;
-			while (true)
+			Add(ref Root, key, value);
+
+			void Add(ref Node node, int key, long value)
 			{
 				if (node == null)
 				{
 					node = new Node { L = key, R = key + 1, Value = value };
-					return;
+				}
+				else if (key == node.L && key + 1 == node.R)
+				{
+					node.Value += value;
 				}
 				else if (node.L <= key && key < node.R)
 				{
 					node.Value += value;
-					if (key == node.L && key + 1 == node.R) return;
 					var nc = node.L + node.R >> 1;
-					node = ref (key < nc ? ref node.Left : ref node.Right);
+					Add(ref key < nc ? ref node.Left : ref node.Right, key, value);
 				}
 				else
 				{
@@ -75,12 +80,12 @@ namespace AlgorithmLib10.SegTrees.SegTrees209
 					if (child.L < (l | f))
 					{
 						node.Left = child;
-						node = ref node.Right;
+						Add(ref node.Right, key, value);
 					}
 					else
 					{
 						node.Right = child;
-						node = ref node.Left;
+						Add(ref node.Left, key, value);
 					}
 				}
 			}
