@@ -33,16 +33,54 @@ namespace AlgorithmLib10.SegTrees.SegTrees204
 		{
 			if (l < MinIndex) l = MinIndex;
 			if (r > MaxIndex) r = MaxIndex;
-			return Get(Root, l, r);
-		}
 
-		TValue Get(Node node, int l, int r)
-		{
-			if (node == null) return iv;
-			if (l <= node.L && node.R <= r) return node.Value;
-			var nc = node.L + node.R >> 1;
-			var v = l < nc ? Get(node.Left, l, nc < r ? nc : r) : iv;
-			return nc < r ? op(v, Get(node.Right, l < nc ? nc : l, r)) : v;
+			var node = Root;
+			while (true)
+			{
+				if (node == null) return iv;
+				if (l <= node.L && node.R <= r) return node.Value;
+				var nc = node.L + node.R >> 1;
+				if (r <= nc) node = node.Left;
+				else if (nc <= l) node = node.Right;
+				else break;
+			}
+
+			var (vl, vr) = (iv, iv);
+			var rn = node.Right;
+			node = node.Left;
+			while (true)
+			{
+				if (node == null) break;
+				if (l <= node.L) { vl = op(node.Value, vl); break; }
+
+				if (l < node.L + node.R >> 1)
+				{
+					if (node.Right != null) vl = op(node.Right.Value, vl);
+					node = node.Left;
+				}
+				else
+				{
+					node = node.Right;
+				}
+			}
+
+			node = rn;
+			while (true)
+			{
+				if (node == null) break;
+				if (node.R <= r) { vr = op(vr, node.Value); break; }
+
+				if (node.L + node.R >> 1 < r)
+				{
+					if (node.Left != null) vr = op(vr, node.Left.Value);
+					node = node.Right;
+				}
+				else
+				{
+					node = node.Left;
+				}
+			}
+			return op(vl, vr);
 		}
 
 		public TValue Get(int key)

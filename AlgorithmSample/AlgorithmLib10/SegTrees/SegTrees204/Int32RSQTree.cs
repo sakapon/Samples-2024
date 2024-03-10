@@ -25,16 +25,54 @@ namespace AlgorithmLib10.SegTrees.SegTrees204
 		{
 			if (l < MinIndex) l = MinIndex;
 			if (r > MaxIndex) r = MaxIndex;
-			return Get(Root, l, r);
-		}
 
-		long Get(Node node, int l, int r)
-		{
-			if (node == null) return 0;
-			if (l <= node.L && node.R <= r) return node.Value;
-			var nc = node.L + node.R >> 1;
-			var v = l < nc ? Get(node.Left, l, nc < r ? nc : r) : 0;
-			return nc < r ? v + Get(node.Right, l < nc ? nc : l, r) : v;
+			var node = Root;
+			while (true)
+			{
+				if (node == null) return 0;
+				if (l <= node.L && node.R <= r) return node.Value;
+				var nc = node.L + node.R >> 1;
+				if (r <= nc) node = node.Left;
+				else if (nc <= l) node = node.Right;
+				else break;
+			}
+
+			var v = 0L;
+			var rn = node.Right;
+			node = node.Left;
+			while (true)
+			{
+				if (node == null) break;
+				if (l <= node.L) { v += node.Value; break; }
+
+				if (l < node.L + node.R >> 1)
+				{
+					if (node.Right != null) v += node.Right.Value;
+					node = node.Left;
+				}
+				else
+				{
+					node = node.Right;
+				}
+			}
+
+			node = rn;
+			while (true)
+			{
+				if (node == null) break;
+				if (node.R <= r) { v += node.Value; break; }
+
+				if (node.L + node.R >> 1 < r)
+				{
+					if (node.Left != null) v += node.Left.Value;
+					node = node.Right;
+				}
+				else
+				{
+					node = node.Left;
+				}
+			}
+			return v;
 		}
 
 		public long Get(int key)
