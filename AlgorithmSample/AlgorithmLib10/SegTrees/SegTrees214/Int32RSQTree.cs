@@ -33,16 +33,54 @@ namespace AlgorithmLib10.SegTrees.SegTrees214
 		{
 			if (l < MinIndex) l = MinIndex;
 			if (r > MaxIndex) r = MaxIndex;
-			return Get(Root, l, r);
-		}
 
-		long Get(int node, int l, int r)
-		{
-			if (node == -1) return 0;
-			if (l <= li[node] && ri[node] <= r) return values[node];
-			var nc = li[node] + ri[node] >> 1;
-			var v = l < nc ? Get(ln[node], l, nc < r ? nc : r) : 0;
-			return nc < r ? v + Get(rn[node], l < nc ? nc : l, r) : v;
+			var node = Root;
+			while (true)
+			{
+				if (node == -1) return 0;
+				if (l <= li[node] && ri[node] <= r) return values[node];
+				var nc = li[node] + ri[node] >> 1;
+				if (r <= nc) node = ln[node];
+				else if (nc <= l) node = rn[node];
+				else break;
+			}
+
+			var v = 0L;
+			var tn = rn[node];
+			node = ln[node];
+			while (true)
+			{
+				if (node == -1) break;
+				if (l <= li[node]) { v += values[node]; break; }
+
+				if (l < li[node] + ri[node] >> 1)
+				{
+					if (rn[node] != -1) v += values[rn[node]];
+					node = ln[node];
+				}
+				else
+				{
+					node = rn[node];
+				}
+			}
+
+			node = tn;
+			while (true)
+			{
+				if (node == -1) break;
+				if (ri[node] <= r) { v += values[node]; break; }
+
+				if (li[node] + ri[node] >> 1 < r)
+				{
+					if (ln[node] != -1) v += values[ln[node]];
+					node = rn[node];
+				}
+				else
+				{
+					node = ln[node];
+				}
+			}
+			return v;
 		}
 
 		public long Get(int key)

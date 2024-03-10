@@ -38,7 +38,7 @@ namespace AlgorithmLib10.SegTrees.SegTrees204
 			}
 
 			var v = 0L;
-			var rn = node.Right;
+			var tn = node.Right;
 			node = node.Left;
 			while (true)
 			{
@@ -56,7 +56,7 @@ namespace AlgorithmLib10.SegTrees.SegTrees204
 				}
 			}
 
-			node = rn;
+			node = tn;
 			while (true)
 			{
 				if (node == null) break;
