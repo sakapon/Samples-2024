@@ -33,28 +33,27 @@ namespace AlgorithmLib10.SegTrees.SegTrees103
 			if (l < MinIndex) l = MinIndex;
 			if (r > MaxIndex) r = MaxIndex;
 			return Get(Root, MinIndex, MaxIndex, l, r);
-		}
 
-		TValue Get(Node node, int nl, int nr, int l, int r)
-		{
-			if (node == null) return iv;
-			if (nl == l && nr == r) return node.Value;
-			var nc = nl + nr >> 1;
-			var v = l < nc ? Get(node.Left, nl, nc, l, nc < r ? nc : r) : iv;
-			return nc < r ? op(v, Get(node.Right, nc, nr, l < nc ? nc : l, r)) : v;
+			TValue Get(Node node, int nl, int nr, int l, int r)
+			{
+				if (node == null) return iv;
+				if (nl == l && nr == r) return node.Value;
+				var nc = nl + nr >> 1;
+				var v = l < nc ? Get(node.Left, nl, nc, l, nc < r ? nc : r) : iv;
+				return nc < r ? op(v, Get(node.Right, nc, nr, l < nc ? nc : l, r)) : v;
+			}
 		}
 
 		public TValue Get(int key)
 		{
-			var node = Root;
-			var (nl, nr) = (MinIndex, MaxIndex);
-			while (true)
+			return Get(Root, MinIndex, MaxIndex, key);
+
+			TValue Get(Node node, int nl, int nr, int key)
 			{
 				if (node == null) return iv;
 				if (nl + 1 == nr) return node.Value;
 				var nc = nl + nr >> 1;
-				if (key < nc) { nr = nc; node = node.Left; }
-				else { nl = nc; node = node.Right; }
+				return key < nc ? Get(node.Left, nl, nc, key) : Get(node.Right, nc, nr, key);
 			}
 		}
 
