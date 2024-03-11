@@ -4,7 +4,8 @@ namespace AlgorithmLib10.SegTrees.SegTrees114
 	public class Int32SplitTree<TValue>
 	{
 		// [MinIndex, MaxIndex)
-		const int MinIndex = -1 << 30, MaxIndex = 1 << 30;
+		const int MinIndex = -1 << 30;
+		const int MaxIndex = 1 << 30;
 		readonly Func<TValue, TValue, TValue> op;
 		readonly TValue iv;
 		TValue[] values;

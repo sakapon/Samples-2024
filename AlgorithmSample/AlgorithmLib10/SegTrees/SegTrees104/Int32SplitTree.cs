@@ -11,7 +11,8 @@ namespace AlgorithmLib10.SegTrees.SegTrees104
 		}
 
 		// [MinIndex, MaxIndex)
-		const int MinIndex = -1 << 30, MaxIndex = 1 << 30;
+		const int MinIndex = -1 << 30;
+		const int MaxIndex = 1 << 30;
 		readonly Func<TValue, TValue, TValue> op;
 		readonly TValue iv;
 		Node Root;
