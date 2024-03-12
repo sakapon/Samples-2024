@@ -16,7 +16,7 @@ namespace AlgorithmLib10.SegTrees.SegTrees104
 		readonly Func<TValue, TValue, TValue> op;
 		readonly TValue iv;
 		Node Root;
-		readonly List<Node> Path = new List<Node>();
+		readonly Stack<Node> Path = new Stack<Node>(32);
 
 		public Int32MergeTree(Monoid<TValue> monoid) => (op, iv) = (monoid.Op, monoid.Id);
 		public void Clear() => Root = null;
@@ -60,29 +60,22 @@ namespace AlgorithmLib10.SegTrees.SegTrees104
 
 		public void Set(int key, TValue value)
 		{
-			var node = GetOrAddNode(key);
-			node.Value = value;
-			for (int i = Path.Count - 2; i >= 0; --i)
-			{
-				node = Path[i];
-				var v = node.Left != null ? node.Left.Value : iv;
-				node.Value = node.Right != null ? op(v, node.Right.Value) : v;
-			}
-		}
-
-		Node GetOrAddNode(int key)
-		{
-			Path.Clear();
 			ref var node = ref Root;
 			var (nl, nr) = (MinIndex, MaxIndex);
 			while (true)
 			{
 				node ??= new Node();
-				Path.Add(node);
-				if (nl + 1 == nr) return node;
+				if (nl + 1 == nr) { node.Value = value; break; }
+				Path.Push(node);
 				var nc = nl + nr >> 1;
 				if (key < nc) { nr = nc; node = ref node.Left; }
 				else { nl = nc; node = ref node.Right; }
+			}
+
+			while (Path.TryPop(out var n))
+			{
+				var v = n.Left != null ? n.Left.Value : iv;
+				n.Value = n.Right != null ? op(v, n.Right.Value) : v;
 			}
 		}
 	}
