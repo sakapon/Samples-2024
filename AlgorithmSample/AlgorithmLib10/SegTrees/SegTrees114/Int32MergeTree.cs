@@ -12,7 +12,7 @@ namespace AlgorithmLib10.SegTrees.SegTrees114
 		int[] ln, rn;
 		int t;
 		int Root;
-		readonly List<int> Path = new List<int>();
+		readonly Stack<int> Path = new Stack<int>(32);
 
 		public Int32MergeTree(Monoid<TValue> monoid, int size = 1 << 22)
 		{
@@ -69,29 +69,22 @@ namespace AlgorithmLib10.SegTrees.SegTrees114
 
 		public void Set(int key, TValue value)
 		{
-			var node = GetOrAddNode(key);
-			values[node] = value;
-			for (int i = Path.Count - 2; i >= 0; --i)
-			{
-				node = Path[i];
-				var v = ln[node] != -1 ? values[ln[node]] : iv;
-				values[node] = rn[node] != -1 ? op(v, values[rn[node]]) : v;
-			}
-		}
-
-		int GetOrAddNode(int key)
-		{
-			Path.Clear();
 			ref var node = ref Root;
 			var (nl, nr) = (MinIndex, MaxIndex);
 			while (true)
 			{
 				if (node == -1) node = ++t;
-				Path.Add(node);
-				if (nl + 1 == nr) return node;
+				if (nl + 1 == nr) { values[node] = value; break; }
+				Path.Push(node);
 				var nc = nl + nr >> 1;
 				if (key < nc) { nr = nc; node = ref ln[node]; }
 				else { nl = nc; node = ref rn[node]; }
+			}
+
+			while (Path.TryPop(out var n))
+			{
+				var v = ln[n] != -1 ? values[ln[n]] : iv;
+				values[n] = rn[n] != -1 ? op(v, values[rn[n]]) : v;
 			}
 		}
 	}
