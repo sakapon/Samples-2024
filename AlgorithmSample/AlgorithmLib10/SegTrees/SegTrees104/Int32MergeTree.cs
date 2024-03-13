@@ -33,15 +33,15 @@ namespace AlgorithmLib10.SegTrees.SegTrees104
 			if (l < MinIndex) l = MinIndex;
 			if (r > MaxIndex) r = MaxIndex;
 			return Get(Root, MinIndex, MaxIndex, l, r);
-		}
 
-		TValue Get(Node node, int nl, int nr, int l, int r)
-		{
-			if (node == null) return iv;
-			if (nl == l && nr == r) return node.Value;
-			var nc = nl + nr >> 1;
-			var v = l < nc ? Get(node.Left, nl, nc, l, nc < r ? nc : r) : iv;
-			return nc < r ? op(v, Get(node.Right, nc, nr, l < nc ? nc : l, r)) : v;
+			TValue Get(Node node, int nl, int nr, int l, int r)
+			{
+				if (node == null) return iv;
+				if (nl == l && nr == r) return node.Value;
+				var nc = nl + nr >> 1;
+				var v = l < nc ? Get(node.Left, nl, nc, l, nc < r ? nc : r) : iv;
+				return nc < r ? op(v, Get(node.Right, nc, nr, l < nc ? nc : l, r)) : v;
+			}
 		}
 
 		public TValue Get(int key)
