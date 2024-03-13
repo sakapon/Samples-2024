@@ -30,15 +30,15 @@ namespace AlgorithmLib10.SegTrees.SegTrees114
 			if (l < MinIndex) l = MinIndex;
 			if (r > MaxIndex) r = MaxIndex;
 			Add(ref Root, MinIndex, MaxIndex, l, r, value);
-		}
 
-		void Add(ref int node, int nl, int nr, int l, int r, long value)
-		{
-			if (node == -1) node = ++t;
-			if (nl == l && nr == r) { values[node] += value; return; }
-			var nc = nl + nr >> 1;
-			if (l < nc) Add(ref ln[node], nl, nc, l, nc < r ? nc : r, value);
-			if (nc < r) Add(ref rn[node], nc, nr, l < nc ? nc : l, r, value);
+			void Add(ref int node, int nl, int nr, int l, int r, long value)
+			{
+				if (node == -1) node = ++t;
+				if (nl == l && nr == r) { values[node] += value; return; }
+				var nc = nl + nr >> 1;
+				if (l < nc) Add(ref ln[node], nl, nc, l, nc < r ? nc : r, value);
+				if (nc < r) Add(ref rn[node], nc, nr, l < nc ? nc : l, r, value);
+			}
 		}
 
 		public long Get(int key)

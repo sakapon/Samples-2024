@@ -24,15 +24,15 @@ namespace AlgorithmLib10.SegTrees.SegTrees104
 			if (l < MinIndex) l = MinIndex;
 			if (r > MaxIndex) r = MaxIndex;
 			Add(ref Root, MinIndex, MaxIndex, l, r, value);
-		}
 
-		void Add(ref Node node, int nl, int nr, int l, int r, long value)
-		{
-			node ??= new Node();
-			if (nl == l && nr == r) { node.Value += value; return; }
-			var nc = nl + nr >> 1;
-			if (l < nc) Add(ref node.Left, nl, nc, l, nc < r ? nc : r, value);
-			if (nc < r) Add(ref node.Right, nc, nr, l < nc ? nc : l, r, value);
+			void Add(ref Node node, int nl, int nr, int l, int r, long value)
+			{
+				node ??= new Node();
+				if (nl == l && nr == r) { node.Value += value; return; }
+				var nc = nl + nr >> 1;
+				if (l < nc) Add(ref node.Left, nl, nc, l, nc < r ? nc : r, value);
+				if (nc < r) Add(ref node.Right, nc, nr, l < nc ? nc : l, r, value);
+			}
 		}
 
 		public long Get(int key)
