@@ -171,9 +171,49 @@ namespace AlgorithmLib10.SegTrees.SegTrees203
 			}
 		}
 
+		public int RemoveAt(long index)
+		{
+			if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
+			if (index >= Count) throw new ArgumentOutOfRangeException(nameof(index));
+			return Remove(Root, index);
+
+			int Remove(Node node, long index)
+			{
+				if (node.Left == null && node.Right == null) { node.Value = 0; return node.L; }
+				--node.Value;
+				var lc = node.Left?.Value ?? 0;
+				return index < lc ? Remove(node.Left, index) : Remove(node.Right, index - lc);
+			}
+		}
+
 		public int GetFirst() => GetAt(0);
 		public int GetLast() => GetAt(Count - 1);
 		public int GetFirstGeq(int key) => GetAt(GetFirstIndexGeq(key));
 		public int GetLastLeq(int key) => GetAt(GetLastIndexLeq(key));
+
+		public int RemoveFirst() => RemoveAt(0);
+		public int RemoveLast() => RemoveAt(Count - 1);
+		public int RemoveFirstGeq(int key) => RemoveAt(GetFirstIndexGeq(key));
+		public int RemoveLastLeq(int key) => RemoveAt(GetLastIndexLeq(key));
+
+		public int[] ToArray()
+		{
+			var r = new int[Count];
+			var i = -1;
+			Get(Root);
+			return r;
+
+			void Get(Node node)
+			{
+				if (node == null) return;
+				if (node.Left == null && node.Right == null)
+				{
+					if (node.Value != 0) r[++i] = node.L;
+					return;
+				}
+				Get(node.Left);
+				Get(node.Right);
+			}
+		}
 	}
 }
