@@ -173,8 +173,8 @@ namespace AlgorithmLib10.SegTrees.SegTrees203
 
 		public int RemoveAt(long index)
 		{
-			if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
-			if (index >= Count) throw new ArgumentOutOfRangeException(nameof(index));
+			if (index < 0) return int.MinValue;
+			if (index >= Count) return int.MaxValue;
 			return Remove(Root, index);
 
 			int Remove(Node node, long index)
