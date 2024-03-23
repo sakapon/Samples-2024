@@ -3,19 +3,19 @@ namespace AlgorithmLib10.SegTrees.SegTrees203
 {
 	public class Int32TreeMultiSet
 	{
-		[System.Diagnostics.DebuggerDisplay(@"[{L}, {R}), Value = {Value}")]
+		[System.Diagnostics.DebuggerDisplay(@"[{L}, {R}), Count = {Count}")]
 		public class Node
 		{
 			public int L, R;
 			public Node Left, Right;
-			public long Value;
+			public long Count;
 		}
 
 		// [MinIndex, MaxIndex)
 		const int MinIndex = 0;
 		const int MaxIndex = 1 << 30;
 		Node Root;
-		public long Count => Root != null ? Root.Value : 0;
+		public long Count => Root != null ? Root.Count : 0;
 
 		public void Clear() => Root = null;
 
@@ -37,15 +37,15 @@ namespace AlgorithmLib10.SegTrees.SegTrees203
 			{
 				if (node == null)
 				{
-					node = new Node { L = key, R = key + 1, Value = value };
+					node = new Node { L = key, R = key + 1, Count = value };
 				}
 				else if (key == node.L && key + 1 == node.R)
 				{
-					node.Value += value;
+					node.Count += value;
 				}
 				else if (node.L <= key && key < node.R)
 				{
-					node.Value += value;
+					node.Count += value;
 					var nc = node.L + node.R >> 1;
 					Add(ref key < nc ? ref node.Left : ref node.Right, key, value);
 				}
@@ -54,7 +54,7 @@ namespace AlgorithmLib10.SegTrees.SegTrees203
 					var child = node;
 					var f = MaxBit(node.L ^ key);
 					var l = key & ~(f | (f - 1));
-					node = new Node { L = l, R = l + (f << 1), Value = child.Value + value };
+					node = new Node { L = l, R = l + (f << 1), Count = child.Count + value };
 					if (child.L < (l | f))
 					{
 						node.Left = child;
@@ -78,7 +78,7 @@ namespace AlgorithmLib10.SegTrees.SegTrees203
 			long Get(Node node, int l, int r)
 			{
 				if (node == null) return 0;
-				if (l <= node.L && node.R <= r) return node.Value;
+				if (l <= node.L && node.R <= r) return node.Count;
 				var nc = node.L + node.R >> 1;
 				var v = l < nc ? Get(node.Left, l, nc < r ? nc : r) : 0;
 				return nc < r ? v + Get(node.Right, l < nc ? nc : l, r) : v;
@@ -92,7 +92,7 @@ namespace AlgorithmLib10.SegTrees.SegTrees203
 			long Get(Node node, int key)
 			{
 				if (node == null) return 0;
-				if (key == node.L && key + 1 == node.R) return node.Value;
+				if (key == node.L && key + 1 == node.R) return node.Count;
 				if (!(node.L <= key && key < node.R)) return 0;
 				var nc = node.L + node.R >> 1;
 				return Get(key < nc ? node.Left : node.Right, key);
@@ -107,9 +107,9 @@ namespace AlgorithmLib10.SegTrees.SegTrees203
 			{
 				if (node == null) return 0;
 				if (key <= node.L) return 0;
-				if (node.R <= key) return node.Value;
+				if (node.R <= key) return node.Count;
 				var nc = node.L + node.R >> 1;
-				return key < nc ? Get(node.Left, key) : Get(node.Right, key) + (node.Left?.Value ?? 0);
+				return key < nc ? Get(node.Left, key) : Get(node.Right, key) + (node.Left?.Count ?? 0);
 			}
 		}
 		public long GetLastIndexLeq(int key) => GetFirstIndexGeq(key + 1) - 1;
@@ -126,7 +126,7 @@ namespace AlgorithmLib10.SegTrees.SegTrees203
 				var nc = node.L + node.R >> 1;
 				var index = Get(key < nc ? node.Left : node.Right, key);
 				if (index == -1) return -1;
-				if (nc <= key && node.Left != null) index += node.Left.Value;
+				if (nc <= key && node.Left != null) index += node.Left.Count;
 				return index;
 			}
 		}
@@ -140,7 +140,7 @@ namespace AlgorithmLib10.SegTrees.SegTrees203
 			int Get(Node node, long index)
 			{
 				if (node.Left == null && node.Right == null) return node.L;
-				var lc = node.Left?.Value ?? 0;
+				var lc = node.Left?.Count ?? 0;
 				return index < lc ? Get(node.Left, index) : Get(node.Right, index - lc);
 			}
 		}
