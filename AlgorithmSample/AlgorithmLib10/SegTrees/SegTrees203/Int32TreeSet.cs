@@ -161,26 +161,26 @@ namespace AlgorithmLib10.SegTrees.SegTrees203
 		{
 			if (index < 0) return int.MinValue;
 			if (index >= Count) return int.MaxValue;
-			return GetNodeAt(Root, index, false).L;
+			return GetAt(Root, index, false);
 		}
 
 		public int RemoveAt(long index)
 		{
 			if (index < 0) return int.MinValue;
 			if (index >= Count) return int.MaxValue;
-			return GetNodeAt(Root, index, true).L;
+			return GetAt(Root, index, true);
 		}
 
-		Node GetNodeAt(Node node, long index, bool remove)
+		int GetAt(Node node, long index, bool remove)
 		{
 			if (node.Left == null && node.Right == null)
 			{
-				if (remove) node.Count = 0;
-				return node;
+				if (remove) --node.Count;
+				return node.L;
 			}
 			if (remove) --node.Count;
 			var lc = node.Left?.Count ?? 0;
-			return index < lc ? GetNodeAt(node.Left, index, remove) : GetNodeAt(node.Right, index - lc, remove);
+			return index < lc ? GetAt(node.Left, index, remove) : GetAt(node.Right, index - lc, remove);
 		}
 
 		public int GetFirst() => GetAt(0);

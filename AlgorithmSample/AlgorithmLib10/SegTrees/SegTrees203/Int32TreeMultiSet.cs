@@ -135,19 +135,36 @@ namespace AlgorithmLib10.SegTrees.SegTrees203
 		{
 			if (index < 0) return int.MinValue;
 			if (index >= Count) return int.MaxValue;
-			return Get(Root, index);
+			return GetAt(Root, index, false);
+		}
 
-			int Get(Node node, long index)
+		public int RemoveAt(long index)
+		{
+			if (index < 0) return int.MinValue;
+			if (index >= Count) return int.MaxValue;
+			return GetAt(Root, index, true);
+		}
+
+		int GetAt(Node node, long index, bool remove)
+		{
+			if (node.Left == null && node.Right == null)
 			{
-				if (node.Left == null && node.Right == null) return node.L;
-				var lc = node.Left?.Count ?? 0;
-				return index < lc ? Get(node.Left, index) : Get(node.Right, index - lc);
+				if (remove) --node.Count;
+				return node.L;
 			}
+			if (remove) --node.Count;
+			var lc = node.Left?.Count ?? 0;
+			return index < lc ? GetAt(node.Left, index, remove) : GetAt(node.Right, index - lc, remove);
 		}
 
 		public int GetFirst() => GetAt(0);
 		public int GetLast() => GetAt(Count - 1);
 		public int GetFirstGeq(int key) => GetAt(GetFirstIndexGeq(key));
 		public int GetLastLeq(int key) => GetAt(GetLastIndexLeq(key));
+
+		public int RemoveFirst() => RemoveAt(0);
+		public int RemoveLast() => RemoveAt(Count - 1);
+		public int RemoveFirstGeq(int key) => RemoveAt(GetFirstIndexGeq(key));
+		public int RemoveLastLeq(int key) => RemoveAt(GetLastIndexLeq(key));
 	}
 }
