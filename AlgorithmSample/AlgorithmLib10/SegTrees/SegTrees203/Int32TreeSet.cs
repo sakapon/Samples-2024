@@ -29,6 +29,20 @@ namespace AlgorithmLib10.SegTrees.SegTrees203
 			return x ^ (x >> 1);
 		}
 
+		public long GetCount(int key)
+		{
+			return Get(Root, key);
+
+			long Get(Node node, int key)
+			{
+				if (node == null) return 0;
+				if (key == node.L && key + 1 == node.R) return node.Count;
+				if (!(node.L <= key && key < node.R)) return 0;
+				var nc = node.L + node.R >> 1;
+				return Get(key < nc ? node.Left : node.Right, key);
+			}
+		}
+
 		public long GetCount(int l, int r)
 		{
 			if (l < MinIndex) l = MinIndex;
@@ -178,19 +192,7 @@ namespace AlgorithmLib10.SegTrees.SegTrees203
 			}
 		}
 
-		public bool Contains(int key)
-		{
-			return Get(Root, key);
-
-			bool Get(Node node, int key)
-			{
-				if (node == null) return false;
-				if (key == node.L && key + 1 == node.R) return node.Count != 0;
-				if (!(node.L <= key && key < node.R)) return false;
-				var nc = node.L + node.R >> 1;
-				return Get(key < nc ? node.Left : node.Right, key);
-			}
-		}
+		public bool Contains(int key) => GetCount(key) != 0;
 
 		public int[] ToArray()
 		{
@@ -252,20 +254,6 @@ namespace AlgorithmLib10.SegTrees.SegTrees203
 						Add(ref node.Left, key, value);
 					}
 				}
-			}
-		}
-
-		public long GetCount(int key)
-		{
-			return Get(Root, key);
-
-			long Get(Node node, int key)
-			{
-				if (node == null) return 0;
-				if (key == node.L && key + 1 == node.R) return node.Count;
-				if (!(node.L <= key && key < node.R)) return 0;
-				var nc = node.L + node.R >> 1;
-				return Get(key < nc ? node.Left : node.Right, key);
 			}
 		}
 
