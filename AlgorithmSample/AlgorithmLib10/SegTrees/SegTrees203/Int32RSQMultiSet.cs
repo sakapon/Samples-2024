@@ -15,13 +15,11 @@ namespace AlgorithmLib10.SegTrees.SegTrees203
 		const int MinIndex = 0;
 		const int MaxIndex = 1 << 30;
 		Node Root;
+		public long Count => Root != null ? Root.Value : 0;
 
 		public void Clear() => Root = null;
 
-		public long this[int key] => Get(key);
-		public long this[int l, int r] => Get(l, r);
-
-		public long Get(int l, int r)
+		public long GetCount(int l, int r)
 		{
 			if (l < MinIndex) l = MinIndex;
 			if (r > MaxIndex) r = MaxIndex;
@@ -37,7 +35,7 @@ namespace AlgorithmLib10.SegTrees.SegTrees203
 			}
 		}
 
-		public long Get(int key)
+		public long GetCount(int key)
 		{
 			return Get(Root, key);
 
@@ -51,7 +49,7 @@ namespace AlgorithmLib10.SegTrees.SegTrees203
 			}
 		}
 
-		public void Add(int key, long value)
+		public void Add(int key, long value = 1)
 		{
 			Add(ref Root, key, value);
 
@@ -100,5 +98,56 @@ namespace AlgorithmLib10.SegTrees.SegTrees203
 			x |= x >> 16;
 			return x ^ (x >> 1);
 		}
+
+		public long GetFirstIndexGeq(int key)
+		{
+			return Get(Root, key);
+
+			long Get(Node node, int key)
+			{
+				if (node == null) return 0;
+				if (key <= node.L) return 0;
+				if (node.R <= key) return node.Value;
+				var nc = node.L + node.R >> 1;
+				return key < nc ? Get(node.Left, key) : Get(node.Right, key) + (node.Left?.Value ?? 0);
+			}
+		}
+		public long GetLastIndexLeq(int key) => GetFirstIndexGeq(key + 1) - 1;
+
+		public long GetIndex(int key)
+		{
+			return Get(Root, key);
+
+			long Get(Node node, int key)
+			{
+				if (node == null) return -1;
+				if (key == node.L && key + 1 == node.R) return 0;
+				if (!(node.L <= key && key < node.R)) return -1;
+				var nc = node.L + node.R >> 1;
+				var index = Get(key < nc ? node.Left : node.Right, key);
+				if (index == -1) return -1;
+				if (nc <= key && node.Left != null) index += node.Left.Value;
+				return index;
+			}
+		}
+
+		public int GetAt(long index)
+		{
+			if (index < 0) return int.MinValue;
+			if (index >= Count) return int.MaxValue;
+			return Get(Root, index);
+
+			int Get(Node node, long index)
+			{
+				if (node.Left == null && node.Right == null) return node.L;
+				var lc = node.Left?.Value ?? 0;
+				return index < lc ? Get(node.Left, index) : Get(node.Right, index - lc);
+			}
+		}
+
+		public int GetFirst() => GetAt(0);
+		public int GetLast() => GetAt(Count - 1);
+		public int GetFirstGeq(int key) => GetAt(GetFirstIndexGeq(key));
+		public int GetLastLeq(int key) => GetAt(GetLastIndexLeq(key));
 	}
 }
