@@ -29,6 +29,27 @@ namespace AlgorithmLib10.SegTrees.SegTrees203
 			return x ^ (x >> 1);
 		}
 
+		protected bool RemoveInternal(int key, long count)
+		{
+			return Remove(Root, key);
+
+			bool Remove(Node node, int key)
+			{
+				if (node == null) return false;
+				if (key == node.L && key + 1 == node.R)
+				{
+					if (node.Count < count) return false;
+					node.Count -= count;
+					return true;
+				}
+				if (!(node.L <= key && key < node.R)) return false;
+				var nc = node.L + node.R >> 1;
+				var b = Remove(key < nc ? node.Left : node.Right, key);
+				if (b) node.Count -= count;
+				return b;
+			}
+		}
+
 		public long GetCount(int key)
 		{
 			return Get(Root, key);
@@ -171,27 +192,7 @@ namespace AlgorithmLib10.SegTrees.SegTrees203
 			}
 		}
 
-		public bool Remove(int key)
-		{
-			return Remove(ref Root, key);
-
-			bool Remove(ref Node node, int key)
-			{
-				if (node == null) return false;
-				if (key == node.L && key + 1 == node.R)
-				{
-					if (node.Count == 0) return false;
-					node.Count = 0;
-					return true;
-				}
-				if (!(node.L <= key && key < node.R)) return false;
-				var nc = node.L + node.R >> 1;
-				var b = Remove(ref key < nc ? ref node.Left : ref node.Right, key);
-				if (b) --node.Count;
-				return b;
-			}
-		}
-
+		public bool Remove(int key) => RemoveInternal(key, 1);
 		public bool Contains(int key) => GetCount(key) != 0;
 
 		public int[] ToArray()
@@ -256,6 +257,8 @@ namespace AlgorithmLib10.SegTrees.SegTrees203
 				}
 			}
 		}
+
+		public bool Remove(int key, long count = 1) => RemoveInternal(key, count);
 
 		public int[] ToArray()
 		{
