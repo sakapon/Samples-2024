@@ -11,7 +11,7 @@ namespace OnlineTest10.SegTrees.SetTest04
 		{
 			var qc = int.Parse(Console.ReadLine());
 
-			var set = new Int32SetTree();
+			var set = new Int32TreeSet();
 
 			Console.SetOut(new System.IO.StreamWriter(Console.OpenStandardOutput()) { AutoFlush = false });
 			while (qc-- > 0)

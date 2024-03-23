@@ -1,7 +1,7 @@
 ﻿
 namespace AlgorithmLib10.SegTrees.SegTrees203
 {
-	public class Int32SetTree
+	public class Int32TreeSet
 	{
 		[System.Diagnostics.DebuggerDisplay(@"[{L}, {R}), Value = {Value}")]
 		public class Node

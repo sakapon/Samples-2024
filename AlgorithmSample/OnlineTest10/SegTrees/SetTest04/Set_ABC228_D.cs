@@ -15,7 +15,7 @@ namespace OnlineTest10.SegTrees.SetTest04
 			var a = new long[n];
 			Array.Fill(a, -1);
 
-			var set = new Int32SetTree();
+			var set = new Int32TreeSet();
 			for (int i = 0; i < n; i++)
 				set.Add(i);
 

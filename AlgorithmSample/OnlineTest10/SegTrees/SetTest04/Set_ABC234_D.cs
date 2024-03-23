@@ -14,7 +14,7 @@ namespace OnlineTest10.SegTrees.SetTest04
 			var p = Read();
 
 			var r = new int[n - k + 1];
-			var set = new Int32SetTree();
+			var set = new Int32TreeSet();
 
 			for (int i = 1; i <= n; i++)
 			{
