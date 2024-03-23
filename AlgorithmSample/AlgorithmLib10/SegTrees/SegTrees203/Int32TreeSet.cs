@@ -173,12 +173,8 @@ namespace AlgorithmLib10.SegTrees.SegTrees203
 
 		int GetAt(Node node, long index, bool remove)
 		{
-			if (node.Left == null && node.Right == null)
-			{
-				if (remove) --node.Count;
-				return node.L;
-			}
 			if (remove) --node.Count;
+			if (node.Left == null && node.Right == null) return node.L;
 			var lc = node.Left?.Count ?? 0;
 			return index < lc ? GetAt(node.Left, index, remove) : GetAt(node.Right, index - lc, remove);
 		}

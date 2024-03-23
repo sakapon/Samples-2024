@@ -147,12 +147,8 @@ namespace AlgorithmLib10.SegTrees.SegTrees203
 
 		int GetAt(Node node, long index, bool remove)
 		{
-			if (node.Left == null && node.Right == null)
-			{
-				if (remove) --node.Count;
-				return node.L;
-			}
 			if (remove) --node.Count;
+			if (node.Left == null && node.Right == null) return node.L;
 			var lc = node.Left?.Count ?? 0;
 			return index < lc ? GetAt(node.Left, index, remove) : GetAt(node.Right, index - lc, remove);
 		}
@@ -166,5 +162,45 @@ namespace AlgorithmLib10.SegTrees.SegTrees203
 		public int RemoveLast() => RemoveAt(Count - 1);
 		public int RemoveFirstGeq(int key) => RemoveAt(GetFirstIndexGeq(key));
 		public int RemoveLastLeq(int key) => RemoveAt(GetLastIndexLeq(key));
+
+		public int[] ToArray()
+		{
+			var r = new int[Count];
+			var i = -1;
+			Get(Root);
+			return r;
+
+			void Get(Node node)
+			{
+				if (node == null) return;
+				if (node.Left == null && node.Right == null)
+				{
+					var c = node.Count;
+					while (c-- > 0) r[++i] = node.L;
+					return;
+				}
+				Get(node.Left);
+				Get(node.Right);
+			}
+		}
+
+		public (int key, long count)[] ToKeyCountArray()
+		{
+			var r = new List<(int, long)>();
+			Get(Root);
+			return r.ToArray();
+
+			void Get(Node node)
+			{
+				if (node == null) return;
+				if (node.Left == null && node.Right == null)
+				{
+					if (node.Count != 0) r.Add((node.L, node.Count));
+					return;
+				}
+				Get(node.Left);
+				Get(node.Right);
+			}
+		}
 	}
 }
