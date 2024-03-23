@@ -25,7 +25,7 @@ namespace OnlineTest10.SegTrees.SetTest04
 					var x = q[1];
 					var c = q[2];
 					var xc = set.GetCount(x);
-					set.Add(x, -Math.Min(c, xc));
+					set.Remove(x, Math.Min(c, xc));
 				}
 				else
 				{
