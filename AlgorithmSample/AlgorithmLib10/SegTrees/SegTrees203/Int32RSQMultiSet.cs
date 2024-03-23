@@ -19,34 +19,14 @@ namespace AlgorithmLib10.SegTrees.SegTrees203
 
 		public void Clear() => Root = null;
 
-		public long GetCount(int l, int r)
+		static int MaxBit(int x)
 		{
-			if (l < MinIndex) l = MinIndex;
-			if (r > MaxIndex) r = MaxIndex;
-			return Get(Root, l, r);
-
-			long Get(Node node, int l, int r)
-			{
-				if (node == null) return 0;
-				if (l <= node.L && node.R <= r) return node.Value;
-				var nc = node.L + node.R >> 1;
-				var v = l < nc ? Get(node.Left, l, nc < r ? nc : r) : 0;
-				return nc < r ? v + Get(node.Right, l < nc ? nc : l, r) : v;
-			}
-		}
-
-		public long GetCount(int key)
-		{
-			return Get(Root, key);
-
-			long Get(Node node, int key)
-			{
-				if (node == null) return 0;
-				if (key == node.L && key + 1 == node.R) return node.Value;
-				if (!(node.L <= key && key < node.R)) return 0;
-				var nc = node.L + node.R >> 1;
-				return Get(key < nc ? node.Left : node.Right, key);
-			}
+			x |= x >> 1;
+			x |= x >> 2;
+			x |= x >> 4;
+			x |= x >> 8;
+			x |= x >> 16;
+			return x ^ (x >> 1);
 		}
 
 		public void Add(int key, long value = 1)
@@ -89,14 +69,34 @@ namespace AlgorithmLib10.SegTrees.SegTrees203
 			}
 		}
 
-		static int MaxBit(int x)
+		public long GetCount(int l, int r)
 		{
-			x |= x >> 1;
-			x |= x >> 2;
-			x |= x >> 4;
-			x |= x >> 8;
-			x |= x >> 16;
-			return x ^ (x >> 1);
+			if (l < MinIndex) l = MinIndex;
+			if (r > MaxIndex) r = MaxIndex;
+			return Get(Root, l, r);
+
+			long Get(Node node, int l, int r)
+			{
+				if (node == null) return 0;
+				if (l <= node.L && node.R <= r) return node.Value;
+				var nc = node.L + node.R >> 1;
+				var v = l < nc ? Get(node.Left, l, nc < r ? nc : r) : 0;
+				return nc < r ? v + Get(node.Right, l < nc ? nc : l, r) : v;
+			}
+		}
+
+		public long GetCount(int key)
+		{
+			return Get(Root, key);
+
+			long Get(Node node, int key)
+			{
+				if (node == null) return 0;
+				if (key == node.L && key + 1 == node.R) return node.Value;
+				if (!(node.L <= key && key < node.R)) return 0;
+				var nc = node.L + node.R >> 1;
+				return Get(key < nc ? node.Left : node.Right, key);
+			}
 		}
 
 		public long GetFirstIndexGeq(int key)
