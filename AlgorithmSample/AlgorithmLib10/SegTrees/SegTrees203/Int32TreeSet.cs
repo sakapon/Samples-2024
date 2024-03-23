@@ -32,9 +32,9 @@ namespace AlgorithmLib10.SegTrees.SegTrees203
 		protected bool AddInternal(int key, long count, long maxCount)
 		{
 			if (count == 0) return true;
-			return Add(ref Root, key);
+			return Add(ref Root);
 
-			bool Add(ref Node node, int key)
+			bool Add(ref Node node)
 			{
 				if (node == null)
 				{
@@ -50,7 +50,7 @@ namespace AlgorithmLib10.SegTrees.SegTrees203
 				else if (node.L <= key && key < node.R)
 				{
 					var nc = node.L + node.R >> 1;
-					var b = Add(ref key < nc ? ref node.Left : ref node.Right, key);
+					var b = Add(ref key < nc ? ref node.Left : ref node.Right);
 					if (b) node.Count += count;
 					return b;
 				}
@@ -63,12 +63,12 @@ namespace AlgorithmLib10.SegTrees.SegTrees203
 					if (child.L < (l | f))
 					{
 						node.Left = child;
-						Add(ref node.Right, key);
+						Add(ref node.Right);
 					}
 					else
 					{
 						node.Right = child;
-						Add(ref node.Left, key);
+						Add(ref node.Left);
 					}
 					return true;
 				}
@@ -78,9 +78,9 @@ namespace AlgorithmLib10.SegTrees.SegTrees203
 		protected bool RemoveInternal(int key, long count)
 		{
 			if (count == 0) return true;
-			return Remove(Root, key);
+			return Remove(Root);
 
-			bool Remove(Node node, int key)
+			bool Remove(Node node)
 			{
 				if (node == null) return false;
 				if (key == node.L && key + 1 == node.R)
@@ -91,7 +91,7 @@ namespace AlgorithmLib10.SegTrees.SegTrees203
 				}
 				if (!(node.L <= key && key < node.R)) return false;
 				var nc = node.L + node.R >> 1;
-				var b = Remove(key < nc ? node.Left : node.Right, key);
+				var b = Remove(key < nc ? node.Left : node.Right);
 				if (b) node.Count -= count;
 				return b;
 			}
@@ -99,15 +99,15 @@ namespace AlgorithmLib10.SegTrees.SegTrees203
 
 		public long GetCount(int key)
 		{
-			return Get(Root, key);
+			return Get(Root);
 
-			long Get(Node node, int key)
+			long Get(Node node)
 			{
 				if (node == null) return 0;
 				if (key == node.L && key + 1 == node.R) return node.Count;
 				if (!(node.L <= key && key < node.R)) return 0;
 				var nc = node.L + node.R >> 1;
-				return Get(key < nc ? node.Left : node.Right, key);
+				return Get(key < nc ? node.Left : node.Right);
 			}
 		}
 
@@ -129,30 +129,30 @@ namespace AlgorithmLib10.SegTrees.SegTrees203
 
 		public long GetFirstIndexGeq(int key)
 		{
-			return Get(Root, key);
+			return Get(Root);
 
-			long Get(Node node, int key)
+			long Get(Node node)
 			{
 				if (node == null) return 0;
 				if (key <= node.L) return 0;
 				if (node.R <= key) return node.Count;
 				var nc = node.L + node.R >> 1;
-				return key < nc ? Get(node.Left, key) : Get(node.Right, key) + (node.Left?.Count ?? 0);
+				return key < nc ? Get(node.Left) : Get(node.Right) + (node.Left?.Count ?? 0);
 			}
 		}
 		public long GetLastIndexLeq(int key) => GetFirstIndexGeq(key + 1) - 1;
 
 		public long GetIndex(int key)
 		{
-			return Get(Root, key);
+			return Get(Root);
 
-			long Get(Node node, int key)
+			long Get(Node node)
 			{
 				if (node == null) return -1;
 				if (key == node.L && key + 1 == node.R) return 0;
 				if (!(node.L <= key && key < node.R)) return -1;
 				var nc = node.L + node.R >> 1;
-				var index = Get(key < nc ? node.Left : node.Right, key);
+				var index = Get(key < nc ? node.Left : node.Right);
 				if (index == -1) return -1;
 				if (nc <= key && node.Left != null) index += node.Left.Count;
 				return index;
