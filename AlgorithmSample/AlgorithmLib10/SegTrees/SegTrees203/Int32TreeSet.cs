@@ -19,7 +19,7 @@ namespace AlgorithmLib10.SegTrees.SegTrees203
 
 		public void Clear() => Root = null;
 
-		protected static int MaxBit(int x)
+		static int MaxBit(int x)
 		{
 			x |= x >> 1;
 			x |= x >> 2;
