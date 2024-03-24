@@ -99,15 +99,14 @@ namespace AlgorithmLib10.SegTrees.SegTrees204
 
 		public long GetCount(int key)
 		{
-			return Get(Root);
-
-			long Get(Node node)
+			var node = Root;
+			while (true)
 			{
 				if (node == null) return 0;
 				if (key == node.L && key + 1 == node.R) return node.Count;
 				if (!(node.L <= key && key < node.R)) return 0;
 				var nc = node.L + node.R >> 1;
-				return Get(key < nc ? node.Left : node.Right);
+				node = key < nc ? node.Left : node.Right;
 			}
 		}
 
@@ -129,56 +128,73 @@ namespace AlgorithmLib10.SegTrees.SegTrees204
 
 		public long GetFirstIndexGeq(int key)
 		{
-			return Get(Root);
-
-			long Get(Node node)
+			var node = Root;
+			var index = 0L;
+			while (true)
 			{
-				if (node == null) return 0;
-				if (key <= node.L) return 0;
-				if (node.R <= key) return node.Count;
+				if (node == null) return index;
+				if (key <= node.L) return index;
+				if (node.R <= key) return index + node.Count;
 				var nc = node.L + node.R >> 1;
-				return key < nc ? Get(node.Left) : Get(node.Right) + (node.Left?.Count ?? 0);
+				if (key < nc)
+				{
+					node = node.Left;
+				}
+				else
+				{
+					if (node.Left != null) index += node.Left.Count;
+					node = node.Right;
+				}
 			}
 		}
 		public long GetLastIndexLeq(int key) => GetFirstIndexGeq(key + 1) - 1;
 
 		public long GetIndex(int key)
 		{
-			return Get(Root);
-
-			long Get(Node node)
+			var node = Root;
+			var index = 0L;
+			while (true)
 			{
 				if (node == null) return -1;
-				if (key == node.L && key + 1 == node.R) return 0;
+				if (key == node.L && key + 1 == node.R) return index;
 				if (!(node.L <= key && key < node.R)) return -1;
 				var nc = node.L + node.R >> 1;
-				var index = Get(key < nc ? node.Left : node.Right);
-				if (index == -1) return -1;
-				if (nc <= key && node.Left != null) index += node.Left.Count;
-				return index;
+				if (key < nc)
+				{
+					node = node.Left;
+				}
+				else
+				{
+					if (node.Left != null) index += node.Left.Count;
+					node = node.Right;
+				}
 			}
 		}
 
-		public int GetAt(long index)
+		public int GetAt(long index) => GetAt(index, false);
+		public int RemoveAt(long index) => GetAt(index, true);
+
+		int GetAt(long index, bool remove)
 		{
 			if (index < 0) return int.MinValue;
 			if (index >= Count) return int.MaxValue;
-			return GetAt(Root, index, false);
-		}
 
-		public int RemoveAt(long index)
-		{
-			if (index < 0) return int.MinValue;
-			if (index >= Count) return int.MaxValue;
-			return GetAt(Root, index, true);
-		}
-
-		int GetAt(Node node, long index, bool remove)
-		{
-			if (remove) --node.Count;
-			if (node.Left == null && node.Right == null) return node.L;
-			var lc = node.Left?.Count ?? 0;
-			return index < lc ? GetAt(node.Left, index, remove) : GetAt(node.Right, index - lc, remove);
+			var node = Root;
+			while (true)
+			{
+				if (remove) --node.Count;
+				if (node.Left == null && node.Right == null) return node.L;
+				var lc = node.Left?.Count ?? 0;
+				if (index < lc)
+				{
+					node = node.Left;
+				}
+				else
+				{
+					node = node.Right;
+					index -= lc;
+				}
+			}
 		}
 
 		public int GetFirst() => GetAt(0);
