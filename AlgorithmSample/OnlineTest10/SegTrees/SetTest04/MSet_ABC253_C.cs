@@ -1,4 +1,4 @@
-using AlgorithmLib10.SegTrees.SegTrees203;
+using AlgorithmLib10.SegTrees.SegTrees204;
 
 namespace OnlineTest10.SegTrees.SetTest04
 {
