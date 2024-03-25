@@ -7,13 +7,14 @@ namespace AlgorithmLib10.SegTrees.SegTrees304
 		public class Node
 		{
 			public int L, R;
-			public Node Left, Right;
+			public Node Left, Right, Parent;
 			public long Count;
 		}
 
 		// [MinIndex, MaxIndex)
 		public const int MinIndex = 0;
 		public const int MaxIndex = 1 << 30;
+		protected Dictionary<int, Node> Leaves = new Dictionary<int, Node>();
 		protected Node Root;
 		public long Count => Root != null ? Root.Count : 0;
 
@@ -32,13 +33,14 @@ namespace AlgorithmLib10.SegTrees.SegTrees304
 		protected bool AddInternal(int key, long count, long maxCount)
 		{
 			if (count == 0) return true;
-			return Add(ref Root);
+			return Add(ref Root, null);
 
-			bool Add(ref Node node)
+			bool Add(ref Node node, Node p)
 			{
 				if (node == null)
 				{
-					node = new Node { L = key, R = key + 1, Count = count };
+					node = new Node { L = key, R = key + 1, Count = count, Parent = p };
+					Leaves[key] = node;
 					return true;
 				}
 				else if (key == node.L && key + 1 == node.R)
@@ -50,7 +52,7 @@ namespace AlgorithmLib10.SegTrees.SegTrees304
 				else if (node.L <= key && key < node.R)
 				{
 					var nc = node.L + node.R >> 1;
-					var b = Add(ref key < nc ? ref node.Left : ref node.Right);
+					var b = Add(ref key < nc ? ref node.Left : ref node.Right, node);
 					if (b) node.Count += count;
 					return b;
 				}
@@ -59,16 +61,17 @@ namespace AlgorithmLib10.SegTrees.SegTrees304
 					var child = node;
 					var f = MaxBit(node.L ^ key);
 					var l = key & ~(f | (f - 1));
-					node = new Node { L = l, R = l + (f << 1), Count = child.Count + count };
+					node = new Node { L = l, R = l + (f << 1), Count = child.Count + count, Parent = p };
+					child.Parent = node;
 					if (child.L < (l | f))
 					{
 						node.Left = child;
-						Add(ref node.Right);
+						Add(ref node.Right, node);
 					}
 					else
 					{
 						node.Right = child;
-						Add(ref node.Left);
+						Add(ref node.Left, node);
 					}
 					return true;
 				}
@@ -78,37 +81,13 @@ namespace AlgorithmLib10.SegTrees.SegTrees304
 		protected bool RemoveInternal(int key, long count)
 		{
 			if (count == 0) return true;
-			return Remove(Root);
-
-			bool Remove(Node node)
-			{
-				if (node == null) return false;
-				if (key == node.L && key + 1 == node.R)
-				{
-					if (node.Count < count) return false;
-					node.Count -= count;
-					return true;
-				}
-				if (!(node.L <= key && key < node.R)) return false;
-				var nc = node.L + node.R >> 1;
-				var b = Remove(key < nc ? node.Left : node.Right);
-				if (b) node.Count -= count;
-				return b;
-			}
+			if (!Leaves.TryGetValue(key, out var node)) return false;
+			if (node.Count < count) return false;
+			for (; node != null; node = node.Parent) node.Count -= count;
+			return true;
 		}
 
-		public long GetCount(int key)
-		{
-			var node = Root;
-			while (true)
-			{
-				if (node == null) return 0;
-				if (key == node.L && key + 1 == node.R) return node.Count;
-				if (!(node.L <= key && key < node.R)) return 0;
-				var nc = node.L + node.R >> 1;
-				node = key < nc ? node.Left : node.Right;
-			}
-		}
+		public long GetCount(int key) => Leaves.TryGetValue(key, out var node) ? node.Count : 0;
 
 		public long GetCount(int l, int r)
 		{
@@ -151,24 +130,12 @@ namespace AlgorithmLib10.SegTrees.SegTrees304
 
 		public long GetIndex(int key)
 		{
-			var node = Root;
+			if (!Leaves.TryGetValue(key, out var node)) return -1;
+			if (node.Count == 0) return -1;
 			var index = 0L;
-			while (true)
-			{
-				if (node == null) return -1;
-				if (key == node.L && key + 1 == node.R) return index;
-				if (!(node.L <= key && key < node.R)) return -1;
-				var nc = node.L + node.R >> 1;
-				if (key < nc)
-				{
-					node = node.Left;
-				}
-				else
-				{
-					if (node.Left != null) index += node.Left.Count;
-					node = node.Right;
-				}
-			}
+			for (var p = node.Parent; p != null; (node, p) = (p, p.Parent))
+				if (p.Right == node && p.Left != null) index += p.Left.Count;
+			return index;
 		}
 
 		public int GetAt(long index) => GetAt(index, false);
