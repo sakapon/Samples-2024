@@ -16,5 +16,15 @@ namespace OnlineTest10.SegTrees.SetTest04
 				if (!set.Add(x)) set.Remove(x);
 			return set.Count;
 		}
+
+		static object Solve2()
+		{
+			var n = int.Parse(Console.ReadLine());
+			var a = Array.ConvertAll(new bool[n], _ => int.Parse(Console.ReadLine()));
+
+			var map = new Int32TreeMap<int>();
+			foreach (var x in a) map[x]++;
+			return map.ToArray().Count(p => p.value % 2 == 1);
+		}
 	}
 }

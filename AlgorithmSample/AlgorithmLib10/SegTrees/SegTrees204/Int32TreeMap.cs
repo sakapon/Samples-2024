@@ -1,7 +1,7 @@
 ﻿
 namespace AlgorithmLib10.SegTrees.SegTrees204
 {
-	public class Int32TreeMap
+	public class Int32TreeMap<TValue>
 	{
 		[System.Diagnostics.DebuggerDisplay(@"[{L}, {R}), Count = {Count}")]
 		public class Node
@@ -9,15 +9,21 @@ namespace AlgorithmLib10.SegTrees.SegTrees204
 			public int L, R;
 			public Node Left, Right;
 			public long Count;
+			public TValue Value;
 		}
 
 		// [MinIndex, MaxIndex)
 		public const int MinIndex = 0;
 		public const int MaxIndex = 1 << 30;
-		protected Node Root;
+		Node Root;
 		public long Count => Root != null ? Root.Count : 0;
-
 		public void Clear() => Root = null;
+
+		readonly TValue iv;
+		public Int32TreeMap(TValue iv = default)
+		{
+			this.iv = iv;
+		}
 
 		static int MaxBit(int x)
 		{
@@ -29,29 +35,29 @@ namespace AlgorithmLib10.SegTrees.SegTrees204
 			return x ^ (x >> 1);
 		}
 
-		protected bool AddInternal(int key, long count, long maxCount)
+		bool AddOrSet(int key, TValue value, bool addOnly)
 		{
-			if (count == 0) return true;
 			return Add(ref Root);
 
 			bool Add(ref Node node)
 			{
 				if (node == null)
 				{
-					node = new Node { L = key, R = key + 1, Count = count };
+					node = new Node { L = key, R = key + 1, Count = 1, Value = value };
 					return true;
 				}
 				else if (key == node.L && key + 1 == node.R)
 				{
-					if (node.Count + count > maxCount) return false;
-					node.Count += count;
+					if (addOnly && node.Count != 0) return false;
+					node.Count = 1;
+					node.Value = value;
 					return true;
 				}
 				else if (node.L <= key && key < node.R)
 				{
 					var nc = node.L + node.R >> 1;
 					var b = Add(ref key < nc ? ref node.Left : ref node.Right);
-					if (b) node.Count += count;
+					if (b) ++node.Count;
 					return b;
 				}
 				else
@@ -59,7 +65,7 @@ namespace AlgorithmLib10.SegTrees.SegTrees204
 					var child = node;
 					var f = MaxBit(node.L ^ key);
 					var l = key & ~(f | (f - 1));
-					node = new Node { L = l, R = l + (f << 1), Count = child.Count + count };
+					node = new Node { L = l, R = l + (f << 1), Count = child.Count + 1 };
 					if (child.L < (l | f))
 					{
 						node.Left = child;
@@ -75,9 +81,8 @@ namespace AlgorithmLib10.SegTrees.SegTrees204
 			}
 		}
 
-		protected bool RemoveInternal(int key, long count)
+		public bool Remove(int key)
 		{
-			if (count == 0) return true;
 			return Remove(Root);
 
 			bool Remove(Node node)
@@ -85,29 +90,44 @@ namespace AlgorithmLib10.SegTrees.SegTrees204
 				if (node == null) return false;
 				if (key == node.L && key + 1 == node.R)
 				{
-					if (node.Count < count) return false;
-					node.Count -= count;
+					if (node.Count == 0) return false;
+					node.Count = 0;
 					return true;
 				}
 				if (!(node.L <= key && key < node.R)) return false;
 				var nc = node.L + node.R >> 1;
 				var b = Remove(key < nc ? node.Left : node.Right);
-				if (b) node.Count -= count;
+				if (b) --node.Count;
 				return b;
 			}
 		}
 
-		public long GetCount(int key)
+		Node GetNode(int key)
 		{
 			var node = Root;
 			while (true)
 			{
-				if (node == null) return 0;
-				if (key == node.L && key + 1 == node.R) return node.Count;
-				if (!(node.L <= key && key < node.R)) return 0;
+				if (node == null) return null;
+				if (key == node.L && key + 1 == node.R) return node;
+				if (!(node.L <= key && key < node.R)) return null;
 				var nc = node.L + node.R >> 1;
 				node = key < nc ? node.Left : node.Right;
 			}
+		}
+
+		public TValue this[int key]
+		{
+			get => TryGetValue(key, out var value) ? value : iv;
+			set => AddOrSet(key, value, false);
+		}
+
+		public bool Add(int key, TValue value) => AddOrSet(key, value, true);
+		public bool ContainsKey(int key) => GetNode(key)?.Count == 1;
+		public bool TryGetValue(int key, out TValue value)
+		{
+			var node = GetNode(key);
+			if (node != null && node.Count != 0) { value = node.Value; return true; }
+			else { value = default; return false; }
 		}
 
 		public long GetCount(int l, int r)
@@ -171,19 +191,38 @@ namespace AlgorithmLib10.SegTrees.SegTrees204
 			}
 		}
 
-		public int GetAt(long index) => GetAt(index, false);
-		public int RemoveAt(long index) => GetAt(index, true);
-
-		int GetAt(long index, bool remove)
+		public (int key, TValue value) GetAt(long index)
 		{
-			if (index < 0) return int.MinValue;
-			if (index >= Count) return int.MaxValue;
+			if (index < 0) return (int.MinValue, default);
+			if (index >= Count) return (int.MaxValue, default);
+			var node = GetNodeAt(index, false);
+			return (node.L, node.Value);
+		}
 
+		public (int key, TValue value) RemoveAt(long index)
+		{
+			if (index < 0) return (int.MinValue, default);
+			if (index >= Count) return (int.MaxValue, default);
+			var node = GetNodeAt(index, true);
+			return (node.L, node.Value);
+		}
+
+		public bool SetAt(long index, TValue value)
+		{
+			if (index < 0) return false;
+			if (index >= Count) return false;
+			var node = GetNodeAt(index, false);
+			node.Value = value;
+			return true;
+		}
+
+		Node GetNodeAt(long index, bool remove)
+		{
 			var node = Root;
 			while (true)
 			{
 				if (remove) --node.Count;
-				if (node.Left == null && node.Right == null) return node.L;
+				if (node.Left == null && node.Right == null) return node;
 				var lc = node.Left?.Count ?? 0;
 				if (index < lc)
 				{
@@ -197,14 +236,34 @@ namespace AlgorithmLib10.SegTrees.SegTrees204
 			}
 		}
 
-		public int GetFirst() => GetAt(0);
-		public int GetLast() => GetAt(Count - 1);
-		public int GetFirstGeq(int key) => GetAt(GetFirstIndexGeq(key));
-		public int GetLastLeq(int key) => GetAt(GetLastIndexLeq(key));
+		public (int key, TValue value) GetFirst() => GetAt(0);
+		public (int key, TValue value) GetLast() => GetAt(Count - 1);
+		public (int key, TValue value) GetFirstGeq(int key) => GetAt(GetFirstIndexGeq(key));
+		public (int key, TValue value) GetLastLeq(int key) => GetAt(GetLastIndexLeq(key));
 
-		public int RemoveFirst() => RemoveAt(0);
-		public int RemoveLast() => RemoveAt(Count - 1);
-		public int RemoveFirstGeq(int key) => RemoveAt(GetFirstIndexGeq(key));
-		public int RemoveLastLeq(int key) => RemoveAt(GetLastIndexLeq(key));
+		public (int key, TValue value) RemoveFirst() => RemoveAt(0);
+		public (int key, TValue value) RemoveLast() => RemoveAt(Count - 1);
+		public (int key, TValue value) RemoveFirstGeq(int key) => RemoveAt(GetFirstIndexGeq(key));
+		public (int key, TValue value) RemoveLastLeq(int key) => RemoveAt(GetLastIndexLeq(key));
+
+		public (int key, TValue value)[] ToArray()
+		{
+			var r = new (int key, TValue value)[Count];
+			var i = -1;
+			Get(Root);
+			return r;
+
+			void Get(Node node)
+			{
+				if (node == null) return;
+				if (node.Left == null && node.Right == null)
+				{
+					if (node.Count != 0) r[++i] = (node.L, node.Value);
+					return;
+				}
+				Get(node.Left);
+				Get(node.Right);
+			}
+		}
 	}
 }
