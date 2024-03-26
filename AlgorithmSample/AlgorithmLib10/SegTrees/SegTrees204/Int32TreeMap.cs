@@ -50,6 +50,7 @@ namespace AlgorithmLib10.SegTrees.SegTrees204
 			return x ^ (x >> 1);
 		}
 
+		// 追加された場合 true
 		bool AddOrSet(int key, TValue value, bool addOnly)
 		{
 			return Add(ref Root);
@@ -63,10 +64,17 @@ namespace AlgorithmLib10.SegTrees.SegTrees204
 				}
 				else if (key == node.L && key + 1 == node.R)
 				{
-					if (addOnly && node.Count != 0) return false;
-					node.Count = 1;
-					node.Value = value;
-					return true;
+					if (node.Count == 0)
+					{
+						node.Count = 1;
+						node.Value = value;
+						return true;
+					}
+					else
+					{
+						if (!addOnly) node.Value = value;
+						return false;
+					}
 				}
 				else if (node.L <= key && key < node.R)
 				{
@@ -259,6 +267,25 @@ namespace AlgorithmLib10.SegTrees.SegTrees204
 				if (node.Left == null && node.Right == null)
 				{
 					if (node.Count != 0) r[++i] = (node.L, node.Value);
+					return;
+				}
+				Get(node.Left);
+				Get(node.Right);
+			}
+		}
+
+		public Dictionary<int, TValue> ToDictionary()
+		{
+			var r = new Dictionary<int, TValue>();
+			Get(Root);
+			return r;
+
+			void Get(Node node)
+			{
+				if (node == null) return;
+				if (node.Left == null && node.Right == null)
+				{
+					if (node.Count != 0) r[node.L] = node.Value;
 					return;
 				}
 				Get(node.Left);
