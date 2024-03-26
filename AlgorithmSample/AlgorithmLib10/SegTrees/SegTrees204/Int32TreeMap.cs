@@ -25,6 +25,21 @@ namespace AlgorithmLib10.SegTrees.SegTrees204
 			this.iv = iv;
 		}
 
+		public TValue this[int key]
+		{
+			get => TryGetValue(key, out var value) ? value : iv;
+			set => AddOrSet(key, value, false);
+		}
+
+		public bool Add(int key, TValue value) => AddOrSet(key, value, true);
+		public bool ContainsKey(int key) => GetNode(key)?.Count == 1;
+		public bool TryGetValue(int key, out TValue value)
+		{
+			var node = GetNode(key);
+			if (node != null && node.Count != 0) { value = node.Value; return true; }
+			else { value = default; return false; }
+		}
+
 		static int MaxBit(int x)
 		{
 			x |= x >> 1;
@@ -113,21 +128,6 @@ namespace AlgorithmLib10.SegTrees.SegTrees204
 				var nc = node.L + node.R >> 1;
 				node = key < nc ? node.Left : node.Right;
 			}
-		}
-
-		public TValue this[int key]
-		{
-			get => TryGetValue(key, out var value) ? value : iv;
-			set => AddOrSet(key, value, false);
-		}
-
-		public bool Add(int key, TValue value) => AddOrSet(key, value, true);
-		public bool ContainsKey(int key) => GetNode(key)?.Count == 1;
-		public bool TryGetValue(int key, out TValue value)
-		{
-			var node = GetNode(key);
-			if (node != null && node.Count != 0) { value = node.Value; return true; }
-			else { value = default; return false; }
 		}
 
 		public long GetCount(int l, int r)
