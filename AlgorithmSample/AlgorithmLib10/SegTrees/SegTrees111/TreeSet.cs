@@ -48,6 +48,16 @@ namespace AlgorithmLib10.SegTrees.SegTrees111
 			}
 			return v;
 		}
+
+		public long GetFirstIndexGeq(int key)
+		{
+			var i = n | key;
+			var index = 0L;
+			for (; i != 1; i >>= 1)
+				if ((i & 1) != 0) index += counts[--i];
+			return index;
+		}
+		public long GetLastIndexLeq(int key) => GetFirstIndexGeq(key + 1) - 1;
 	}
 
 	public class TreeSet : TreeSetBase
