@@ -7,7 +7,7 @@ namespace AlgorithmLib10.SegTrees.SegTrees111
 		readonly long[] counts;
 		public long Count => counts[1];
 
-		public TreeSetBase(int size)
+		protected TreeSetBase(int size)
 		{
 			n = 1;
 			while (n < size) n <<= 1;
@@ -17,6 +17,22 @@ namespace AlgorithmLib10.SegTrees.SegTrees111
 		public void Clear()
 		{
 			Array.Clear(counts, 0, counts.Length);
+		}
+
+		protected bool AddInternal(int key, long count, long maxCount)
+		{
+			var i = n | key;
+			if (counts[i] + count > maxCount) return false;
+			for (; i != 0; i >>= 1) counts[i] += count;
+			return true;
+		}
+
+		protected bool RemoveInternal(int key, long count)
+		{
+			var i = n | key;
+			if (counts[i] < count) return false;
+			for (; i != 0; i >>= 1) counts[i] -= count;
+			return true;
 		}
 
 		public long GetCount(int key) => counts[n | key];
@@ -32,13 +48,20 @@ namespace AlgorithmLib10.SegTrees.SegTrees111
 			}
 			return v;
 		}
+	}
 
-		protected bool AddInternal(int key, long count, long maxCount)
-		{
-			var i = n | key;
-			if (counts[i] + count > maxCount) return false;
-			for (; i != 0; i >>= 1) counts[i] += count;
-			return true;
-		}
+	public class TreeSet : TreeSetBase
+	{
+		public TreeSet(int size) : base(size) { }
+		public bool Add(int key) => AddInternal(key, 1, 1);
+		public bool Remove(int key) => RemoveInternal(key, 1);
+		public bool Contains(int key) => GetCount(key) != 0;
+	}
+
+	public class TreeMultiSet : TreeSetBase
+	{
+		public TreeMultiSet(int size) : base(size) { }
+		public bool Add(int key, long count = 1) => AddInternal(key, count, long.MaxValue);
+		public bool Remove(int key, long count = 1) => RemoveInternal(key, count);
 	}
 }
