@@ -3,8 +3,8 @@ namespace AlgorithmLib10.SegTrees.SegTrees111
 {
 	public abstract class TreeSetBase
 	{
-		readonly int n;
-		readonly long[] counts;
+		protected readonly int n;
+		protected readonly long[] counts;
 		public long Count => counts[1];
 
 		protected TreeSetBase(int size)
@@ -107,6 +107,15 @@ namespace AlgorithmLib10.SegTrees.SegTrees111
 		public bool Add(int key) => AddInternal(key, 1, 1);
 		public bool Remove(int key) => RemoveInternal(key, 1);
 		public bool Contains(int key) => GetCount(key) != 0;
+
+		public int[] ToArray()
+		{
+			var r = new int[Count];
+			var i = -1;
+			for (int key = 0; key < n; ++key)
+				if (counts[n | key] != 0) r[++i] = key;
+			return r;
+		}
 	}
 
 	public class TreeMultiSet : TreeSetBase
@@ -114,5 +123,25 @@ namespace AlgorithmLib10.SegTrees.SegTrees111
 		public TreeMultiSet(int size) : base(size) { }
 		public bool Add(int key, long count = 1) => AddInternal(key, count, long.MaxValue);
 		public bool Remove(int key, long count = 1) => RemoveInternal(key, count);
+
+		public int[] ToArray()
+		{
+			var r = new int[Count];
+			var i = -1;
+			for (int key = 0; key < n; ++key)
+			{
+				var c = counts[n | key];
+				while (c-- > 0) r[++i] = key;
+			}
+			return r;
+		}
+
+		public (int key, long count)[] ToKeyCountArray()
+		{
+			var r = new List<(int, long)>();
+			for (int key = 0; key < n; ++key)
+				if (counts[n | key] != 0) r.Add((key, counts[n | key]));
+			return r.ToArray();
+		}
 	}
 }
