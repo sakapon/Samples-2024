@@ -54,10 +54,51 @@ namespace AlgorithmLib10.SegTrees.SegTrees111
 			var i = n | key;
 			var index = 0L;
 			for (; i != 1; i >>= 1)
-				if ((i & 1) != 0) index += counts[--i];
+				if ((i & 1) != 0) index += counts[i & ~1];
 			return index;
 		}
 		public long GetLastIndexLeq(int key) => GetFirstIndexGeq(key + 1) - 1;
+
+		public long GetIndex(int key)
+		{
+			var i = n | key;
+			if (counts[i] == 0) return -1;
+			var index = 0L;
+			for (; i != 1; i >>= 1)
+				if ((i & 1) != 0) index += counts[i & ~1];
+			return index;
+		}
+
+		int GetAt(long index, bool remove)
+		{
+			if (index < 0) return int.MinValue;
+			if (index >= Count) return int.MaxValue;
+
+			var i = 1;
+			while (true)
+			{
+				if (remove) --counts[i];
+				if (i >= n) return i & ~n;
+				if (index >= counts[i <<= 1])
+				{
+					index -= counts[i];
+					i |= 1;
+				}
+			}
+		}
+
+		public int GetAt(long index) => GetAt(index, false);
+		public int RemoveAt(long index) => GetAt(index, true);
+
+		public int GetFirst() => GetAt(0);
+		public int GetLast() => GetAt(Count - 1);
+		public int GetFirstGeq(int key) => GetAt(GetFirstIndexGeq(key));
+		public int GetLastLeq(int key) => GetAt(GetLastIndexLeq(key));
+
+		public int RemoveFirst() => RemoveAt(0);
+		public int RemoveLast() => RemoveAt(Count - 1);
+		public int RemoveFirstGeq(int key) => RemoveAt(GetFirstIndexGeq(key));
+		public int RemoveLastLeq(int key) => RemoveAt(GetLastIndexLeq(key));
 	}
 
 	public class TreeSet : TreeSetBase
