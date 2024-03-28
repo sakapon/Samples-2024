@@ -99,30 +99,6 @@ namespace AlgorithmLib10.SegTrees.SegTrees111
 		public int RemoveLast() => RemoveAt(Count - 1);
 		public int RemoveFirstGeq(int key) => RemoveAt(GetFirstIndexGeq(key));
 		public int RemoveLastLeq(int key) => RemoveAt(GetLastIndexLeq(key));
-	}
-
-	public class TreeSet : TreeSetBase
-	{
-		public TreeSet(int size) : base(size) { }
-		public bool Add(int key) => AddInternal(key, 1, 1);
-		public bool Remove(int key) => RemoveInternal(key, 1);
-		public bool Contains(int key) => GetCount(key) != 0;
-
-		public int[] ToArray()
-		{
-			var r = new int[Count];
-			var i = -1;
-			for (int key = 0; key < n; ++key)
-				if (counts[n | key] != 0) r[++i] = key;
-			return r;
-		}
-	}
-
-	public class TreeMultiSet : TreeSetBase
-	{
-		public TreeMultiSet(int size) : base(size) { }
-		public bool Add(int key, long count = 1) => AddInternal(key, count, long.MaxValue);
-		public bool Remove(int key, long count = 1) => RemoveInternal(key, count);
 
 		public int[] ToArray()
 		{
@@ -135,6 +111,21 @@ namespace AlgorithmLib10.SegTrees.SegTrees111
 			}
 			return r;
 		}
+	}
+
+	public class TreeSet : TreeSetBase
+	{
+		public TreeSet(int size) : base(size) { }
+		public bool Add(int key) => AddInternal(key, 1, 1);
+		public bool Remove(int key) => RemoveInternal(key, 1);
+		public bool Contains(int key) => GetCount(key) != 0;
+	}
+
+	public class TreeMultiSet : TreeSetBase
+	{
+		public TreeMultiSet(int size) : base(size) { }
+		public bool Add(int key, long count = 1) => AddInternal(key, count, long.MaxValue);
+		public bool Remove(int key, long count = 1) => RemoveInternal(key, count);
 
 		public (int key, long count)[] ToKeyCountArray()
 		{

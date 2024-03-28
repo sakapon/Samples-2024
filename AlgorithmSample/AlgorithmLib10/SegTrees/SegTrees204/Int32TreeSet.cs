@@ -206,39 +206,6 @@ namespace AlgorithmLib10.SegTrees.SegTrees204
 		public int RemoveLast() => RemoveAt(Count - 1);
 		public int RemoveFirstGeq(int key) => RemoveAt(GetFirstIndexGeq(key));
 		public int RemoveLastLeq(int key) => RemoveAt(GetLastIndexLeq(key));
-	}
-
-	public class Int32TreeSet : Int32TreeSetBase
-	{
-		public bool Add(int key) => AddInternal(key, 1, 1);
-		public bool Remove(int key) => RemoveInternal(key, 1);
-		public bool Contains(int key) => GetCount(key) != 0;
-
-		public int[] ToArray()
-		{
-			var r = new int[Count];
-			var i = -1;
-			Get(Root);
-			return r;
-
-			void Get(Node node)
-			{
-				if (node == null) return;
-				if (node.Left == null && node.Right == null)
-				{
-					if (node.Count != 0) r[++i] = node.L;
-					return;
-				}
-				Get(node.Left);
-				Get(node.Right);
-			}
-		}
-	}
-
-	public class Int32TreeMultiSet : Int32TreeSetBase
-	{
-		public bool Add(int key, long count = 1) => AddInternal(key, count, long.MaxValue);
-		public bool Remove(int key, long count = 1) => RemoveInternal(key, count);
 
 		public int[] ToArray()
 		{
@@ -260,6 +227,19 @@ namespace AlgorithmLib10.SegTrees.SegTrees204
 				Get(node.Right);
 			}
 		}
+	}
+
+	public class Int32TreeSet : Int32TreeSetBase
+	{
+		public bool Add(int key) => AddInternal(key, 1, 1);
+		public bool Remove(int key) => RemoveInternal(key, 1);
+		public bool Contains(int key) => GetCount(key) != 0;
+	}
+
+	public class Int32TreeMultiSet : Int32TreeSetBase
+	{
+		public bool Add(int key, long count = 1) => AddInternal(key, count, long.MaxValue);
+		public bool Remove(int key, long count = 1) => RemoveInternal(key, count);
 
 		public (int key, long count)[] ToKeyCountArray()
 		{
