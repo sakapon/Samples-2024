@@ -100,16 +100,17 @@ namespace AlgorithmLib10.SegTrees.SegTrees111
 		public int RemoveFirstGeq(int key) => RemoveAt(GetFirstIndexGeq(key));
 		public int RemoveLastLeq(int key) => RemoveAt(GetLastIndexLeq(key));
 
-		public int[] ToArray()
+		public int[] ToArray() => ToArray(0, n);
+		public int[] ToArray(int l, int r)
 		{
-			var r = new int[Count];
+			var a = new int[Count];
 			var i = -1;
-			for (int key = 0; key < n; ++key)
+			for (int key = l; key < r; ++key)
 			{
 				var c = counts[n | key];
-				while (c-- > 0) r[++i] = key;
+				while (c-- > 0) a[++i] = key;
 			}
-			return r;
+			return a;
 		}
 	}
 
@@ -127,12 +128,13 @@ namespace AlgorithmLib10.SegTrees.SegTrees111
 		public bool Add(int key, long count = 1) => AddInternal(key, count, long.MaxValue);
 		public bool Remove(int key, long count = 1) => RemoveInternal(key, count);
 
-		public (int key, long count)[] ToKeyCountArray()
+		public (int key, long count)[] ToKeyCountArray() => ToKeyCountArray(0, n);
+		public (int key, long count)[] ToKeyCountArray(int l, int r)
 		{
-			var r = new List<(int, long)>();
-			for (int key = 0; key < n; ++key)
-				if (counts[n | key] != 0) r.Add((key, counts[n | key]));
-			return r.ToArray();
+			var a = new List<(int, long)>();
+			for (int key = l; key < r; ++key)
+				if (counts[n | key] != 0) a.Add((key, counts[n | key]));
+			return a.ToArray();
 		}
 	}
 }
