@@ -100,17 +100,27 @@ namespace AlgorithmLib10.SegTrees.SegTrees111
 		public int RemoveFirstGeq(int key) => RemoveAt(GetFirstIndexGeq(key));
 		public int RemoveLastLeq(int key) => RemoveAt(GetLastIndexLeq(key));
 
-		public int[] ToArray() => ToArray(0, n);
+		public int[] ToArray()
+		{
+			var r = new int[Count];
+			var i = -1;
+			for (int key = 0; key < n; ++key)
+			{
+				var c = counts[n | key];
+				while (c-- > 0) r[++i] = key;
+			}
+			return r;
+		}
+
 		public int[] ToArray(int l, int r)
 		{
-			var a = new int[Count];
-			var i = -1;
+			var a = new List<int>();
 			for (int key = l; key < r; ++key)
 			{
 				var c = counts[n | key];
-				while (c-- > 0) a[++i] = key;
+				while (c-- > 0) a.Add(key);
 			}
-			return a;
+			return a.ToArray();
 		}
 	}
 
