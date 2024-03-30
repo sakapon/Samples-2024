@@ -227,6 +227,27 @@ namespace AlgorithmLib10.SegTrees.SegTrees204
 				Get(node.Right);
 			}
 		}
+
+		public int[] ToArray(int l, int r)
+		{
+			var a = new List<int>();
+			Get(Root);
+			return a.ToArray();
+
+			void Get(Node node)
+			{
+				if (node == null) return;
+				if (node.Left == null && node.Right == null && l <= node.L && node.L < r)
+				{
+					var c = node.Count;
+					while (c-- > 0) a.Add(node.L);
+					return;
+				}
+				var nc = node.L + node.R >> 1;
+				if (l < nc) Get(node.Left);
+				if (nc < r) Get(node.Right);
+			}
+		}
 	}
 
 	public class Int32TreeSet : Int32TreeSetBase
