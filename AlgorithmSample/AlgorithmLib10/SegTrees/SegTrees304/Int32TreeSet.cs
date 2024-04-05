@@ -210,6 +210,18 @@ namespace AlgorithmLib10.SegTrees.SegTrees304
 				if (node.Count != 0) r.Add((node.L, node.Count));
 			return r.ToArray();
 		}
+
+		public int[] ToArray(int l, int r)
+		{
+			var a = new List<int>();
+			l = GetFirstGeq(l);
+			for (var node = Leaves[l]; node != null && node.L < r; node = GetNextLeaf(node))
+			{
+				var c = node.Count;
+				while (c-- > 0) a.Add(node.L);
+			}
+			return a.ToArray();
+		}
 	}
 
 	public class Int32TreeSet : Int32TreeSetBase
