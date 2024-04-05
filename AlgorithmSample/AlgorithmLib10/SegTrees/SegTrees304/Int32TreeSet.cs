@@ -173,6 +173,43 @@ namespace AlgorithmLib10.SegTrees.SegTrees304
 		public int RemoveLast() => RemoveAt(Count - 1);
 		public int RemoveFirstGeq(int key) => RemoveAt(GetFirstIndexGeq(key));
 		public int RemoveLastLeq(int key) => RemoveAt(GetLastIndexLeq(key));
+
+		static Node GetFirstLeaf(Node node)
+		{
+			if (node == null) return null;
+			while (node.Left != null) node = node.Left;
+			return node;
+		}
+
+		static Node GetNextLeaf(Node node)
+		{
+			for (var p = node.Parent; ; (node, p) = (p, p.Parent))
+			{
+				if (p == null) return null;
+				if (p.Left == node) { node = p.Right; break; }
+			}
+			return GetFirstLeaf(node);
+		}
+
+		public int[] ToArray()
+		{
+			var r = new int[Count];
+			var i = -1;
+			for (var node = GetFirstLeaf(Root); node != null; node = GetNextLeaf(node))
+			{
+				var c = node.Count;
+				while (c-- > 0) r[++i] = node.L;
+			}
+			return r;
+		}
+
+		public (int key, long count)[] ToKeyCountArray()
+		{
+			var r = new List<(int, long)>();
+			for (var node = GetFirstLeaf(Root); node != null; node = GetNextLeaf(node))
+				if (node.Count != 0) r.Add((node.L, node.Count));
+			return r.ToArray();
+		}
 	}
 
 	public class Int32TreeSet : Int32TreeSetBase
@@ -180,71 +217,11 @@ namespace AlgorithmLib10.SegTrees.SegTrees304
 		public bool Add(int key) => AddInternal(key, 1, 1);
 		public bool Remove(int key) => RemoveInternal(key, 1);
 		public bool Contains(int key) => GetCount(key) != 0;
-
-		public int[] ToArray()
-		{
-			var r = new int[Count];
-			var i = -1;
-			Get(Root);
-			return r;
-
-			void Get(Node node)
-			{
-				if (node == null) return;
-				if (node.Left == null && node.Right == null)
-				{
-					if (node.Count != 0) r[++i] = node.L;
-					return;
-				}
-				Get(node.Left);
-				Get(node.Right);
-			}
-		}
 	}
 
 	public class Int32TreeMultiSet : Int32TreeSetBase
 	{
 		public bool Add(int key, long count = 1) => AddInternal(key, count, long.MaxValue);
 		public bool Remove(int key, long count = 1) => RemoveInternal(key, count);
-
-		public int[] ToArray()
-		{
-			var r = new int[Count];
-			var i = -1;
-			Get(Root);
-			return r;
-
-			void Get(Node node)
-			{
-				if (node == null) return;
-				if (node.Left == null && node.Right == null)
-				{
-					var c = node.Count;
-					while (c-- > 0) r[++i] = node.L;
-					return;
-				}
-				Get(node.Left);
-				Get(node.Right);
-			}
-		}
-
-		public (int key, long count)[] ToKeyCountArray()
-		{
-			var r = new List<(int, long)>();
-			Get(Root);
-			return r.ToArray();
-
-			void Get(Node node)
-			{
-				if (node == null) return;
-				if (node.Left == null && node.Right == null)
-				{
-					if (node.Count != 0) r.Add((node.L, node.Count));
-					return;
-				}
-				Get(node.Left);
-				Get(node.Right);
-			}
-		}
 	}
 }
