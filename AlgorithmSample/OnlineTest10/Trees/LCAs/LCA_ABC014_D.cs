@@ -15,42 +15,16 @@ namespace OnlineTest10.Trees.LCAs
 			var qc = int.Parse(Console.ReadLine());
 			var qs = Array.ConvertAll(new bool[qc], _ => Read2());
 
-			var map = Array.ConvertAll(new bool[n + 1], _ => new List<int>());
-			foreach (var (u, v) in es)
-			{
-				map[u].Add(v);
-				map[v].Add(u);
-			}
-
-			var tour = new List<(int depth, int v)>();
-			var depths = new int[n + 1];
-			var first = new int[n + 1];
-			DFS(1, -1, 0);
-
-			var monoid = new Monoid<(int depth, int v)>((x, y) => x.depth <= y.depth ? x : y, (int.MaxValue, -1));
-			var st = new SparseTable<(int depth, int v)>(tour.ToArray(), monoid);
+			var tree = new LCATree(n + 1);
+			tree.AddEdges(es, true);
+			var lca = tree.Build(1);
 
 			return string.Join("\n", qs.Select(q =>
 			{
 				var (a, b) = q;
-				var l = first[a];
-				var r = first[b];
-				var (d0, _) = l <= r ? st[l, r + 1] : st[r, l + 1];
-				return depths[a] + depths[b] - 2 * d0 + 1;
+				var d = lca.Depths[lca.GetLCA(a, b)];
+				return lca.Depths[a] + lca.Depths[b] - 2 * d + 1;
 			}));
-
-			void DFS(int v, int pv, int d)
-			{
-				depths[v] = d;
-				first[v] = tour.Count;
-				tour.Add((d, v));
-				foreach (var nv in map[v])
-				{
-					if (nv == pv) continue;
-					DFS(nv, v, d + 1);
-					tour.Add((d, v));
-				}
-			}
 		}
 	}
 }
