@@ -15,8 +15,7 @@ namespace OnlineTest10.Trees.LCAs
 			var qc = int.Parse(Console.ReadLine());
 			var qs = Array.ConvertAll(new bool[qc], _ => Read2());
 
-			var tree = new LCATree(n + 1);
-			tree.AddEdges(es, true);
+			var tree = new LCATree(n + 1, es, true);
 			var lca = tree.Build(1);
 
 			return string.Join("\n", qs.Select(q =>
