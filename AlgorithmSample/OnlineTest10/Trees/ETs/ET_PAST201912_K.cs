@@ -1,6 +1,6 @@
 ﻿using AlgorithmLib10.Trees.ETs101;
 
-namespace OnlineTest10.Trees.LCAs
+namespace OnlineTest10.Trees.ETs
 {
 	// Test: https://atcoder.jp/contests/past201912-open/tasks/past201912_k
 	class ET_PAST201912_K
