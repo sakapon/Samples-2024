@@ -43,7 +43,7 @@ namespace AlgorithmLib10.Trees.LCAs101
 			var depths = new int[n];
 			var parents = new int[n];
 			var steps = new int[n];
-			var tour = new List<(int, int)>();
+			var tour = new List<int>();
 			Array.Fill(depths, -1);
 			Array.Fill(parents, -1);
 			Array.Fill(steps, -1);
@@ -54,14 +54,14 @@ namespace AlgorithmLib10.Trees.LCAs101
 			void DFS(int v)
 			{
 				steps[v] = tour.Count;
-				tour.Add((v, depths[v]));
+				tour.Add(v);
 				foreach (var nv in map[v])
 				{
 					if (depths[nv] != -1) continue;
 					depths[nv] = depths[v] + 1;
 					parents[nv] = v;
 					DFS(nv);
-					tour.Add((v, depths[v]));
+					tour.Add(v);
 				}
 			}
 		}
@@ -71,28 +71,29 @@ namespace AlgorithmLib10.Trees.LCAs101
 	{
 		public int[] Depths { get; }
 		public int[] Parents { get; }
-		public (int v, int depth)[] Tour { get; }
+		public int[] Tour { get; }
 
 		// その頂点に初めて到着したときの歩数。
 		readonly int[] steps;
-		readonly SparseTable<(int v, int depth)> st;
+		readonly SparseTable<int> st;
 
-		internal LCAResult(int[] depths, int[] parents, int[] steps, (int v, int depth)[] tour)
+		internal LCAResult(int[] depths, int[] parents, int[] steps, int[] tour)
 		{
 			Depths = depths;
 			Parents = parents;
 			this.steps = steps;
 			Tour = tour;
 
-			var monoid = new Monoid<(int v, int depth)>((x, y) => x.depth <= y.depth ? x : y, (int.MaxValue, -1));
-			st = new SparseTable<(int, int)>(tour, monoid);
+			// depths[-1] は実行されません。
+			var monoid = new Monoid<int>((x, y) => depths[x] <= depths[y] ? x : y, -1);
+			st = new SparseTable<int>(tour, monoid);
 		}
 
 		public int GetLCA(int u, int v)
 		{
 			var s = steps[u];
 			var t = steps[v];
-			return s <= t ? st[s, t + 1].v : st[t, s + 1].v;
+			return s <= t ? st[s, t + 1] : st[t, s + 1];
 		}
 	}
 }
