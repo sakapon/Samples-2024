@@ -65,23 +65,52 @@ namespace AlgorithmLib10.Trees.LCAs101
 				}
 			}
 		}
+
+		public LCAResult2 Build2(int root)
+		{
+			var depths = new int[n];
+			var parents = new int[n];
+			var stepMap = Array.ConvertAll(depths, _ => new List<int>());
+			var tour = new List<int>();
+			Array.Fill(depths, -1);
+			Array.Fill(parents, -1);
+			depths[root] = 0;
+			DFS(root);
+			return new LCAResult2(depths, parents, Array.ConvertAll(stepMap, l => l.ToArray()), tour.ToArray());
+
+			void DFS(int v)
+			{
+				stepMap[v].Add(tour.Count);
+				tour.Add(v);
+				foreach (var nv in map[v])
+				{
+					if (depths[nv] != -1) continue;
+					depths[nv] = depths[v] + 1;
+					parents[nv] = v;
+					DFS(nv);
+					stepMap[v].Add(tour.Count);
+					tour.Add(v);
+				}
+			}
+		}
 	}
 
 	public class LCAResult
 	{
 		public int[] Depths { get; }
 		public int[] Parents { get; }
-		public int[] Tour { get; }
 
 		// その頂点に初めて到着したときの歩数。
-		readonly int[] steps;
+		public int[] Steps { get; }
+		public int[] Tour { get; }
+
 		readonly SparseTable<int> st;
 
 		internal LCAResult(int[] depths, int[] parents, int[] steps, int[] tour)
 		{
 			Depths = depths;
 			Parents = parents;
-			this.steps = steps;
+			Steps = steps;
 			Tour = tour;
 
 			// depths[-1] は実行されません。
@@ -91,8 +120,37 @@ namespace AlgorithmLib10.Trees.LCAs101
 
 		public int GetLCA(int u, int v)
 		{
-			var s = steps[u];
-			var t = steps[v];
+			var s = Steps[u];
+			var t = Steps[v];
+			return s <= t ? st[s, t + 1] : st[t, s + 1];
+		}
+	}
+
+	public class LCAResult2
+	{
+		public int[] Depths { get; }
+		public int[] Parents { get; }
+		public int[][] StepMap { get; }
+		public int[] Tour { get; }
+
+		readonly SparseTable<int> st;
+
+		internal LCAResult2(int[] depths, int[] parents, int[][] stepMap, int[] tour)
+		{
+			Depths = depths;
+			Parents = parents;
+			StepMap = stepMap;
+			Tour = tour;
+
+			// depths[-1] は実行されません。
+			var monoid = new Monoid<int>((x, y) => depths[x] <= depths[y] ? x : y, -1);
+			st = new SparseTable<int>(tour, monoid);
+		}
+
+		public int GetLCA(int u, int v)
+		{
+			var s = StepMap[u][0];
+			var t = StepMap[v][0];
 			return s <= t ? st[s, t + 1] : st[t, s + 1];
 		}
 	}
