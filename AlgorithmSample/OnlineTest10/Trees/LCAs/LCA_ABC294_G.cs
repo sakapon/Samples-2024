@@ -20,7 +20,7 @@ namespace OnlineTest10.Trees.LCAs
 			var tree = new LCATree(n + 1);
 			foreach (var (u, v, _) in es)
 				tree.AddEdge(u, v, true);
-			var lca = tree.Build2(root);
+			var lca = tree.Build(root);
 
 			var rsq = new RSQTree(2 * n - 2);
 			foreach (var e in es)
