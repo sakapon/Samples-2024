@@ -23,9 +23,12 @@ namespace OnlineTest10.Trees.LCAs
 			var lca = tree.Build(root);
 
 			var rsq = new RSQTree(2 * n - 2);
-			foreach (var e in es)
+			for (int j = 0; j < es.Length; j++)
+				UpdateWeight(j, es[j].Item3);
+
+			void UpdateWeight(int j, int w)
 			{
-				var (p, v, w) = e;
+				var (p, v, _) = es[j];
 				if (lca.Parents[v] != p) (p, v) = (v, p);
 				rsq[lca.StepMap[v][0] - 1] = w;
 				rsq[lca.StepMap[v][^1]] = -w;
@@ -37,10 +40,7 @@ namespace OnlineTest10.Trees.LCAs
 				if (q.Item1 == 1)
 				{
 					var (_, j, w) = q;
-					var (p, v, _) = es[j - 1];
-					if (lca.Parents[v] != p) (p, v) = (v, p);
-					rsq[lca.StepMap[v][0] - 1] = w;
-					rsq[lca.StepMap[v][^1]] = -w;
+					UpdateWeight(j - 1, w);
 				}
 				else
 				{
