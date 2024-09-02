@@ -4,13 +4,16 @@
 	class ABC369_D
 	{
 		static long[] ReadL() => Array.ConvertAll(Console.ReadLine().Split(), long.Parse);
-		static void Main() => Console.WriteLine(Solve1());
-
-		static object Solve1()
+		static void Main()
 		{
 			var n = int.Parse(Console.ReadLine());
 			var a = ReadL();
+			Console.WriteLine(Solve1(n, a));
+		}
 
+		// 貰う
+		static long Solve1(int n, long[] a)
+		{
 			var dp0 = new long[n + 1];
 			var dp1 = new long[n + 1];
 			dp1[0] = long.MinValue;
@@ -23,11 +26,9 @@
 			return Math.Max(dp0[n], dp1[n]);
 		}
 
-		static object Solve2()
+		// 貰う (メモリ節約)
+		static long Solve2(int n, long[] a)
 		{
-			var n = int.Parse(Console.ReadLine());
-			var a = ReadL();
-
 			var dp0 = 0L;
 			var dp1 = long.MinValue;
 
