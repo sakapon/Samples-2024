@@ -55,5 +55,31 @@
 			}
 			return Math.Max(v0, v1);
 		}
+
+		// メモ化再帰
+		static long Solve5(int n, long[] a)
+		{
+			var dp0 = new long[n + 1];
+			var dp1 = new long[n + 1];
+			Array.Fill(dp0, long.MinValue);
+			Array.Fill(dp1, long.MinValue);
+			dp0[0] = 0;
+
+			return Math.Max(Rec0(n), Rec1(n));
+
+			long Rec0(int i)
+			{
+				if (i != 0 && dp0[i] == long.MinValue)
+					dp0[i] = Math.Max(Rec0(i - 1), Rec1(i - 1) + 2 * a[i - 1]);
+				return dp0[i];
+			}
+
+			long Rec1(int i)
+			{
+				if (i != 0 && dp1[i] == long.MinValue)
+					dp1[i] = Math.Max(Rec0(i - 1) + a[i - 1], Rec1(i - 1));
+				return dp1[i];
+			}
+		}
 	}
 }
