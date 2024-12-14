@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Numerics;
 
+#nullable disable
 namespace PiWpf
 {
 	public struct RealNumber : IEquatable<RealNumber>
 	{
-		public static int MaxOffset = 5000;
+		public static int MaxOffset = 1000;
 
 		public BigInteger Value;
 		public int Offset;
@@ -79,16 +80,17 @@ namespace PiWpf
 			o = MaxOffset << 1;
 		}
 
+		// ニュートン法
 		public static RealNumber Sqrt(RealNumber v)
 		{
-			RealNumber x0 = 1;
+			RealNumber x = 1;
 			for (var i = 0; i < 100; i++)
 			{
-				var temp = x0 / 2 + v / (2 * x0);
-				if (x0 == temp) break;
-				x0 = temp;
+				var temp = (x + v / x) / 2;
+				if (x == temp) break;
+				x = temp;
 			}
-			return x0;
+			return x;
 		}
 	}
 }
