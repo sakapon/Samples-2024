@@ -5,8 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PiWpf"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" FontSize="24">
-    <Grid>
-        <TextBlock x:Name="PiText" TextWrapping="Wrap" Text=""/>
-    </Grid>
+        Title="Convergence to π" Height="600" Width="900" WindowState="Maximized" FontSize="24">
+    <Window.Resources>
+        <Style x:Key="ButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="Width" Value="150"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="FontSize" Value="20"/>
+        </Style>
+    </Window.Resources>
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Style="{DynamicResource ButtonStyle}" x:Name="LeibnizButton" Content="Leibniz"/>
+            <Button Style="{DynamicResource ButtonStyle}" x:Name="MadhavaButton" Content="Madhava"/>
+            <Button Style="{DynamicResource ButtonStyle}" x:Name="RamanujanButton" Content="Ramanujan"/>
+            <Button Style="{DynamicResource ButtonStyle}" x:Name="ClearButton" Content="Clear" Margin="10"/>
+        </StackPanel>
+        <TextBlock x:Name="PiText" TextWrapping="Wrap" Text="0"/>
+    </DockPanel>
 </Window>
