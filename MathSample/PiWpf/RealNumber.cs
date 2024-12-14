@@ -5,7 +5,7 @@ namespace PiWpf
 {
 	public struct RealNumber
 	{
-		public const int MaxOffset = 1000;
+		public static int MaxOffset = 5000;
 
 		public BigInteger Value;
 		public int Offset;
@@ -43,13 +43,34 @@ namespace PiWpf
 		{
 			var v = v1.Value * v2.Value;
 			var o = v1.Offset + v2.Offset;
-			if (o > MaxOffset)
-			{
-				var d = o - MaxOffset;
-				v /= BigInteger.Pow(10, d);
-				o = MaxOffset;
-			}
+			Floor(ref v, ref o);
 			return new RealNumber(v, o);
+		}
+
+		public static RealNumber operator /(RealNumber v1, RealNumber v2)
+		{
+			var v = v1.Value;
+			var o = v1.Offset;
+			Expand(ref v, ref o);
+			v /= v2.Value;
+			o -= v2.Offset;
+			Floor(ref v, ref o);
+			return new RealNumber(v, o);
+		}
+
+		static void Floor(ref BigInteger v, ref int o)
+		{
+			if (o <= MaxOffset) return;
+			var d = o - MaxOffset;
+			v /= BigInteger.Pow(10, d);
+			o = MaxOffset;
+		}
+
+		static void Expand(ref BigInteger v, ref int o)
+		{
+			var d = (MaxOffset << 1) - o;
+			v *= BigInteger.Pow(10, d);
+			o = MaxOffset << 1;
 		}
 	}
 }
