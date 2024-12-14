@@ -17,6 +17,7 @@ namespace PiWpf
 	public partial class MainWindow : Window
 	{
 		const int TextInterval = 80;
+		const int WheelUnit = 120;
 
 		public MainWindow()
 		{
@@ -29,10 +30,19 @@ namespace PiWpf
 			MadhavaButton.Click += (o, e) => Task.Run(() => ByMadhava());
 			RamanujanButton.Click += (o, e) => Task.Run(() => ByRamanujan());
 			StopButton.Click += (o, e) => isOn = false;
+
+			PiText.MouseWheel += (o, e) =>
+			{
+				fontSizeWheel += e.Delta;
+				if (fontSizeWheel < 2 * WheelUnit) fontSizeWheel = 2 * WheelUnit;
+				PiText.FontSize = fontSizeWheel / WheelUnit;
+			};
 		}
 
 		void Initialize()
 		{
+			PiText.FontSize = fontSizeWheel / WheelUnit;
+
 			var piTimer = new System.Timers.Timer(TextInterval);
 			piTimer.Elapsed += (o, e) =>
 			{
@@ -44,6 +54,7 @@ namespace PiWpf
 			piTimer.Start();
 		}
 
+		double fontSizeWheel = 24 * WheelUnit;
 		bool isOn;
 		decimal pi_d;
 		RealNumber pi;
