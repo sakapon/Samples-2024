@@ -27,7 +27,8 @@ namespace PiWpf
 		{
 			Task.Run(() =>
 			{
-				StartMadhava();
+				RealNumber.MaxOffset = 30;
+				StartLeibniz();
 			});
 
 			var piTimer = new System.Timers.Timer(50);
@@ -41,29 +42,43 @@ namespace PiWpf
 			piTimer.Start();
 		}
 
-		decimal pi = 0;
+		decimal pi_d;
+		RealNumber pi;
 
-		void StartLeibniz()
+		void StartLeibniz_d()
 		{
-			pi = 0;
+			pi_d = 0;
 			var pos = true;
 			for (int i = 1; ; i += 2, pos ^= true)
 			{
 				var d = 4m / i;
+				if (pos) pi_d += d;
+				else pi_d -= d;
+			}
+		}
+
+		void StartLeibniz()
+		{
+			pi = 0;
+			var n4 = (RealNumber)4;
+			var pos = true;
+			for (int i = 1; ; i += 2, pos ^= true)
+			{
+				var d = n4 / i;
 				if (pos) pi += d;
 				else pi -= d;
 			}
 		}
 
-		void StartMadhava()
+		void StartMadhava_d()
 		{
 			var r12 = (decimal)Math.Sqrt(12);
-			pi = r12;
+			pi_d = r12;
 			var p = 1m;
 			for (int i = 3; ; i += 2)
 			{
 				p *= -3;
-				pi += r12 / (i * p);
+				pi_d += r12 / (i * p);
 			}
 		}
 	}
