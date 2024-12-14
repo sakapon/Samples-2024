@@ -25,16 +25,14 @@ namespace PiWpf
 			RealNumber.MaxOffset = 5000;
 
 			Loaded += (o, e) => Initialize();
+			LeibnizButton.Click += (o, e) => Task.Run(() => ByLeibniz());
+			MadhavaButton.Click += (o, e) => Task.Run(() => ByMadhava());
+			RamanujanButton.Click += (o, e) => Task.Run(() => ByRamanujan());
+			StopButton.Click += (o, e) => isOn = false;
 		}
 
 		void Initialize()
 		{
-			Task.Run(() =>
-			{
-				//StartLeibniz();
-				StartMadhava();
-			});
-
 			var piTimer = new System.Timers.Timer(TextInterval);
 			piTimer.Elapsed += (o, e) =>
 			{
@@ -46,14 +44,16 @@ namespace PiWpf
 			piTimer.Start();
 		}
 
+		bool isOn;
 		decimal pi_d;
 		RealNumber pi;
 
-		void StartLeibniz_d()
+		void ByLeibniz_d()
 		{
+			isOn = true;
 			pi_d = 0;
 			var pos = true;
-			for (int i = 1; ; i += 2, pos ^= true)
+			for (int i = 1; isOn; i += 2, pos ^= true)
 			{
 				var d = 4m / i;
 				if (pos) pi_d += d;
@@ -61,12 +61,13 @@ namespace PiWpf
 			}
 		}
 
-		void StartLeibniz()
+		void ByLeibniz()
 		{
+			isOn = true;
 			pi = 0;
 			var n4 = (RealNumber)4;
 			var pos = true;
-			for (int i = 1; ; i += 2, pos ^= true)
+			for (int i = 1; isOn; i += 2, pos ^= true)
 			{
 				var d = n4 / i;
 				if (pos) pi += d;
@@ -74,28 +75,35 @@ namespace PiWpf
 			}
 		}
 
-		void StartMadhava_d()
+		void ByMadhava_d()
 		{
+			isOn = true;
 			var r12 = (decimal)Math.Sqrt(12);
 			pi_d = r12;
 			var p = 1m;
-			for (int i = 3; ; i += 2)
+			for (int i = 3; isOn; i += 2)
 			{
 				p *= -3;
 				pi_d += r12 / (i * p);
 			}
 		}
 
-		void StartMadhava()
+		void ByMadhava()
 		{
+			isOn = true;
 			var r12 = RealNumber.Sqrt(12);
 			pi = r12;
 			RealNumber p = 1;
-			for (int i = 3; ; i += 2)
+			for (int i = 3; isOn; i += 2)
 			{
 				p *= -3;
 				pi += r12 / (i * p);
 			}
+		}
+
+		void ByRamanujan()
+		{
+			isOn = true;
 		}
 	}
 }

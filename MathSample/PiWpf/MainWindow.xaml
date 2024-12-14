@@ -18,7 +18,7 @@
             <Button Style="{DynamicResource ButtonStyle}" x:Name="LeibnizButton" Content="Leibniz"/>
             <Button Style="{DynamicResource ButtonStyle}" x:Name="MadhavaButton" Content="Madhava"/>
             <Button Style="{DynamicResource ButtonStyle}" x:Name="RamanujanButton" Content="Ramanujan"/>
-            <Button Style="{DynamicResource ButtonStyle}" x:Name="ClearButton" Content="Clear" Margin="10"/>
+            <Button Style="{DynamicResource ButtonStyle}" x:Name="StopButton" Content="Stop" Margin="10"/>
         </StackPanel>
         <TextBlock x:Name="PiText" TextWrapping="Wrap" Text="0"/>
     </DockPanel>
