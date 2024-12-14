@@ -16,9 +16,13 @@ namespace PiWpf
 	/// </summary>
 	public partial class MainWindow : Window
 	{
+		const int TextInterval = 80;
+
 		public MainWindow()
 		{
 			InitializeComponent();
+
+			RealNumber.MaxOffset = 5000;
 
 			Loaded += (o, e) => Initialize();
 		}
@@ -27,11 +31,11 @@ namespace PiWpf
 		{
 			Task.Run(() =>
 			{
-				RealNumber.MaxOffset = 30;
-				StartLeibniz();
+				//StartLeibniz();
+				StartMadhava();
 			});
 
-			var piTimer = new System.Timers.Timer(50);
+			var piTimer = new System.Timers.Timer(TextInterval);
 			piTimer.Elapsed += (o, e) =>
 			{
 				Dispatcher.InvokeAsync(() =>
@@ -79,6 +83,18 @@ namespace PiWpf
 			{
 				p *= -3;
 				pi_d += r12 / (i * p);
+			}
+		}
+
+		void StartMadhava()
+		{
+			var r12 = RealNumber.Sqrt(12);
+			pi = r12;
+			RealNumber p = 1;
+			for (int i = 3; ; i += 2)
+			{
+				p *= -3;
+				pi += r12 / (i * p);
 			}
 		}
 	}
