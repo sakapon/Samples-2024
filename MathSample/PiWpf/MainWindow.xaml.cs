@@ -27,7 +27,7 @@ namespace PiWpf
 		{
 			Task.Run(() =>
 			{
-				StartLeibniz();
+				StartMadhava();
 			});
 
 			var piTimer = new System.Timers.Timer(50);
@@ -52,6 +52,18 @@ namespace PiWpf
 				var d = 4m / i;
 				if (pos) pi += d;
 				else pi -= d;
+			}
+		}
+
+		void StartMadhava()
+		{
+			var r12 = (decimal)Math.Sqrt(12);
+			pi = r12;
+			var p = 1m;
+			for (int i = 3; ; i += 2)
+			{
+				p *= -3;
+				pi += r12 / (i * p);
 			}
 		}
 	}
