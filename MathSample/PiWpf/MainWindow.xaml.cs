@@ -23,18 +23,11 @@ namespace PiWpf
 			Loaded += (o, e) => Initialize();
 		}
 
-		decimal pi = 0;
-
 		void Initialize()
 		{
 			Task.Run(() =>
 			{
-				var positive = true;
-				for (int i = 1; ; i += 2, positive ^= true)
-				{
-					if (positive) pi += 4m / i;
-					else pi -= 4m / i;
-				}
+				StartLeibniz();
 			});
 
 			var piTimer = new System.Timers.Timer(50);
@@ -46,6 +39,20 @@ namespace PiWpf
 				});
 			};
 			piTimer.Start();
+		}
+
+		decimal pi = 0;
+
+		void StartLeibniz()
+		{
+			pi = 0;
+			var pos = true;
+			for (int i = 1; ; i += 2, pos ^= true)
+			{
+				var d = 4m / i;
+				if (pos) pi += d;
+				else pi -= d;
+			}
 		}
 	}
 }
