@@ -3,7 +3,7 @@ using System.Numerics;
 
 namespace PiWpf
 {
-	public struct RealNumber
+	public struct RealNumber : IEquatable<RealNumber>
 	{
 		public static int MaxOffset = 5000;
 
@@ -17,13 +17,19 @@ namespace PiWpf
 		}
 
 		// 負値には非対応
-		public readonly override string ToString()
+		public override readonly string ToString()
 		{
 			var s = Value.ToString();
 			if (Offset == 0) return s;
 			s = s.PadLeft(Offset + 1, '0');
 			return $"{s[..^Offset]}.{s[^Offset..]}";
 		}
+
+		public readonly bool Equals(RealNumber other) => Value == other.Value && Offset == other.Offset;
+		public static bool operator ==(RealNumber v1, RealNumber v2) => v1.Equals(v2);
+		public static bool operator !=(RealNumber v1, RealNumber v2) => !v1.Equals(v2);
+		public override bool Equals(object obj) => obj is RealNumber v && Equals(v);
+		public override readonly int GetHashCode() => (Value, Offset).GetHashCode();
 
 		public static implicit operator RealNumber(int value) => new RealNumber(value, 0);
 
@@ -71,6 +77,18 @@ namespace PiWpf
 			var d = (MaxOffset << 1) - o;
 			v *= BigInteger.Pow(10, d);
 			o = MaxOffset << 1;
+		}
+
+		public static RealNumber Sqrt(RealNumber v)
+		{
+			RealNumber x0 = 1;
+			for (var i = 0; i < 100; i++)
+			{
+				var temp = x0 / 2 + v / (2 * x0);
+				if (x0 == temp) break;
+				x0 = temp;
+			}
+			return x0;
 		}
 	}
 }
