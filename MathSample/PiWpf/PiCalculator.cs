@@ -67,6 +67,19 @@
 		public void ByRamanujan()
 		{
 			IsOn = true;
+			RealNumber a = 1123;
+			RealNumber p = 1;
+			RealNumber bumbo = 882;
+			var s = a * p / bumbo;
+			Pi = 4 / s;
+			for (long i = 1; IsOn; ++i)
+			{
+				a += 21460;
+				p = p * -(4 * i - 3) * (4 * i - 2) * (4 * i - 1) * (4 * i);
+				bumbo = bumbo * (882 * 882 * 256) * i * i * i * i;
+				s += a * p / bumbo;
+				Pi = 4 / s;
+			}
 		}
 	}
 }
