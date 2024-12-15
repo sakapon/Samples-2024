@@ -67,6 +67,25 @@
 		public void ByRamanujan()
 		{
 			IsOn = true;
+			RealNumber c = RealNumber.Sqrt(2) * (99 * 99) / 4;
+			RealNumber a = 1103;
+			RealNumber p = 1;
+			RealNumber bumbo = 1;
+			var s = a;
+			Pi = c / s;
+			for (long i = 1; IsOn; ++i)
+			{
+				a += 26390;
+				p = p * (4 * i - 3) * (4 * i - 2) * (4 * i - 1) * (4 * i);
+				bumbo = bumbo * (256L * 99 * 99 * 99 * 99) * i * i * i * i;
+				s += a * p / bumbo;
+				Pi = c / s;
+			}
+		}
+
+		public void ByRamanujan2()
+		{
+			IsOn = true;
 			RealNumber a = 1123;
 			RealNumber p = 1;
 			RealNumber bumbo = 882;
