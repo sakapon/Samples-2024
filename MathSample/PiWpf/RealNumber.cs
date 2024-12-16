@@ -34,6 +34,7 @@ namespace PiWpf
 
 		public static implicit operator RealNumber(int value) => new RealNumber(value, 0);
 		public static implicit operator RealNumber(long value) => new RealNumber(value, 0);
+		public static implicit operator RealNumber(BigInteger value) => new RealNumber(value, 0);
 
 		public static RealNumber operator +(RealNumber v1, RealNumber v2)
 		{

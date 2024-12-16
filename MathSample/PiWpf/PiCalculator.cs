@@ -1,4 +1,6 @@
-﻿namespace PiWpf
+﻿using System.Numerics;
+
+namespace PiWpf
 {
 	public class PiCalculator
 	{
@@ -68,17 +70,15 @@
 		{
 			IsOn = true;
 			RealNumber c = RealNumber.Sqrt(2) * (99 * 99) / 4;
-			RealNumber a = 1103;
-			RealNumber p = 1;
-			RealNumber bumbo = 1;
-			var s = a;
+			BigInteger a = 1103, p = 1, d = 1;
+			RealNumber s = a;
 			Pi = c / s;
 			for (long i = 1; IsOn; ++i)
 			{
 				a += 26390;
 				p = p * (4 * i - 3) * (4 * i - 2) * (4 * i - 1) * (4 * i);
-				bumbo = bumbo * (256L * 99 * 99 * 99 * 99) * i * i * i * i;
-				s += a * p / bumbo;
+				d = d * (256L * 99 * 99 * 99 * 99) * i * i * i * i;
+				s += (RealNumber)(a * p) / d;
 				Pi = c / s;
 			}
 		}
@@ -86,18 +86,17 @@
 		public void ByRamanujan2()
 		{
 			IsOn = true;
-			RealNumber a = 1123;
-			RealNumber p = 1;
-			RealNumber bumbo = 882;
-			var s = a * p / bumbo;
-			Pi = 4 / s;
+			RealNumber c = 4;
+			BigInteger a = 1123, p = 1, d = 882;
+			var s = (RealNumber)a / d;
+			Pi = c / s;
 			for (long i = 1; IsOn; ++i)
 			{
 				a += 21460;
 				p = p * -(4 * i - 3) * (4 * i - 2) * (4 * i - 1) * (4 * i);
-				bumbo = bumbo * (882 * 882 * 256) * i * i * i * i;
-				s += a * p / bumbo;
-				Pi = 4 / s;
+				d = d * (882 * 882 * 256) * i * i * i * i;
+				s += (RealNumber)(a * p) / d;
+				Pi = c / s;
 			}
 		}
 	}
