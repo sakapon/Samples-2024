@@ -5,8 +5,20 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DropTester"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-
-    </Grid>
+        Title="MainWindow" Height="600" Width="900" FontSize="14" AllowDrop="True">
+    <Window.Resources>
+        <DataTemplate x:Key="ItemsControlItemTemplate1">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Width="200" Text="{Binding Key}"/>
+                <TextBlock Width="200" Text="{Binding TypeName}"/>
+                <TextBlock Width="240" Text="{Binding ValueString}"/>
+            </StackPanel>
+        </DataTemplate>
+    </Window.Resources>
+    <DockPanel HorizontalAlignment="Center">
+        <StackPanel DockPanel.Dock="Top" Margin="10">
+            <Rectangle x:Name="Rect1" Height="100" Stroke="Black" Width="200"/>
+        </StackPanel>
+        <ItemsControl ItemTemplate="{DynamicResource ItemsControlItemTemplate1}" x:Name="DataItems"/>
+    </DockPanel>
 </Window>
