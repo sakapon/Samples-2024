@@ -23,7 +23,8 @@ namespace DropTester
 			Drop += (o, e) =>
 			{
 				var d = ToDictionary(e.Data);
-				DataItems.ItemsSource = d;
+				var vm = (MainViewModel)DataContext;
+				vm.DataItems.Value = d;
 			};
 
 			Rect1.DragOver += (o, e) =>
@@ -52,23 +53,6 @@ namespace DropTester
 				l.Add(o);
 			}
 			return l.ToArray();
-		}
-	}
-
-	public class Obj
-	{
-		public string Key { get; set; }
-		public object Value { get; set; }
-
-		public string TypeName => Value?.GetType().FullName ?? "None";
-		public string ValueString
-		{
-			get
-			{
-				if (Value is null) return "None";
-				if (Value is string[] vs) return string.Join("\n", vs);
-				return Value.ToString();
-			}
 		}
 	}
 }
