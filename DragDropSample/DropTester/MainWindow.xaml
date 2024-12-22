@@ -18,10 +18,12 @@
             </StackPanel>
         </DataTemplate>
     </Window.Resources>
-    <DockPanel HorizontalAlignment="Center">
+    <DockPanel>
         <StackPanel DockPanel.Dock="Top" Margin="10">
             <Rectangle x:Name="Rect1" Height="100" Stroke="Black" Width="200"/>
         </StackPanel>
-        <ItemsControl ItemTemplate="{DynamicResource DataItemTemplate}" ItemsSource="{Binding DataItems.Value}"/>
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="10">
+            <ItemsControl ItemTemplate="{DynamicResource DataItemTemplate}" ItemsSource="{Binding DataItems.Value}"/>
+        </ScrollViewer>
     </DockPanel>
 </Window>
