@@ -1,4 +1,6 @@
-﻿using Reactive.Bindings;
+﻿using System.IO;
+using System.Text;
+using Reactive.Bindings;
 
 namespace DropTester
 {
@@ -16,6 +18,7 @@ namespace DropTester
 		{
 			null => "(None)",
 			string[] vs => string.Join("\n", vs),
+			MemoryStream stream => Encoding.UTF8.GetString(stream.ToArray()),
 			_ => Value.ToString(),
 		};
 	}
