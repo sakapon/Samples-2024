@@ -28,6 +28,7 @@ namespace DropTester
 			{
 				vm.DataItems.Value = ToDictionary(e.Data);
 				vm.AllowedEffects.Value = e.AllowedEffects.ToString();
+				vm.KeyStates.Value = e.KeyStates.ToString();
 			};
 
 			Rect1.DragOver += (o, e) =>

@@ -6,6 +6,7 @@ namespace DropTester
 	{
 		public ReactiveProperty<DataItem[]> DataItems { get; } = new ReactiveProperty<DataItem[]>();
 		public ReactiveProperty<string> AllowedEffects { get; } = new ReactiveProperty<string>();
+		public ReactiveProperty<string> KeyStates { get; } = new ReactiveProperty<string>();
 	}
 
 	public record DataItem(string Key, object Value)
