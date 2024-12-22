@@ -4,23 +4,20 @@ namespace DropTester
 {
 	public class MainViewModel
 	{
-		public ReactiveProperty<Obj[]> DataItems { get; } = new ReactiveProperty<Obj[]>();
+		public ReactiveProperty<DataItem[]> DataItems { get; } = new ReactiveProperty<DataItem[]>();
 	}
 
-	public class Obj
+	public class DataItem
 	{
 		public string Key { get; set; }
 		public object Value { get; set; }
 
 		public string TypeName => Value?.GetType().FullName ?? "None";
-		public string ValueString
+		public string ValueString => Value switch
 		{
-			get
-			{
-				if (Value is null) return "None";
-				if (Value is string[] vs) return string.Join("\n", vs);
-				return Value.ToString();
-			}
-		}
+			null => "None",
+			string[] vs => string.Join("\n", vs),
+			_ => Value.ToString(),
+		};
 	}
 }

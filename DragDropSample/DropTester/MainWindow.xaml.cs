@@ -37,12 +37,12 @@ namespace DropTester
 			};
 		}
 
-		public static Obj[] ToDictionary(IDataObject data)
+		public static DataItem[] ToDictionary(IDataObject data)
 		{
-			var l = new List<Obj>();
+			var l = new List<DataItem>();
 			foreach (var f in data.GetFormats())
 			{
-				var o = new Obj { Key = f };
+				var o = new DataItem { Key = f };
 				try
 				{
 					o.Value = data.GetData(f);
