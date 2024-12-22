@@ -16,15 +16,18 @@ namespace DropTester
 	/// </summary>
 	public partial class MainWindow : Window
 	{
+		readonly MainViewModel vm;
+
 		public MainWindow()
 		{
 			InitializeComponent();
 
+			vm = (MainViewModel)DataContext;
+
 			Drop += (o, e) =>
 			{
-				var d = ToDictionary(e.Data);
-				var vm = (MainViewModel)DataContext;
-				vm.DataItems.Value = d;
+				vm.DataItems.Value = ToDictionary(e.Data);
+				vm.AllowedEffects.Value = e.AllowedEffects.ToString();
 			};
 
 			Rect1.DragOver += (o, e) =>
@@ -39,20 +42,17 @@ namespace DropTester
 
 		public static DataItem[] ToDictionary(IDataObject data)
 		{
-			var l = new List<DataItem>();
-			foreach (var f in data.GetFormats())
+			return Array.ConvertAll(data.GetFormats(), f =>
 			{
-				var o = new DataItem { Key = f };
 				try
 				{
-					o.Value = data.GetData(f);
+					return new DataItem(f, data.GetData(f));
 				}
 				catch (Exception)
 				{
+					return new DataItem(f, null);
 				}
-				l.Add(o);
-			}
-			return l.ToArray();
+			});
 		}
 	}
 }
