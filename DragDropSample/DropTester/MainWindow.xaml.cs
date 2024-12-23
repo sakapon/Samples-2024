@@ -26,12 +26,13 @@ namespace DropTester
 
 			DragOver += (o, e) =>
 			{
-				vm.DataItems.Value = ToDictionary(e.Data);
 				vm.AllowedEffects.Value = e.AllowedEffects.ToString();
 				vm.KeyStates.Value = e.KeyStates.ToString();
 
-				// Effects プロパティで動作を指定します。
-				//e.Effects = DragDropEffects.None;
+				// Effects プロパティに処理可能な動作を指定します。
+				// AllowedEffects と Effects が排他的となる場合、Drop イベントが抑制されます。
+				e.Effects = DragDropEffects.Copy;
+				e.Handled = true;
 			};
 
 			Drop += (o, e) =>
@@ -39,6 +40,13 @@ namespace DropTester
 				vm.DataItems.Value = ToDictionary(e.Data);
 				vm.AllowedEffects.Value = e.AllowedEffects.ToString();
 				vm.KeyStates.Value = e.KeyStates.ToString();
+
+				// AllowedEffects, KeyStates の値をもとに、ドロップされたときの処理を決定します。
+
+				// ドラッグ元に返す値。
+				// Move の場合、ドラッグ元で対象が削除されることがあります。
+				e.Effects = DragDropEffects.Copy;
+				e.Handled = true;
 			};
 		}
 
