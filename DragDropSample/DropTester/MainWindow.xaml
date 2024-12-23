@@ -19,9 +19,6 @@
         </DataTemplate>
     </Window.Resources>
     <DockPanel Margin="10">
-        <StackPanel DockPanel.Dock="Top">
-            <Rectangle x:Name="Rect1" Height="100" Stroke="Black" Width="200"/>
-        </StackPanel>
         <StackPanel DockPanel.Dock="Top" Margin="0,2" Orientation="Horizontal">
             <TextBlock Text="Allowed Effects:"/>
             <TextBlock Text="{Binding AllowedEffects.Value}" Margin="6,0"/>

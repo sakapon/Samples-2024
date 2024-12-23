@@ -24,20 +24,20 @@ namespace DropTester
 
 			vm = (MainViewModel)DataContext;
 
+			DragOver += (o, e) =>
+			{
+				vm.AllowedEffects.Value = e.AllowedEffects.ToString();
+				vm.KeyStates.Value = e.KeyStates.ToString();
+
+				// Effects プロパティで動作を指定します。
+				//e.Effects = DragDropEffects.None;
+			};
+
 			Drop += (o, e) =>
 			{
 				vm.DataItems.Value = ToDictionary(e.Data);
 				vm.AllowedEffects.Value = e.AllowedEffects.ToString();
 				vm.KeyStates.Value = e.KeyStates.ToString();
-			};
-
-			Rect1.DragOver += (o, e) =>
-			{
-				// Effects プロパティで動作を指定します。
-				//e.Effects = DragDropEffects.None;
-			};
-			Rect1.Drop += (o, e) =>
-			{
 			};
 		}
 
