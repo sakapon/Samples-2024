@@ -44,6 +44,14 @@ namespace DragTester
 				vm.Effects.Value = result.ToString();
 				Array.ForEach(files, File.Delete);
 			};
+
+			DragTextText.MouseLeftButtonDown += (o, e) =>
+			{
+				var text = "あいうえお";
+				var data = new DataObject(DataFormats.UnicodeText, text);
+				var result = DragDrop.DoDragDrop((DependencyObject)o, data, DragDropEffects.Copy | DragDropEffects.Move);
+				vm.Effects.Value = result.ToString();
+			};
 		}
 
 		static string CreateTempFile()

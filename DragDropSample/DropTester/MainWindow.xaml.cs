@@ -80,6 +80,8 @@ namespace DropTester
 				//e.Effects = DragDropEffects.Copy;
 				e.Handled = true;
 			};
+
+			// 文字列は e.Data.GetData(DataFormats.UnicodeText) で取得します。
 		}
 
 		public static DataItem[] ToDataItems(IDataObject data)
