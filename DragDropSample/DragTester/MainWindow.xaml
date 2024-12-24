@@ -10,7 +10,7 @@
         <local:MainViewModel/>
     </Window.DataContext>
     <Window.Resources>
-        <Style x:Key="EffectsTextStyle" TargetType="{x:Type TextBlock}">
+        <Style x:Key="AreaTextStyle" TargetType="{x:Type TextBlock}">
             <Setter Property="Background" Value="#FFFFCC99"/>
             <Setter Property="Margin" Value="10,6"/>
             <Setter Property="Padding" Value="16"/>
@@ -18,9 +18,9 @@
     </Window.Resources>
     <DockPanel Margin="10">
         <StackPanel DockPanel.Dock="Top" Margin="0,2" Orientation="Horizontal" HorizontalAlignment="Center">
-            <TextBlock x:Name="DragFileText" Style="{DynamicResource EffectsTextStyle}" Text="Drag File"/>
-            <TextBlock x:Name="DragFilesText" Style="{DynamicResource EffectsTextStyle}" Text="Drag Files"/>
-            <TextBlock x:Name="DragTextText" Style="{DynamicResource EffectsTextStyle}" Text="Drag Text"/>
+            <TextBlock x:Name="DragFileText" Style="{DynamicResource AreaTextStyle}" Text="Drag File"/>
+            <TextBlock x:Name="DragFilesText" Style="{DynamicResource AreaTextStyle}" Text="Drag Files"/>
+            <TextBlock x:Name="DragTextText" Style="{DynamicResource AreaTextStyle}" Text="Drag Text"/>
         </StackPanel>
         <StackPanel DockPanel.Dock="Top" Margin="0,2" Orientation="Horizontal">
             <TextBlock Text="Effects:"/>
