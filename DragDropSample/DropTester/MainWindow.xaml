@@ -17,8 +17,19 @@
                 <TextBlock Text="{Binding ValueString}"/>
             </StackPanel>
         </DataTemplate>
+        <Style x:Key="EffectsTextStyle" TargetType="{x:Type TextBlock}">
+            <Setter Property="Background" Value="#FFFFCC99"/>
+            <Setter Property="Margin" Value="10,6"/>
+            <Setter Property="Padding" Value="16"/>
+        </Style>
     </Window.Resources>
     <DockPanel Margin="10">
+        <StackPanel x:Name="EffectsPanel" DockPanel.Dock="Top" Margin="0,2" Orientation="Horizontal" HorizontalAlignment="Center">
+            <TextBlock Style="{DynamicResource EffectsTextStyle}" Text="Effects = None"/>
+            <TextBlock Style="{DynamicResource EffectsTextStyle}" Text="Effects = Copy"/>
+            <TextBlock Style="{DynamicResource EffectsTextStyle}" Text="Effects = Move"/>
+            <TextBlock Style="{DynamicResource EffectsTextStyle}" Text="Effects = Link"/>
+        </StackPanel>
         <StackPanel DockPanel.Dock="Top" Margin="0,2" Orientation="Horizontal">
             <TextBlock Text="Allowed Effects:"/>
             <TextBlock Text="{Binding AllowedEffects.Value}" Margin="6,0"/>
