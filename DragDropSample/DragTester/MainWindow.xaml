@@ -5,8 +5,26 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DragTester"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-
-    </Grid>
+        Title="Drag Tester" Height="600" Width="900" FontSize="14">
+    <Window.DataContext>
+        <local:MainViewModel/>
+    </Window.DataContext>
+    <Window.Resources>
+        <Style x:Key="EffectsTextStyle" TargetType="{x:Type TextBlock}">
+            <Setter Property="Background" Value="#FFFFCC99"/>
+            <Setter Property="Margin" Value="10,6"/>
+            <Setter Property="Padding" Value="16"/>
+        </Style>
+    </Window.Resources>
+    <DockPanel Margin="10">
+        <StackPanel DockPanel.Dock="Top" Margin="0,2" Orientation="Horizontal" HorizontalAlignment="Center">
+            <TextBlock x:Name="DragFileText" Style="{DynamicResource EffectsTextStyle}" Text="Drag File"/>
+            <TextBlock x:Name="DragFilesText" Style="{DynamicResource EffectsTextStyle}" Text="Drag Files"/>
+            <TextBlock x:Name="DragTextText" Style="{DynamicResource EffectsTextStyle}" Text="Drag Text"/>
+        </StackPanel>
+        <StackPanel DockPanel.Dock="Top" Margin="0,2" Orientation="Horizontal">
+            <TextBlock Text="Effects:"/>
+            <TextBlock Text="{Binding Effects.Value}" Margin="6,0"/>
+        </StackPanel>
+    </DockPanel>
 </Window>
