@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DragTester"
         mc:Ignorable="d"
-        Title="Drag Tester" Height="400" Width="600" FontSize="14">
+        Title="Drag Tester" Height="300" Width="450" FontSize="14">
     <Window.DataContext>
         <local:MainViewModel/>
     </Window.DataContext>
@@ -18,15 +18,13 @@
     </Window.Resources>
     <DockPanel Margin="10">
         <StackPanel DockPanel.Dock="Top" Margin="0,2" Orientation="Horizontal" HorizontalAlignment="Center">
-            <TextBlock x:Name="DragFileText" Style="{DynamicResource AreaTextStyle}" Text="Drag File"/>
-            <TextBlock x:Name="DragFilesText" Style="{DynamicResource AreaTextStyle}" Text="Drag Files"/>
-            <TextBlock x:Name="DragTextText" Style="{DynamicResource AreaTextStyle}" Text="Drag Text"/>
+            <ListBox Width="100" ItemsSource="{Binding DragTypes}" SelectedItem="{Binding SelectedDragType.Value}" Margin="10,6"/>
+            <ListBox x:Name="DDEList" Width="100" ItemsSource="{Binding DragDropEffects}" SelectionMode="Multiple" Margin="10,6"/>
         </StackPanel>
         <StackPanel DockPanel.Dock="Top" Margin="0,2" Orientation="Horizontal" HorizontalAlignment="Center">
-            <ListBox Width="100" ItemsSource="{Binding DragTypes}" SelectedItem="{Binding SelectedDragType.Value}" Margin="6,6"/>
-            <ListBox x:Name="DDEList" Width="100" ItemsSource="{Binding DragDropEffects}" SelectionMode="Multiple" Margin="6,6"/>
+            <TextBlock x:Name="DragText" Style="{DynamicResource AreaTextStyle}" Text="Drag This"/>
         </StackPanel>
-        <StackPanel DockPanel.Dock="Top" Margin="0,2" Orientation="Horizontal">
+        <StackPanel DockPanel.Dock="Top" Margin="0,10" Orientation="Horizontal">
             <TextBlock Text="Return Value (Effects):"/>
             <TextBlock Text="{Binding Effects.Value}" Margin="6,0"/>
         </StackPanel>
