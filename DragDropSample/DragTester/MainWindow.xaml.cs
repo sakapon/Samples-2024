@@ -47,10 +47,19 @@ namespace DragTester
 
 			DragTextText.MouseLeftButtonDown += (o, e) =>
 			{
-				var text = "あいうえお";
-				var data = new DataObject(DataFormats.UnicodeText, text);
+				var data = CreateDataObject(vm.SelectedDragType.Value);
+				var effects = DDEList.SelectedItems.Cast<DragDropEffects>().Aggregate(DragDropEffects.None, (x, y) => x | y);
+				var result = DragDrop.DoDragDrop((DependencyObject)o, data, effects);
+				vm.Effects.Value = result.ToString();
+				e.Handled = true;
+			};
+
+			MouseLeftButtonDown += (o, e) =>
+			{
+				var data = new DataObject(DataFormats.UnicodeText, "Drag Tester");
 				var result = DragDrop.DoDragDrop((DependencyObject)o, data, DragDropEffects.Copy | DragDropEffects.Move);
 				vm.Effects.Value = result.ToString();
+				e.Handled = true;
 			};
 		}
 
@@ -60,6 +69,26 @@ namespace DragTester
 			var filePath = Path.GetFullPath(Path.Combine(DirName, fileName));
 			File.WriteAllText(filePath, "");
 			return filePath;
+		}
+
+		static DataObject CreateDataObject(DragType type)
+		{
+			switch (type)
+			{
+				case DragType.File:
+					break;
+				case DragType.Files:
+					break;
+				case DragType.Text:
+					return new DataObject(DataFormats.UnicodeText, "あいうえお");
+				case DragType.Tuple:
+					break;
+				case DragType.Custom:
+					break;
+				default:
+					throw new InvalidOperationException();
+			}
+			throw new NotImplementedException();
 		}
 	}
 }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DragTester"
         mc:Ignorable="d"
-        Title="Drag Tester" Height="600" Width="900" FontSize="14">
+        Title="Drag Tester" Height="400" Width="600" FontSize="14">
     <Window.DataContext>
         <local:MainViewModel/>
     </Window.DataContext>
@@ -22,8 +22,12 @@
             <TextBlock x:Name="DragFilesText" Style="{DynamicResource AreaTextStyle}" Text="Drag Files"/>
             <TextBlock x:Name="DragTextText" Style="{DynamicResource AreaTextStyle}" Text="Drag Text"/>
         </StackPanel>
+        <StackPanel DockPanel.Dock="Top" Margin="0,2" Orientation="Horizontal" HorizontalAlignment="Center">
+            <ListBox Width="100" ItemsSource="{Binding DragTypes}" SelectedItem="{Binding SelectedDragType.Value}" Margin="6,6"/>
+            <ListBox x:Name="DDEList" Width="100" ItemsSource="{Binding DragDropEffects}" SelectionMode="Multiple" Margin="6,6"/>
+        </StackPanel>
         <StackPanel DockPanel.Dock="Top" Margin="0,2" Orientation="Horizontal">
-            <TextBlock Text="Effects:"/>
+            <TextBlock Text="Return Value (Effects):"/>
             <TextBlock Text="{Binding Effects.Value}" Margin="6,0"/>
         </StackPanel>
     </DockPanel>
