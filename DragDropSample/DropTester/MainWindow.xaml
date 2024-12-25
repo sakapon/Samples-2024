@@ -20,15 +20,13 @@
         <Style x:Key="AreaTextStyle" TargetType="{x:Type TextBlock}">
             <Setter Property="Background" Value="#FFFFCC99"/>
             <Setter Property="Margin" Value="10,6"/>
-            <Setter Property="Padding" Value="16"/>
+            <Setter Property="Padding" Value="30"/>
         </Style>
     </Window.Resources>
     <DockPanel Margin="10">
-        <StackPanel x:Name="EffectsPanel" DockPanel.Dock="Top" Margin="0,2" Orientation="Horizontal" HorizontalAlignment="Center">
-            <TextBlock Style="{DynamicResource AreaTextStyle}" Text="Effects = None"/>
-            <TextBlock Style="{DynamicResource AreaTextStyle}" Text="Effects = Copy"/>
-            <TextBlock Style="{DynamicResource AreaTextStyle}" Text="Effects = Move"/>
-            <TextBlock Style="{DynamicResource AreaTextStyle}" Text="Effects = Link"/>
+        <StackPanel DockPanel.Dock="Top" Margin="0,2" Orientation="Horizontal" HorizontalAlignment="Center">
+            <ListBox x:Name="DDEList" Width="100" ItemsSource="{Binding DragDropEffects}" SelectionMode="Multiple" Margin="10,6"/>
+            <TextBlock x:Name="DropText" Style="{DynamicResource AreaTextStyle}" Text="Drop Here" VerticalAlignment="Center"/>
         </StackPanel>
         <StackPanel DockPanel.Dock="Top" Margin="0,2" Orientation="Horizontal">
             <TextBlock Text="Allowed Effects:"/>
