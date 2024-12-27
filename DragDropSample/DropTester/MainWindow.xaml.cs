@@ -60,7 +60,7 @@ namespace DropTester
 
 				// Effects プロパティに処理可能な動作を指定します。
 				// AllowedEffects と Effects が排他的となる場合、Drop イベントが抑制されます。
-				//e.Effects = DragDropEffects.Copy;
+				//e.Effects = DragDropEffects.None;
 				e.Handled = true;
 			};
 
@@ -74,7 +74,7 @@ namespace DropTester
 
 				// ドラッグ元に返す値。
 				// Move が含まれる場合、ドラッグ元で対象が削除されることがあります。
-				//e.Effects = DragDropEffects.Copy;
+				//e.Effects = DragDropEffects.None;
 				e.Handled = true;
 			};
 
