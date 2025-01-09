@@ -43,7 +43,7 @@ namespace DragDropCanvas
 				return;
 			}
 
-			var offset = (Point)e.Data.GetData("Circle");
+			var offset = ((MyPoint)e.Data.GetData("Circle")).ToPoint();
 			var position = e.GetPosition(TheCanvas) - offset;
 
 			var circle = CreateCircle();
@@ -60,8 +60,7 @@ namespace DragDropCanvas
 			var circle = (Ellipse)sender;
 			var offset = Mouse.GetPosition(circle);
 
-			// 現在のアプリ内であれば、カスタム型でも可能。
-			var data = new DataObject("Circle", offset);
+			var data = new DataObject("Circle", new MyPoint(offset));
 			var result = DragDrop.DoDragDrop(circle, data, DragDropEffects.Move);
 			e.Handled = true;
 
@@ -80,5 +79,15 @@ namespace DragDropCanvas
 			circle.MouseLeftButtonDown += Circle_MouseLeftButtonDown;
 			return circle;
 		}
+	}
+
+	// カスタム型のテスト (通常は Point 型を使えばよい)
+	// 現在のアプリ内であれば、Serializable でないカスタム型でも可能。
+	[Serializable]
+	public class MyPoint
+	{
+		public double X, Y;
+		public MyPoint(Point p) => (X, Y) = (p.X, p.Y);
+		public Point ToPoint() => new Point(X, Y);
 	}
 }
