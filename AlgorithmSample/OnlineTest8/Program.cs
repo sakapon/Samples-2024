@@ -17,7 +17,8 @@ namespace OnlineTest8
 		{
 			var result = Enumerable.Range(0, 30).AsIterable()
 				.Filter(x => x % 3 == 0)
-				.Map(x => x.ToString("X2"))
+				.Map(x => x * 2)
+				.Sort(x => x.ToString())
 				.ToArray();
 			Array.ForEach(result, Console.WriteLine);
 		}

@@ -10,6 +10,7 @@ namespace AlgorithmLib8.Iterators
 
 		IIterable<T> Filter(Func<T, bool> func) => new FilterIterable<T>(this, func);
 		IIterable<TResult> Map<TResult>(Func<T, TResult> func) => new MapIterable<T, TResult>(this, func);
+		IIterable<T> Sort<TKey>(Func<T, TKey> func) => new SortIterable<T, TKey>(this, func);
 
 		T[] ToArray()
 		{
@@ -53,6 +54,27 @@ namespace AlgorithmLib8.Iterators
 		public bool MoveNext() => source.MoveNext();
 	}
 
+	class SortIterable<T, TKey> : ArrayIterable<T>
+	{
+		public SortIterable(IIterable<T> source, Func<T, TKey> func) : base(Sort(source, func)) { }
+
+		static T[] Sort(IIterable<T> source, Func<T, TKey> func)
+		{
+			var l = new List<T>();
+			var lkey = new List<TKey>();
+			while (source.MoveNext())
+			{
+				l.Add(source.Current);
+				lkey.Add(func(source.Current));
+			}
+
+			var a = l.ToArray();
+			var keys = lkey.ToArray();
+			Array.Sort(keys, a);
+			return a;
+		}
+	}
+
 	class EnumerableIterable<T> : IIterable<T>
 	{
 		readonly IEnumerator<T> source;
@@ -69,7 +91,7 @@ namespace AlgorithmLib8.Iterators
 	class ArrayIterable<T> : IIterable<T>
 	{
 		readonly T[] source;
-		int i;
+		int i = -1;
 
 		public ArrayIterable(T[] source)
 		{
@@ -77,7 +99,7 @@ namespace AlgorithmLib8.Iterators
 		}
 
 		public T Current => source[i];
-		public bool MoveNext() => i++ < source.Length;
+		public bool MoveNext() => ++i < source.Length;
 	}
 
 	public static class Iterable
