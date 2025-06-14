@@ -8,6 +8,9 @@ namespace AlgorithmLib8.Iterators
 		T Current { get; }
 		bool MoveNext();
 
+		IIterable<T> Filter(Func<T, bool> func) => new FilterIterable<T>(this, func);
+		IIterable<TResult> Map<TResult>(Func<T, TResult> func) => new MapIterable<T, TResult>(this, func);
+
 		T[] ToArray()
 		{
 			var l = new List<T>();
@@ -16,7 +19,41 @@ namespace AlgorithmLib8.Iterators
 		}
 	}
 
-	public class EnumerableIterable<T> : IIterable<T>
+	class FilterIterable<T> : IIterable<T>
+	{
+		readonly IIterable<T> source;
+		readonly Func<T, bool> func;
+
+		public FilterIterable(IIterable<T> source, Func<T, bool> func)
+		{
+			this.source = source;
+			this.func = func;
+		}
+
+		public T Current => source.Current;
+		public bool MoveNext()
+		{
+			while (source.MoveNext()) if (func(Current)) return true;
+			return false;
+		}
+	}
+
+	class MapIterable<T, TResult> : IIterable<TResult>
+	{
+		readonly IIterable<T> source;
+		readonly Func<T, TResult> func;
+
+		public MapIterable(IIterable<T> source, Func<T, TResult> func)
+		{
+			this.source = source;
+			this.func = func;
+		}
+
+		public TResult Current => func(source.Current);
+		public bool MoveNext() => source.MoveNext();
+	}
+
+	class EnumerableIterable<T> : IIterable<T>
 	{
 		readonly IEnumerator<T> source;
 
@@ -29,7 +66,7 @@ namespace AlgorithmLib8.Iterators
 		public bool MoveNext() => source.MoveNext();
 	}
 
-	public class ArrayIterable<T> : IIterable<T>
+	class ArrayIterable<T> : IIterable<T>
 	{
 		readonly T[] source;
 		int i;

@@ -15,8 +15,9 @@ namespace OnlineTest8
 
 		static void IterableTest()
 		{
-			var result = Enumerable.Range(0, 30)
-				.AsIterable()
+			var result = Enumerable.Range(0, 30).AsIterable()
+				.Filter(x => x % 3 == 0)
+				.Map(x => x.ToString("X2"))
 				.ToArray();
 			Array.ForEach(result, Console.WriteLine);
 		}
