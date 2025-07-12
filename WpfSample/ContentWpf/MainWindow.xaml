@@ -4,12 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ContentWpf"
+        xmlns:system="clr-namespace:System;assembly=System.Runtime"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Window.DataContext>
         <local:AppModel d:IsForDesign="True"/>
     </Window.DataContext>
     <Grid>
-
+        <d:TextBlock Text="{x:Static system:Environment.CurrentDirectory}"/>
     </Grid>
 </Window>
