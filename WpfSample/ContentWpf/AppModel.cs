@@ -11,5 +11,6 @@ namespace ContentWpf
 
 		public string NoneImagePath { get; } = @".\Images\menfukuro.png";
 		public string NoneImageFullPath => Path.GetFullPath(NoneImagePath);
+		public byte[] NoneImageData => File.ReadAllBytes(NoneImagePath);
 	}
 }
