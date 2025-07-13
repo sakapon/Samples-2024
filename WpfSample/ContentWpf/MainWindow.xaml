@@ -6,11 +6,19 @@
         xmlns:local="clr-namespace:ContentWpf"
         xmlns:system="clr-namespace:System;assembly=System.Runtime"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Content WPF" Height="400" Width="600">
     <Window.DataContext>
         <local:AppModel d:IsForDesign="True"/>
     </Window.DataContext>
     <Grid>
+        <UniformGrid Columns="3">
+            <Image Source="{Binding ContentImagePath}"/>
+            <Image Source="{Binding ContentImageFullPath}"/>
+            <StackPanel Background="Gray"/>
+            <Image Source="{Binding NoneImagePath}"/>
+            <Image Source="{Binding NoneImageFullPath}"/>
+            <Image Source="{Binding NoneImageFullPath}" d:Source="{Binding NoneImagePath}"/>
+        </UniformGrid>
         <d:TextBlock Text="{x:Static system:Environment.CurrentDirectory}"/>
     </Grid>
 </Window>
