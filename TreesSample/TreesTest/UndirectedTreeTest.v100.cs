@@ -6,9 +6,8 @@ namespace TreesTest.v100
 	public class UndirectedTreeTest
 	{
 		[TestMethod]
-		public void GetForm_6()
+		public void GetFormForVertex_6()
 		{
-			var n = 6;
 			(int u, int v)[] edges =
 			[
 				(0, 1),
@@ -18,18 +17,17 @@ namespace TreesTest.v100
 				(4, 5),
 			];
 
-			Assert.AreEqual("(((()))()())", UndirectedTree.GetForm(n, edges, 0));
-			Assert.AreEqual("((((()))()))", UndirectedTree.GetForm(n, edges, 1));
-			Assert.AreEqual("((((()))()))", UndirectedTree.GetForm(n, edges, 2));
-			Assert.AreEqual("((()())(()))", UndirectedTree.GetForm(n, edges, 3));
-			Assert.AreEqual("(((()()))())", UndirectedTree.GetForm(n, edges, 4));
-			Assert.AreEqual("((((()()))))", UndirectedTree.GetForm(n, edges, 5));
+			Assert.AreEqual("(((()))()())", UndirectedTree.GetFormForVertex(edges, 0));
+			Assert.AreEqual("((((()))()))", UndirectedTree.GetFormForVertex(edges, 1));
+			Assert.AreEqual("((((()))()))", UndirectedTree.GetFormForVertex(edges, 2));
+			Assert.AreEqual("((()())(()))", UndirectedTree.GetFormForVertex(edges, 3));
+			Assert.AreEqual("(((()()))())", UndirectedTree.GetFormForVertex(edges, 4));
+			Assert.AreEqual("((((()()))))", UndirectedTree.GetFormForVertex(edges, 5));
 		}
 
 		[TestMethod]
-		public void GetForm_7()
+		public void GetFormForVertex_7()
 		{
-			var n = 7;
 			(int u, int v)[] edges =
 			[
 				(0, 1),
@@ -40,13 +38,13 @@ namespace TreesTest.v100
 				(2, 6),
 			];
 
-			Assert.AreEqual("((()())(()()))", UndirectedTree.GetForm(n, edges, 0));
-			Assert.AreEqual("(((()()))()())", UndirectedTree.GetForm(n, edges, 1));
-			Assert.AreEqual("(((()()))()())", UndirectedTree.GetForm(n, edges, 2));
-			Assert.AreEqual("((((()()))()))", UndirectedTree.GetForm(n, edges, 3));
-			Assert.AreEqual("((((()()))()))", UndirectedTree.GetForm(n, edges, 4));
-			Assert.AreEqual("((((()()))()))", UndirectedTree.GetForm(n, edges, 5));
-			Assert.AreEqual("((((()()))()))", UndirectedTree.GetForm(n, edges, 6));
+			Assert.AreEqual("((()())(()()))", UndirectedTree.GetFormForVertex(edges, 0));
+			Assert.AreEqual("(((()()))()())", UndirectedTree.GetFormForVertex(edges, 1));
+			Assert.AreEqual("(((()()))()())", UndirectedTree.GetFormForVertex(edges, 2));
+			Assert.AreEqual("((((()()))()))", UndirectedTree.GetFormForVertex(edges, 3));
+			Assert.AreEqual("((((()()))()))", UndirectedTree.GetFormForVertex(edges, 4));
+			Assert.AreEqual("((((()()))()))", UndirectedTree.GetFormForVertex(edges, 5));
+			Assert.AreEqual("((((()()))()))", UndirectedTree.GetFormForVertex(edges, 6));
 		}
 	}
 }
