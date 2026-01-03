@@ -16,9 +16,14 @@
 			return map;
 		}
 
+		readonly (int u, int v)[] edges;
 		readonly List<int>[] map;
-		public UndirectedTree(List<int>[] map) => this.map = map;
-		public UndirectedTree((int u, int v)[] edges) : this(ToMap(edges)) { }
+
+		public UndirectedTree((int u, int v)[] edges)
+		{
+			this.edges = edges;
+			map = ToMap(edges);
+		}
 
 		string DFS(int v, int parent)
 		{
@@ -36,6 +41,15 @@
 		public string GetFormForVertex(int root)
 		{
 			return DFS(root, -1);
+		}
+
+		public string GetFormForEdge(int root)
+		{
+			var (u, v) = edges[root];
+			var f1 = DFS(u, v);
+			var f2 = DFS(v, u);
+			if (FormComparer.Compare(f1, f2) > 0) (f1, f2) = (f2, f1);
+			return f1 + f2;
 		}
 	}
 }

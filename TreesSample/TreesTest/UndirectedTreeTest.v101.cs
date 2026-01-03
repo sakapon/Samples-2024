@@ -24,6 +24,12 @@ namespace TreesTest.v101
 			Assert.AreEqual("((()())(()))", tree.GetFormForVertex(3));
 			Assert.AreEqual("(((()()))())", tree.GetFormForVertex(4));
 			Assert.AreEqual("((((()()))))", tree.GetFormForVertex(5));
+
+			Assert.AreEqual("(((()))())()", tree.GetFormForEdge(0));
+			Assert.AreEqual("(((()))())()", tree.GetFormForEdge(1));
+			Assert.AreEqual("((()))(()())", tree.GetFormForEdge(2));
+			Assert.AreEqual("((()()))(())", tree.GetFormForEdge(3));
+			Assert.AreEqual("(((()())))()", tree.GetFormForEdge(4));
 		}
 
 		[TestMethod]
@@ -47,6 +53,13 @@ namespace TreesTest.v101
 			Assert.AreEqual("((((()()))()))", tree.GetFormForVertex(4));
 			Assert.AreEqual("((((()()))()))", tree.GetFormForVertex(5));
 			Assert.AreEqual("((((()()))()))", tree.GetFormForVertex(6));
+
+			Assert.AreEqual("((()()))(()())", tree.GetFormForEdge(0));
+			Assert.AreEqual("((()()))(()())", tree.GetFormForEdge(1));
+			Assert.AreEqual("(((()()))())()", tree.GetFormForEdge(2));
+			Assert.AreEqual("(((()()))())()", tree.GetFormForEdge(3));
+			Assert.AreEqual("(((()()))())()", tree.GetFormForEdge(4));
+			Assert.AreEqual("(((()()))())()", tree.GetFormForEdge(5));
 		}
 	}
 }
