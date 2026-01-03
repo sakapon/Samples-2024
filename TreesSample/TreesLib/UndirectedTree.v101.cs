@@ -1,10 +1,10 @@
 ﻿namespace TreesLib.v101
 {
-	public static class UndirectedTree
+	public class UndirectedTree
 	{
 		static readonly StringComparer FormComparer = StringComparer.Ordinal;
 
-		public static string GetFormForVertex((int u, int v)[] edges, int root)
+		static List<int>[] ToMap((int u, int v)[] edges)
 		{
 			var n = edges.Length + 1;
 			var map = Array.ConvertAll(new bool[n], _ => new List<int>());
@@ -13,6 +13,15 @@
 				map[u].Add(v);
 				map[v].Add(u);
 			}
+			return map;
+		}
+
+		readonly List<int>[] map;
+		public UndirectedTree(List<int>[] map) => this.map = map;
+		public UndirectedTree((int u, int v)[] edges) : this(ToMap(edges)) { }
+
+		public string GetFormForVertex(int root)
+		{
 			return DFS(root, -1);
 
 			string DFS(int v, int parent)
