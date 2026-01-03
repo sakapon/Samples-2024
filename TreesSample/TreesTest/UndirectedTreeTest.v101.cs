@@ -6,16 +6,16 @@ namespace TreesTest.v101
 	public class UndirectedTreeTest
 	{
 		[TestMethod]
-		public void GetFormForVertex_6()
+		public void GetForm_6()
 		{
-			(int u, int v)[] edges =
-			[
+			var edges = new[]
+			{
 				(0, 1),
 				(0, 2),
 				(0, 3),
 				(3, 4),
 				(4, 5),
-			];
+			};
 			var tree = new UndirectedTree(edges);
 
 			Assert.AreEqual("(((()))()())", tree.GetFormForVertex(0));
@@ -33,17 +33,17 @@ namespace TreesTest.v101
 		}
 
 		[TestMethod]
-		public void GetFormForVertex_7()
+		public void GetForm_7()
 		{
-			(int u, int v)[] edges =
-			[
+			var edges = new[]
+			{
 				(0, 1),
 				(0, 2),
 				(1, 3),
 				(1, 4),
 				(2, 5),
 				(2, 6),
-			];
+			};
 			var tree = new UndirectedTree(edges);
 
 			Assert.AreEqual("((()())(()()))", tree.GetFormForVertex(0));
