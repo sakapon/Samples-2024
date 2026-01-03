@@ -4,7 +4,7 @@
 	{
 		static readonly StringComparer FormComparer = StringComparer.Ordinal;
 
-		public static string GetForm((int u, int v)[] edges, int root)
+		public static string GetFormForVertex((int u, int v)[] edges, int root)
 		{
 			var n = edges.Length + 1;
 			var map = Array.ConvertAll(new bool[n], _ => new List<int>());
