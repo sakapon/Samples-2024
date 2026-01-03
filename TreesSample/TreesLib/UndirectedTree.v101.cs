@@ -20,22 +20,22 @@
 		public UndirectedTree(List<int>[] map) => this.map = map;
 		public UndirectedTree((int u, int v)[] edges) : this(ToMap(edges)) { }
 
+		string DFS(int v, int parent)
+		{
+			var l = new List<string>();
+			foreach (var nv in map[v])
+			{
+				if (nv == parent) continue;
+				l.Add(DFS(nv, v));
+			}
+			l.Sort(FormComparer);
+			var f = string.Join("", l);
+			return $"({f})";
+		}
+
 		public string GetFormForVertex(int root)
 		{
 			return DFS(root, -1);
-
-			string DFS(int v, int parent)
-			{
-				var l = new List<string>();
-				foreach (var nv in map[v])
-				{
-					if (nv == parent) continue;
-					l.Add(DFS(nv, v));
-				}
-				l.Sort(FormComparer);
-				var f = string.Join("", l);
-				return $"({f})";
-			}
 		}
 	}
 }
