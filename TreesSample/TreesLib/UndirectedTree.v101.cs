@@ -25,13 +25,13 @@
 			map = ToMap(edges);
 		}
 
-		string DFS(int v, int parent)
+		string GetFormByDFS(int v, int parent)
 		{
 			var l = new List<string>();
 			foreach (var nv in map[v])
 			{
 				if (nv == parent) continue;
-				l.Add(DFS(nv, v));
+				l.Add(GetFormByDFS(nv, v));
 			}
 			l.Sort(FormComparer);
 			var f = string.Join("", l);
@@ -40,14 +40,14 @@
 
 		public string GetFormForVertex(int root)
 		{
-			return DFS(root, -1);
+			return GetFormByDFS(root, -1);
 		}
 
 		public string GetFormForEdge(int root)
 		{
 			var (u, v) = edges[root];
-			var f1 = DFS(u, v);
-			var f2 = DFS(v, u);
+			var f1 = GetFormByDFS(u, v);
+			var f2 = GetFormByDFS(v, u);
 			if (FormComparer.Compare(f1, f2) > 0) (f1, f2) = (f2, f1);
 			return f1 + f2;
 		}
