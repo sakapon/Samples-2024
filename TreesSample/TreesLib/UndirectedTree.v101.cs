@@ -62,14 +62,14 @@
 			var depths = new int[map.Length];
 			var parents = new int[map.Length];
 
-			void DFS(int v, int parent)
+			void DFS(int v)
 			{
 				foreach (var nv in map[v])
 				{
-					if (nv == parent) continue;
+					if (nv == parents[v]) continue;
 					depths[nv] = depths[v] + 1;
 					parents[nv] = v;
-					DFS(nv, v);
+					DFS(nv);
 				}
 			}
 
@@ -77,7 +77,7 @@
 			{
 				depths[root] = 0;
 				parents[root] = -1;
-				DFS(root, -1);
+				DFS(root);
 			}
 
 			Reroot(0);
