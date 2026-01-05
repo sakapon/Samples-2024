@@ -6,7 +6,37 @@ namespace TreesTest.v101
 	public class UndirectedTreeTest
 	{
 		[TestMethod]
-		public void GetForm_6()
+		public void GetForm_6_1()
+		{
+			var edges = new[]
+			{
+				(0, 1),
+				(1, 2),
+				(1, 3),
+				(2, 4),
+				(3, 5),
+			};
+			var tree = new UndirectedTree(edges);
+
+			Assert.AreEqual("(((())(())))", tree.GetFormForVertex(0));
+			Assert.AreEqual("((())(())())", tree.GetFormForVertex(1));
+			Assert.AreEqual("(((())())())", tree.GetFormForVertex(2));
+			Assert.AreEqual("(((())())())", tree.GetFormForVertex(3));
+			Assert.AreEqual("((((())())))", tree.GetFormForVertex(4));
+			Assert.AreEqual("((((())())))", tree.GetFormForVertex(5));
+
+			Assert.AreEqual("((())(()))()", tree.GetFormForEdge(0));
+			Assert.AreEqual("((())())(())", tree.GetFormForEdge(1));
+			Assert.AreEqual("((())())(())", tree.GetFormForEdge(2));
+			Assert.AreEqual("(((())()))()", tree.GetFormForEdge(3));
+			Assert.AreEqual("(((())()))()", tree.GetFormForEdge(4));
+
+			// Center: Vertex 1
+			Assert.AreEqual("((())(())())", tree.GetNormalForm());
+		}
+
+		[TestMethod]
+		public void GetForm_6_2()
 		{
 			var edges = new[]
 			{
@@ -36,7 +66,37 @@ namespace TreesTest.v101
 		}
 
 		[TestMethod]
-		public void GetForm_7()
+		public void GetForm_6_3()
+		{
+			var edges = new[]
+			{
+				(0, 1),
+				(0, 2),
+				(0, 3),
+				(0, 4),
+				(4, 5),
+			};
+			var tree = new UndirectedTree(edges);
+
+			Assert.AreEqual("((())()()())", tree.GetFormForVertex(0));
+			Assert.AreEqual("(((())()()))", tree.GetFormForVertex(1));
+			Assert.AreEqual("(((())()()))", tree.GetFormForVertex(2));
+			Assert.AreEqual("(((())()()))", tree.GetFormForVertex(3));
+			Assert.AreEqual("((()()())())", tree.GetFormForVertex(4));
+			Assert.AreEqual("(((()()())))", tree.GetFormForVertex(5));
+
+			Assert.AreEqual("((())()())()", tree.GetFormForEdge(0));
+			Assert.AreEqual("((())()())()", tree.GetFormForEdge(1));
+			Assert.AreEqual("((())()())()", tree.GetFormForEdge(2));
+			Assert.AreEqual("(()()())(())", tree.GetFormForEdge(3));
+			Assert.AreEqual("((()()()))()", tree.GetFormForEdge(4));
+
+			// Center: Edge 3
+			Assert.AreEqual("(()()())(())", tree.GetNormalForm());
+		}
+
+		[TestMethod]
+		public void GetForm_7_1()
 		{
 			var edges = new[]
 			{
