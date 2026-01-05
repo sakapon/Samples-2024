@@ -30,6 +30,9 @@ namespace TreesTest.v101
 			Assert.AreEqual("((()))(()())", tree.GetFormForEdge(2));
 			Assert.AreEqual("((()()))(())", tree.GetFormForEdge(3));
 			Assert.AreEqual("(((()())))()", tree.GetFormForEdge(4));
+
+			// Center: Vertex 3
+			Assert.AreEqual("((()())(()))", tree.GetNormalForm());
 		}
 
 		[TestMethod]
@@ -60,6 +63,9 @@ namespace TreesTest.v101
 			Assert.AreEqual("(((()()))())()", tree.GetFormForEdge(3));
 			Assert.AreEqual("(((()()))())()", tree.GetFormForEdge(4));
 			Assert.AreEqual("(((()()))())()", tree.GetFormForEdge(5));
+
+			// Center: Vertex 0
+			Assert.AreEqual("((()())(()()))", tree.GetNormalForm());
 		}
 	}
 }
