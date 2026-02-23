@@ -43,7 +43,7 @@
 			return GetFormByDFS(root, -1);
 		}
 
-		public string GetFormForEdge(int u, int v)
+		string GetFormForEdge(int u, int v)
 		{
 			var f1 = GetFormByDFS(u, v);
 			var f2 = GetFormByDFS(v, u);
@@ -92,6 +92,47 @@
 				return GetFormForVertex(tv);
 			else
 				return GetFormForEdge(tv, parents[tv]);
+		}
+
+		// form: 標準形とは限りません。
+		public static UndirectedTree Parse(string form)
+		{
+			ArgumentNullException.ThrowIfNull(form);
+
+			var edges = new List<(int, int)>();
+			var roots = new List<int>();
+			var vi = -1;
+			var q = new Stack<int>();
+
+			foreach (var c in form)
+			{
+				switch (c)
+				{
+					case '(':
+						if (q.Count == 0) roots.Add(++vi);
+						else edges.Add((q.Peek(), ++vi));
+						q.Push(vi);
+						break;
+					case ')':
+						if (q.Count == 0) throw new FormatException();
+						q.Pop();
+						break;
+					default:
+						throw new FormatException();
+				}
+			}
+
+			if (q.Count > 0) throw new FormatException();
+			if (roots.Count == 1)
+			{
+				return new UndirectedTree(edges.ToArray());
+			}
+			if (roots.Count == 2)
+			{
+				edges.Add((roots[0], roots[1]));
+				return new UndirectedTree(edges.ToArray());
+			}
+			throw new FormatException();
 		}
 	}
 }
