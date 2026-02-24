@@ -3,6 +3,7 @@
 	// 根付き木の場合のみ
 	public static class UndirectedTree
 	{
+		const char UO = '(', UC = ')';
 		static readonly StringComparer FormComparer = StringComparer.Ordinal;
 
 		public static string GetFormForVertex((int u, int v)[] edges, int root)
@@ -26,7 +27,7 @@
 				}
 				l.Sort(FormComparer);
 				var f = string.Join("", l);
-				return $"({f})";
+				return $"{UO}{f}{UC}";
 			}
 		}
 
@@ -42,12 +43,12 @@
 			{
 				switch (c)
 				{
-					case '(':
+					case UO:
 						++vi;
 						if (q.Count > 0) edges.Add((q.Peek(), vi));
 						q.Push(vi);
 						break;
-					case ')':
+					case UC:
 						if (q.Count == 0) throw new FormatException();
 						q.Pop();
 						break;
