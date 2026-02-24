@@ -51,6 +51,10 @@ namespace TreesTest.v100
 		public void Parse_6_2()
 		{
 			CollectionAssert.AreEqual(new[] { (0, 1), (1, 2), (2, 3), (0, 4), (0, 5) }, UndirectedTree.Parse("(((()))()())"));
+			CollectionAssert.AreEqual(new[] { (0, 1), (1, 2), (2, 3), (3, 4), (1, 5) }, UndirectedTree.Parse("((((()))()))"));
+			CollectionAssert.AreEqual(new[] { (0, 1), (1, 2), (1, 3), (0, 4), (4, 5) }, UndirectedTree.Parse("((()())(()))"));
+			CollectionAssert.AreEqual(new[] { (0, 1), (1, 2), (2, 3), (2, 4), (0, 5) }, UndirectedTree.Parse("(((()()))())"));
+			CollectionAssert.AreEqual(new[] { (0, 1), (1, 2), (2, 3), (3, 4), (3, 5) }, UndirectedTree.Parse("((((()()))))"));
 		}
 	}
 }
