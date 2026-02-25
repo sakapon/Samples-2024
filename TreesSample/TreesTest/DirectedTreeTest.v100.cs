@@ -32,19 +32,19 @@ namespace TreesTest.v100
 			{
 				(0, 1),
 				(0, 2),
-				(1, 3),
-				(1, 4),
-				(2, 5),
+				(3, 1),
+				(4, 1),
+				(5, 2),
 				(2, 6),
 			};
 
-			Assert.AreEqual("((()())(()()))", UndirectedTree.GetFormForVertex(edges, 0));
-			Assert.AreEqual("(((()()))()())", UndirectedTree.GetFormForVertex(edges, 1));
-			Assert.AreEqual("(((()()))()())", UndirectedTree.GetFormForVertex(edges, 2));
-			Assert.AreEqual("((((()()))()))", UndirectedTree.GetFormForVertex(edges, 3));
-			Assert.AreEqual("((((()()))()))", UndirectedTree.GetFormForVertex(edges, 4));
-			Assert.AreEqual("((((()()))()))", UndirectedTree.GetFormForVertex(edges, 5));
-			Assert.AreEqual("((((()()))()))", UndirectedTree.GetFormForVertex(edges, 6));
+			Assert.AreEqual("0(+(+()-())+(-()-()))", DirectedTree.GetFormForVertex(edges, 0));
+			Assert.AreEqual("0(-()-()-(+(+()-())))", DirectedTree.GetFormForVertex(edges, 1));
+			Assert.AreEqual("0(+()-()-(+(-()-())))", DirectedTree.GetFormForVertex(edges, 2));
+			Assert.AreEqual("0(+(-()-(+(+()-()))))", DirectedTree.GetFormForVertex(edges, 3));
+			Assert.AreEqual("0(+(-()-(+(+()-()))))", DirectedTree.GetFormForVertex(edges, 4));
+			Assert.AreEqual("0(+(+()-(+(-()-()))))", DirectedTree.GetFormForVertex(edges, 5));
+			Assert.AreEqual("0(-(-()-(+(-()-()))))", DirectedTree.GetFormForVertex(edges, 6));
 		}
 
 		[TestMethod]
