@@ -3,31 +3,31 @@
 	// 根付き木の場合のみ
 	public static class DirectedTree
 	{
-		const char UO = '(', UC = ')';
+		const string DOU = "+(", DOD = "-(", DO0 = "0(", DC = ")";
 		static readonly StringComparer FormComparer = StringComparer.Ordinal;
 
 		public static string GetFormForVertex((int u, int v)[] edges, int root)
 		{
 			var n = edges.Length + 1;
-			var map = Array.ConvertAll(new bool[n], _ => new List<int>());
+			var map = Array.ConvertAll(new bool[n], _ => new List<(int to, bool forward)>());
 			foreach (var (u, v) in edges)
 			{
-				map[u].Add(v);
-				map[v].Add(u);
+				map[u].Add((v, true));
+				map[v].Add((u, false));
 			}
-			return DFS(root, -1);
+			return DFS(root, -1, false);
 
-			string DFS(int v, int parent)
+			string DFS(int v, int parent, bool forward)
 			{
 				var l = new List<string>();
-				foreach (var nv in map[v])
+				foreach (var (nv, nf) in map[v])
 				{
 					if (nv == parent) continue;
-					l.Add(DFS(nv, v));
+					l.Add(DFS(nv, v, nf));
 				}
 				l.Sort(FormComparer);
 				var f = string.Join("", l);
-				return $"{UO}{f}{UC}";
+				return $"{(parent == -1 ? DO0 : forward ? DOU : DOD)}{f}{DC}";
 			}
 		}
 
@@ -43,12 +43,12 @@
 			{
 				switch (c)
 				{
-					case UO:
+					case '(':
 						++vi;
 						if (q.Count > 0) edges.Add((q.Peek(), vi));
 						q.Push(vi);
 						break;
-					case UC:
+					case ')':
 						if (q.Count == 0) throw new FormatException();
 						q.Pop();
 						break;
