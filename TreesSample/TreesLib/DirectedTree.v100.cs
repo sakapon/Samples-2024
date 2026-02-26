@@ -1,6 +1,7 @@
 ﻿namespace TreesLib.v100
 {
 	// 根付き木の場合のみ
+	// Order: ()+-0<>[]{}
 	public static class DirectedTree
 	{
 		const string DOU = "+(", DOD = "-(", DO0 = "0(", DC = ")";
@@ -34,32 +35,53 @@
 		public static (int u, int v)[] Parse(string form)
 		{
 			ArgumentNullException.ThrowIfNull(form);
+			if (form.Length % 3 != 0) throw new FormatException();
 
 			var edges = new List<(int, int)>();
 			var vi = -1;
 			var q = new Stack<int>();
 
-			foreach (var c in form)
+			for (int si = 0; si < form.Length;)
 			{
-				switch (c)
+				if (StartsWith(form, si, DO0))
 				{
-					case '(':
-						++vi;
-						if (q.Count > 0) edges.Add((q.Peek(), vi));
-						q.Push(vi);
-						break;
-					case ')':
-						if (q.Count == 0) throw new FormatException();
-						q.Pop();
-						break;
-					default:
-						throw new FormatException();
+					if (q.Count > 0) throw new FormatException();
+					q.Push(++vi);
+					si += 2;
 				}
+				else if (StartsWith(form, si, DOU))
+				{
+					if (q.Count == 0) throw new FormatException();
+					edges.Add((q.Peek(), ++vi));
+					q.Push(vi);
+					si += 2;
+				}
+				else if (StartsWith(form, si, DOD))
+				{
+					if (q.Count == 0) throw new FormatException();
+					edges.Add((++vi, q.Peek()));
+					q.Push(vi);
+					si += 2;
+				}
+				else if (StartsWith(form, si, DC))
+				{
+					if (q.Count == 0) throw new FormatException();
+					q.Pop();
+					si += 1;
+				}
+				else throw new FormatException();
 			}
 
 			if (q.Count > 0) throw new FormatException();
-			if ((edges.Count + 1) * 2 != form.Length) throw new FormatException();
+			if ((edges.Count + 1) * 3 != form.Length) throw new FormatException();
 			return edges.ToArray();
+		}
+
+		static bool StartsWith(string s, int index, string value)
+		{
+			for (int i = 0; i < value.Length; i++)
+				if (index + i >= s.Length || s[index + i] != value[i]) return false;
+			return true;
 		}
 	}
 }
