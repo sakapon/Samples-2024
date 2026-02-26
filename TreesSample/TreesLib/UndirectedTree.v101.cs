@@ -1,7 +1,10 @@
 ﻿namespace TreesLib.v101
 {
+	// 辺を根とする文字列表現を実装します。
+	// 中心を直径から求めます。
 	public class UndirectedTree
 	{
+		const char UO = '(', UC = ')';
 		static readonly StringComparer FormComparer = StringComparer.Ordinal;
 
 		static List<int>[] ToMap((int u, int v)[] edges)
@@ -35,7 +38,7 @@
 			}
 			l.Sort(FormComparer);
 			var f = string.Join("", l);
-			return $"({f})";
+			return $"{UO}{f}{UC}";
 		}
 
 		public string GetFormForVertex(int root)
@@ -108,12 +111,12 @@
 			{
 				switch (c)
 				{
-					case '(':
+					case UO:
 						if (q.Count == 0) roots.Add(++vi);
 						else edges.Add((q.Peek(), ++vi));
 						q.Push(vi);
 						break;
-					case ')':
+					case UC:
 						if (q.Count == 0) throw new FormatException();
 						q.Pop();
 						break;
