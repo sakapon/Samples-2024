@@ -127,5 +127,23 @@ namespace TreesTest.v102
 			// Center: Vertex 0
 			Assert.AreEqual("((()())(()()))", tree.GetNormalForm());
 		}
+
+		[TestMethod]
+		public void Parse_6_2()
+		{
+			CollectionAssert.AreEqual(new[] { (0, 1), (1, 2), (2, 3), (0, 4), (0, 5) }, UndirectedTree.Parse("(((()))()())").edges);
+			CollectionAssert.AreEqual(new[] { (0, 1), (1, 2), (2, 3), (3, 4), (1, 5) }, UndirectedTree.Parse("((((()))()))").edges);
+			CollectionAssert.AreEqual(new[] { (0, 1), (1, 2), (1, 3), (0, 4), (4, 5) }, UndirectedTree.Parse("((()())(()))").edges);
+			CollectionAssert.AreEqual(new[] { (0, 1), (1, 2), (2, 3), (2, 4), (0, 5) }, UndirectedTree.Parse("(((()()))())").edges);
+			CollectionAssert.AreEqual(new[] { (0, 1), (1, 2), (2, 3), (3, 4), (3, 5) }, UndirectedTree.Parse("((((()()))))").edges);
+		}
+
+		[TestMethod]
+		public void Parse_7()
+		{
+			CollectionAssert.AreEqual(new[] { (0, 1), (1, 2), (1, 3), (0, 4), (4, 5), (4, 6) }, UndirectedTree.Parse("((()())(()()))").edges);
+			CollectionAssert.AreEqual(new[] { (0, 1), (1, 2), (2, 3), (2, 4), (0, 5), (0, 6) }, UndirectedTree.Parse("(((()()))()())").edges);
+			CollectionAssert.AreEqual(new[] { (0, 1), (1, 2), (2, 3), (3, 4), (3, 5), (1, 6) }, UndirectedTree.Parse("((((()()))()))").edges);
+		}
 	}
 }
