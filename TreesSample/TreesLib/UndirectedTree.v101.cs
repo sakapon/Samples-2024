@@ -1,6 +1,6 @@
 ﻿namespace TreesLib.v101
 {
-	// 辺を根とする文字列表現を実装します。
+	// 中心が根である場合も、頂点を根とする文字列表現を利用します。
 	// 中心を直径から求めます。
 	public class UndirectedTree
 	{
@@ -48,10 +48,9 @@
 
 		string GetFormForEdge(int u, int v)
 		{
-			var f1 = GetFormByDFS(u, v);
-			var f2 = GetFormByDFS(v, u);
-			if (FormComparer.Compare(f1, f2) > 0) (f1, f2) = (f2, f1);
-			return f1 + f2;
+			var f1 = GetFormForVertex(u);
+			var f2 = GetFormForVertex(v);
+			return FormComparer.Compare(f1, f2) < 0 ? f1 : f2;
 		}
 
 		public string GetFormForEdge(int root)
