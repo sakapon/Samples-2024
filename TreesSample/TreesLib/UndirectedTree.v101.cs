@@ -19,7 +19,7 @@
 			return map;
 		}
 
-		readonly (int u, int v)[] edges;
+		public readonly (int u, int v)[] edges;
 		readonly List<int>[] map;
 
 		public UndirectedTree((int u, int v)[] edges)
@@ -102,7 +102,6 @@
 			ArgumentNullException.ThrowIfNull(form);
 
 			var edges = new List<(int, int)>();
-			var roots = new List<int>();
 			var vi = -1;
 			var q = new Stack<int>();
 
@@ -111,8 +110,8 @@
 				switch (c)
 				{
 					case UO:
-						if (q.Count == 0) roots.Add(++vi);
-						else edges.Add((q.Peek(), ++vi));
+						++vi;
+						if (q.Count > 0) edges.Add((q.Peek(), vi));
 						q.Push(vi);
 						break;
 					case UC:
@@ -125,16 +124,8 @@
 			}
 
 			if (q.Count > 0) throw new FormatException();
-			if (roots.Count == 1)
-			{
-				return new UndirectedTree(edges.ToArray());
-			}
-			if (roots.Count == 2)
-			{
-				edges.Add((roots[0], roots[1]));
-				return new UndirectedTree(edges.ToArray());
-			}
-			throw new FormatException();
+			if ((edges.Count + 1) * 2 != form.Length) throw new FormatException();
+			return new UndirectedTree(edges.ToArray());
 		}
 	}
 }
