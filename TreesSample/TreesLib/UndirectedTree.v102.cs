@@ -1,7 +1,7 @@
 ﻿namespace TreesLib.v102
 {
 	// 辺を根とする文字列表現を実装します。
-	// 中心を直径から求めます。
+	// 中心を葉から求めます。
 	public class UndirectedTree
 	{
 		const char UO = '(', UC = ')';
@@ -19,7 +19,7 @@
 			return map;
 		}
 
-		readonly (int u, int v)[] edges;
+		public readonly (int u, int v)[] edges;
 		readonly List<int>[] map;
 
 		public UndirectedTree((int u, int v)[] edges)
@@ -62,39 +62,36 @@
 
 		public string GetNormalForm()
 		{
-			var depths = new int[map.Length];
-			var parents = new int[map.Length];
+			var n = map.Length;
 
-			void DFS(int v)
+			var rem = n;
+			var degrees = Array.ConvertAll(map, l => l.Count);
+			var l = new List<int>();
+			var lt = new List<int>();
+
+			for (int v = 0; v < n; ++v)
+				if (degrees[v] == 1) l.Add(v);
+
+			while (rem > 2)
 			{
-				foreach (var nv in map[v])
+				foreach (var v in l)
 				{
-					if (nv == parents[v]) continue;
-					depths[nv] = depths[v] + 1;
-					parents[nv] = v;
-					DFS(nv);
+					foreach (var nv in map[v])
+					{
+						if (degrees[nv] == 0) continue;
+						--rem;
+						--degrees[v];
+						if (--degrees[nv] == 1) lt.Add(nv);
+					}
 				}
+				(l, lt) = (lt, l);
+				lt.Clear();
 			}
 
-			void Reroot(int root)
-			{
-				depths[root] = 0;
-				parents[root] = -1;
-				DFS(root);
-			}
-
-			Reroot(0);
-			var tv = Array.IndexOf(depths, depths.Max());
-			Reroot(tv);
-			tv = Array.IndexOf(depths, depths.Max());
-
-			var diameter = depths[tv];
-			var radius = (diameter + 1) / 2;
-			while (depths[tv] > radius) tv = parents[tv];
-			if (diameter % 2 == 0)
-				return GetFormForVertex(tv);
+			if (l.Count == 1)
+				return GetFormForVertex(l[0]);
 			else
-				return GetFormForEdge(tv, parents[tv]);
+				return GetFormForEdge(l[0], l[1]);
 		}
 
 		// form: 標準形とは限りません。
@@ -112,8 +109,9 @@
 				switch (c)
 				{
 					case UO:
-						if (q.Count == 0) roots.Add(++vi);
-						else edges.Add((q.Peek(), ++vi));
+						++vi;
+						if (q.Count == 0) roots.Add(vi);
+						else edges.Add((q.Peek(), vi));
 						q.Push(vi);
 						break;
 					case UC:
