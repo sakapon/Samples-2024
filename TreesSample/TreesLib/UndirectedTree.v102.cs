@@ -60,7 +60,7 @@
 			return GetFormForEdge(u, v);
 		}
 
-		public string GetNormalForm()
+		int[] GetCenter()
 		{
 			var n = map.Length;
 
@@ -87,11 +87,16 @@
 				(l, lt) = (lt, l);
 				lt.Clear();
 			}
+			return l.ToArray();
+		}
 
-			if (l.Count == 1)
-				return GetFormForVertex(l[0]);
+		public string GetNormalForm()
+		{
+			var center = GetCenter();
+			if (center.Length == 1)
+				return GetFormForVertex(center[0]);
 			else
-				return GetFormForEdge(l[0], l[1]);
+				return GetFormForEdge(center[0], center[1]);
 		}
 
 		// form: 標準形とは限りません。

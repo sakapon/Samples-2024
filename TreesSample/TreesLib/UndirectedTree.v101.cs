@@ -59,7 +59,7 @@
 			return GetFormForEdge(u, v);
 		}
 
-		public string GetNormalForm()
+		int[] GetCenter()
 		{
 			var depths = new int[map.Length];
 			var parents = new int[map.Length];
@@ -91,9 +91,18 @@
 			var radius = (diameter + 1) / 2;
 			while (depths[tv] > radius) tv = parents[tv];
 			if (diameter % 2 == 0)
-				return GetFormForVertex(tv);
+				return [tv];
 			else
-				return GetFormForEdge(tv, parents[tv]);
+				return [tv, parents[tv]];
+		}
+
+		public string GetNormalForm()
+		{
+			var center = GetCenter();
+			if (center.Length == 1)
+				return GetFormForVertex(center[0]);
+			else
+				return GetFormForEdge(center[0], center[1]);
 		}
 
 		// form: 標準形とは限りません。
