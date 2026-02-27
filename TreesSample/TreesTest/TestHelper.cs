@@ -35,11 +35,13 @@
 			return r;
 		}
 
-		public static void WriteTree(int n, bool from1 = true) => WriteTree(n, CreateTree(n, from1));
-		public static void WriteTree(int n, (int u, int v)[] es)
+		// https://hello-world-494ec.firebaseapp.com/
+		public static void WriteTree(int n, bool from1 = true) => WriteTree(CreateTree(n, from1));
+		public static void WriteTree((int u, int v)[] es) => WriteGraph(es.Length + 1, es);
+		public static void WriteGraph(int n, (int u, int v)[] es)
 		{
 			var ess = string.Join("\n", es.Select(e => $"{e.u} {e.v}"));
-			Console.Write($"{n} {n - 1}\n{ess}\n");
+			Console.Write($"{n} {es.Length}\n{ess}\n");
 		}
 
 		// 各辺が任意の方向を持つ木 (arborescence とは異なる)
