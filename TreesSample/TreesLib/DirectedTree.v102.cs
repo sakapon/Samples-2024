@@ -49,8 +49,8 @@
 
 		string GetFormForEdge(int u, int v)
 		{
-			var f1 = GetFormByDFS(u, v, true);
-			var f2 = GetFormByDFS(v, u, false);
+			var f1 = GetFormByDFS(u, v, false);
+			var f2 = GetFormByDFS(v, u, true);
 			if (FormComparer.Compare(f1, f2) > 0) (f1, f2) = (f2, f1);
 			return f1 + f2;
 		}
@@ -155,7 +155,7 @@
 			}
 			if (roots.Count == 2)
 			{
-				var (u, v) = (roots[0], roots[1]);
+				var (u, v) = (roots[1], roots[0]);
 				if (StartsWith(form, 0, DOD)) (u, v) = (v, u);
 				edges.Add((u, v));
 				return new DirectedTree(edges.ToArray());
