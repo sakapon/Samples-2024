@@ -56,6 +56,16 @@ namespace TreesTest.v102
 			Assert.AreEqual("0(+(-()-(+(+()-()))))", tree.GetFormForVertex(4));
 			Assert.AreEqual("0(+(+()-(+(-()-()))))", tree.GetFormForVertex(5));
 			Assert.AreEqual("0(-(-()-(+(-()-()))))", tree.GetFormForVertex(6));
+
+			Assert.AreEqual("+(-()-())-(+(+()-()))", tree.GetFormForEdge(0));
+			Assert.AreEqual("+(+()-())-(+(-()-()))", tree.GetFormForEdge(1));
+			Assert.AreEqual("+(-()-(+(+()-())))-()", tree.GetFormForEdge(2));
+			Assert.AreEqual("+(-()-(+(+()-())))-()", tree.GetFormForEdge(3));
+			Assert.AreEqual("+(+()-(+(-()-())))-()", tree.GetFormForEdge(4));
+			Assert.AreEqual("+()-(-()-(+(-()-())))", tree.GetFormForEdge(5));
+
+			// Center: Vertex 0
+			Assert.AreEqual("0(+(+()-())+(-()-()))", tree.GetNormalForm());
 		}
 
 		[TestMethod]
@@ -84,6 +94,12 @@ namespace TreesTest.v102
 			CollectionAssert.AreEqual(new[] { (0, 1), (2, 1), (3, 1), (3, 4), (4, 5), (6, 4) }, DirectedTree.Parse("0(+(-()-(+(+()-()))))").edges);
 			CollectionAssert.AreEqual(new[] { (0, 1), (1, 2), (3, 1), (3, 4), (5, 4), (6, 4) }, DirectedTree.Parse("0(+(+()-(+(-()-()))))").edges);
 			CollectionAssert.AreEqual(new[] { (1, 0), (2, 1), (3, 1), (3, 4), (5, 4), (6, 4) }, DirectedTree.Parse("0(-(-()-(+(-()-()))))").edges);
+
+			CollectionAssert.AreEqual(new[] { (1, 0), (2, 0), (3, 4), (4, 5), (6, 4), (3, 0) }, DirectedTree.Parse("+(-()-())-(+(+()-()))").edges);
+			CollectionAssert.AreEqual(new[] { (0, 1), (2, 0), (3, 4), (5, 4), (6, 4), (3, 0) }, DirectedTree.Parse("+(+()-())-(+(-()-()))").edges);
+			CollectionAssert.AreEqual(new[] { (1, 0), (2, 0), (2, 3), (3, 4), (5, 3), (6, 0) }, DirectedTree.Parse("+(-()-(+(+()-())))-()").edges);
+			CollectionAssert.AreEqual(new[] { (0, 1), (2, 0), (2, 3), (4, 3), (5, 3), (6, 0) }, DirectedTree.Parse("+(+()-(+(-()-())))-()").edges);
+			CollectionAssert.AreEqual(new[] { (2, 1), (3, 1), (3, 4), (5, 4), (6, 4), (1, 0) }, DirectedTree.Parse("+()-(-()-(+(-()-())))").edges);
 		}
 	}
 }
