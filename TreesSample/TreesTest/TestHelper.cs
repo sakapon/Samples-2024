@@ -44,6 +44,15 @@
 			Console.Write($"{n} {es.Length}\n{ess}\n");
 		}
 
+		// https://mermaid.live/
+		public static void WriteTreeForMermaid((int u, int v)[] es, bool directed) => WriteGraphForMermaid(es.Length + 1, es, directed);
+		public static void WriteGraphForMermaid(int n, (int u, int v)[] es, bool directed)
+		{
+			Console.WriteLine("graph TD");
+			Console.WriteLine(string.Join("\n", Enumerable.Range(0, n).Select(v => $"    {v}(({v}))")));
+			Console.WriteLine(string.Join("\n", es.Select(e => $"    {e.u} --{(directed ? '>' : '-')} {e.v}")));
+		}
+
 		// 各辺が任意の方向を持つ木 (arborescence とは異なる)
 		public static (int u, int v)[] CreateDirectedTree(int n, bool from1 = true)
 		{
