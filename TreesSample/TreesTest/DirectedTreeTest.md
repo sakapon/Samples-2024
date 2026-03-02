@@ -1,5 +1,7 @@
 # DirectedTreeTest
 
+6-1
+
 ```mermaid
 graph TD
     0((0))
@@ -14,6 +16,8 @@ graph TD
     2 --> 5
     3 --> 5
 ```
+
+7-1
 
 ```mermaid
 graph TD
