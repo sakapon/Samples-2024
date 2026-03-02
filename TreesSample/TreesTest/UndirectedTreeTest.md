@@ -1,5 +1,7 @@
 # UndirectedTreeTest
 
+6-1
+
 ```mermaid
 graph TD
     0((0))
@@ -14,6 +16,8 @@ graph TD
     2 --- 4
     3 --- 5
 ```
+
+6-2
 
 ```mermaid
 graph TD
@@ -30,6 +34,8 @@ graph TD
     4 --- 5
 ```
 
+6-3
+
 ```mermaid
 graph TD
     0((0))
@@ -44,6 +50,8 @@ graph TD
     0 --- 4
     4 --- 5
 ```
+
+7-1
 
 ```mermaid
 graph TD
